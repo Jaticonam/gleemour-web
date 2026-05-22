@@ -1,41 +1,25 @@
-/* ===== INDEX.CSS ===== */
-/* Punto único de carga de estilos */
-
-/* Fuentes */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-
-/* BASE */
+/***** BASE *****/
+@import "./styles/base/tokens.css";
 @import "./styles/base/base.css";
-@import "./styles/base/animations.css";
 @import "./styles/base/utilities.css";
+@import "./styles/base/animations.css";
 
-/* LAYOUT */
-@import "./styles/layout/navbar.css";
-
-/* COMPONENTS */
+/***** COMPONENTS *****/
 @import "./styles/components/buttons.css";
 @import "./styles/components/cards.css";
-@import "./styles/components/badges.css";
-@import "./styles/components/notifications.css";
-@import "./styles/components/searchinput.css";
+@import "./styles/components/productcard.css";
 @import "./styles/components/categoryfilter.css";
 @import "./styles/components/floatingbuttons.css";
 @import "./styles/components/cartsidebar.css";
 @import "./styles/components/addtocartmodal.css";
-@import "./styles/components/productcard.css";
-@import "./styles/components/recentactivity.css";
+@import "./styles/components/notifications.css";
 
-/* SECTIONS */
-@import "./styles/sections/categories.css";
-@import "./styles/sections/brandstory.css";
-
-/* PAGES */
+/***** PAGES *****/
 @import "./styles/pages/catalog.css";
-@import "./styles/pages/productdetail.css";
 @import "./styles/pages/category.css";
-@import "./styles/pages/home.css";
+@import "./styles/pages/productdetail.css";
 
-/* TAILWIND */
+/***** TAILWIND *****/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
