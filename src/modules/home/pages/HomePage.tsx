@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import HeroSlider from "../sections/HeroSlider";
 
 import CategoriesSection from "../sections/CategoriesSection";
@@ -84,3 +85,6 @@ export default function HomePage() {
     </div>
   );
 }
+
+
+
