@@ -306,7 +306,7 @@ export default function ProductPage() {
       <NotificationStack />
 
       <header className="product-detail-header">
-        <CountdownTimer />
+        {/* <CountdownTimer /> */}
 
         <div className="product-detail-header-inner">
           <button
