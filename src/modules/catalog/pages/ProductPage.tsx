@@ -51,6 +51,7 @@ import { ProductSkeleton } from "@/shared/components/skeletons/ProductSkeleton";
 
 import { getBadgePresentation, sortBadges } from "@/tenant/config/badgeRules";
 import { PRODUCT_DETAIL_CONFIG } from "@/tenant/config/productDetail";
+import { ProductHeader } from "@/modules/catalog/components/product";
 
 export default function ProductPage() {
   const { id: paramId } = useParams<{ id: string }>();
@@ -64,7 +65,10 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
+  const [zoomImage, setZoomImage] = useState<{
+    src: string;
+    title: string;
+  } | null>(null);
 
   const [qty, setQty] = useState(1);
   const [qtyInput, setQtyInput] = useState("1");
@@ -107,7 +111,7 @@ export default function ProductPage() {
 
   const product = useMemo(
     () => products.find((item) => item.id === id),
-    [products, id]
+    [products, id],
   );
 
   const available = product ? isProductAvailable(product) : false;
@@ -188,11 +192,12 @@ export default function ProductPage() {
         updateQty(Math.max(1, effectiveQty - 1));
       }
     },
-    [effectiveQty, updateQty]
+    [effectiveQty, updateQty],
   );
 
   const handleAddToCart = useCallback(() => {
-    if (!product || !available || !isQtyInputValid || parsedQtyInput === null) return;
+    if (!product || !available || !isQtyInputValid || parsedQtyInput === null)
+      return;
 
     const nextQtyInCart = currentCartQty + parsedQtyInput;
 
@@ -219,7 +224,7 @@ export default function ProductPage() {
       setQty(nextQty);
       setQtyInput(String(nextQty));
     },
-    [product, modalQty, addToCart]
+    [product, modalQty, addToCart],
   );
 
   const handleShare = useCallback(() => {
@@ -237,7 +242,7 @@ export default function ProductPage() {
     navigator.clipboard.writeText(window.location.href);
     showNotification(
       PRODUCT_DETAIL_CONFIG.notifications.linkCopiedTitle,
-      PRODUCT_DETAIL_CONFIG.notifications.linkCopiedDescription
+      PRODUCT_DETAIL_CONFIG.notifications.linkCopiedDescription,
     );
   }, [product]);
 
@@ -290,7 +295,7 @@ export default function ProductPage() {
             navigate(
               currentCategory
                 ? getCategoryUrl(currentCategory)
-                : getCatalogUrl()
+                : getCatalogUrl(),
             )
           }
         >
@@ -305,32 +310,12 @@ export default function ProductPage() {
     <div className="product-detail-page">
       <NotificationStack />
 
-      <header className="product-detail-header">
-        {/* <CountdownTimer /> */}
-
-        <div className="product-detail-header-inner">
-          <button
-            onClick={() => navigate(-1)}
-            className="product-detail-icon-button"
-            aria-label="Volver"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-
-          <div className="product-detail-header-title">
-            <h1>{product.title}</h1>
-            <p>{product.id}</p>
-          </div>
-
-          <button
-            onClick={handleShare}
-            className="product-detail-icon-button"
-            aria-label="Compartir"
-          >
-            <Share2 className="w-5 h-5" />
-          </button>
-        </div>
-      </header>
+      <ProductHeader
+        title={product.title}
+        code={product.id}
+        onBack={() => navigate(-1)}
+        onShare={handleShare}
+      />
 
       <main className="product-detail-main">
         <section className="product-detail-grid">
@@ -388,14 +373,10 @@ export default function ProductPage() {
                   {getCategoryName(product.category)}
                 </span>
 
-                <span className="product-detail-code">
-                  {product.id}
-                </span>
+                <span className="product-detail-code">{product.id}</span>
               </div>
 
-              <h2 className="product-detail-title">
-                {product.title}
-              </h2>
+              <h2 className="product-detail-title">{product.title}</h2>
 
               <p className="product-detail-description">
                 {product.description ||
@@ -426,11 +407,7 @@ export default function ProductPage() {
                   <strong>{finalPrice.toFixed(2)}</strong>
                 </div>
 
-                {hasOffer && (
-                  <small>
-                    Antes S/ {originalPrice.toFixed(2)}
-                  </small>
-                )}
+                {hasOffer && <small>Antes S/ {originalPrice.toFixed(2)}</small>}
               </div>
 
               <div className="product-detail-qty-box">
@@ -517,7 +494,7 @@ export default function ProductPage() {
                     addToCart(selected, 1);
                     showNotification(
                       PRODUCT_DETAIL_CONFIG.notifications.addedTitle,
-                      PRODUCT_DETAIL_CONFIG.notifications.addedDescription
+                      PRODUCT_DETAIL_CONFIG.notifications.addedDescription,
                     );
                   }}
                   onImageClick={(src, title) =>
@@ -574,6 +551,3 @@ export default function ProductPage() {
     </div>
   );
 }
-
-
-

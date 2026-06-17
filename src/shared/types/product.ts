@@ -48,6 +48,13 @@ export interface Product {
   img: string;
 
   /**
+   * Galería de imágenes del producto.
+   * Si está vacío, se usa img como imagen principal.
+   * En Sheets puede venir separado por "|".
+   */
+  images?: string[];
+
+  /**
    * Prioridad comercial.
    * Mayor número = aparece antes.
    */

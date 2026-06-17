@@ -40,9 +40,7 @@ function parsePipeList(value: unknown): string[] {
 }
 
 function parseCategories(value: unknown): string[] {
-  return parsePipeList(value)
-    .map(getCategoryIdFromSheetLabel)
-    .filter(Boolean);
+  return parsePipeList(value).map(getCategoryIdFromSheetLabel).filter(Boolean);
 }
 
 function parseBadges(value: unknown): string[] {
@@ -77,11 +75,7 @@ function normalizeAttribute(value: unknown): string {
 
 function parseAttributes(value: unknown): string[] {
   return Array.from(
-    new Set(
-      parsePipeList(value)
-        .map(normalizeAttribute)
-        .filter(Boolean)
-    )
+    new Set(parsePipeList(value).map(normalizeAttribute).filter(Boolean)),
   );
 }
 
@@ -94,7 +88,7 @@ export function normalizeProduct(row: CsvRow): SheetProduct {
   const extraCategories = parseCategories(row.categories);
 
   const categories = Array.from(
-    new Set([primaryCategory, ...extraCategories].filter(Boolean))
+    new Set([primaryCategory, ...extraCategories].filter(Boolean)),
   );
 
   return {
@@ -113,6 +107,7 @@ export function normalizeProduct(row: CsvRow): SheetProduct {
 
     stock: parseNumber(row.stock),
     img: cleanText(row.img),
+    images: parsePipeList(row.images),
 
     status: cleanText(row.status),
     badges: parseBadges(row.badge),

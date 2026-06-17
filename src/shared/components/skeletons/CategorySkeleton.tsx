@@ -1,7 +1,6 @@
 import { CatalogSkeleton } from "./CatalogSkeleton";
 
 export function CategorySkeleton() {
-<<<<<<< Updated upstream:src/shared/components/skeletons/CategorySkeleton.tsx
   return (
     <div className="catalog-grid">
       {Array.from({ length: 8 }).map((_, i) => (
@@ -44,7 +43,3 @@ export function CategorySkeleton() {
     </div>
   );
 }
-=======
-  return <CatalogSkeleton />;
-}
->>>>>>> Stashed changes:src/components/skeletons/CategorySkeleton.tsx

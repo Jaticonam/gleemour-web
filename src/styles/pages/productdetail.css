@@ -1,12 +1,19 @@
 @layer components {
-
   /* ===== PAGE ===== */
 
   .product-detail-page {
     min-height: 100vh;
     background:
-      radial-gradient(circle at top left, rgba(236, 164, 194, 0.12), transparent 32%),
-      radial-gradient(circle at top right, rgba(249, 201, 91, 0.08), transparent 28%),
+      radial-gradient(
+        circle at top left,
+        rgba(236, 164, 194, 0.12),
+        transparent 32%
+      ),
+      radial-gradient(
+        circle at top right,
+        rgba(249, 201, 91, 0.08),
+        transparent 28%
+      ),
       var(--w-bg);
   }
 
@@ -245,12 +252,12 @@
 
   .product-detail-status-warning {
     background: rgba(249, 201, 91, 0.18);
-    color: #9A6A00;
+    color: #9a6a00;
   }
 
   .product-detail-status-danger {
     background: rgba(232, 93, 117, 0.12);
-    color: #B4233D;
+    color: #b4233d;
   }
 
   .product-detail-status-preorder {
@@ -259,7 +266,7 @@
   }
 
   .product-detail-status-muted {
-    background: rgba(154, 139, 186, 0.10);
+    background: rgba(154, 139, 186, 0.1);
     color: var(--w-muted);
   }
 
@@ -456,7 +463,11 @@
   }
 
   .product-detail-button-whatsapp {
-    background: linear-gradient(135deg, var(--w-whatsapp), var(--w-whatsapp-dark));
+    background: linear-gradient(
+      135deg,
+      var(--w-whatsapp),
+      var(--w-whatsapp-dark)
+    );
     color: #ffffff;
     box-shadow: var(--w-shadow-whatsapp);
   }
@@ -540,7 +551,6 @@
   /* ===== RESPONSIVE ===== */
 
   @media (max-width: 1100px) {
-
     .product-detail-grid {
       grid-template-columns: 1fr;
       gap: 3rem;
@@ -556,7 +566,6 @@
   }
 
   @media (max-width: 640px) {
-
     .product-detail-main {
       padding-inline: 1rem;
     }
@@ -576,4 +585,50 @@
     }
   }
 
+  /* ================================
+   Product Gallery V2
+   Miniaturas para detalle B2C
+================================ */
+
+  .product-gallery-thumbnails {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.9rem;
+    overflow-x: auto;
+    padding: 0.2rem 0 0.35rem;
+    scrollbar-width: thin;
+  }
+
+  .product-gallery-thumbnail {
+    width: 68px;
+    height: 82px;
+    flex: 0 0 auto;
+    overflow: hidden;
+    border: 1px solid rgba(106, 90, 138, 0.16);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.86);
+    cursor: pointer;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .product-gallery-thumbnail:hover {
+    transform: translateY(-2px);
+    border-color: rgba(106, 90, 138, 0.35);
+    box-shadow: 0 12px 30px rgba(106, 90, 138, 0.12);
+  }
+
+  .product-gallery-thumbnail-active {
+    border-color: rgba(236, 164, 194, 0.95);
+    box-shadow: 0 12px 30px rgba(236, 164, 194, 0.22);
+  }
+
+  .product-gallery-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
 }
