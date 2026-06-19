@@ -1,3 +1,4 @@
+import "./HomeFloatingButtons.css";
 import { Link } from "react-router-dom";
 import { ShoppingBag, MessageCircle } from "lucide-react";
 
@@ -23,6 +24,7 @@ export default function FloatingButtons() {
     </div>
   );
 }
+
 
 
 

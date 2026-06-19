@@ -1,3 +1,4 @@
+import "./NotificationStack.css";
 import { useState, useEffect, useCallback } from "react";
 import { CheckCircle } from "lucide-react";
 
@@ -76,6 +77,7 @@ export function NotificationStack() {
     </div>
   );
 }
+
 
 
 

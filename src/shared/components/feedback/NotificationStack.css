@@ -1,0 +1,123 @@
+/* ===== NOTIFICATION STACK ===== */
+
+
+  .notification-stack {
+    position: fixed;
+    inset-inline: 0;
+    top: 1.5rem;
+
+    z-index: 3000;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+
+    padding-inline: 1rem;
+
+    pointer-events: none;
+  }
+
+  .notification-toast {
+    pointer-events: auto;
+
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    min-width: min(92vw, 320px);
+    max-width: min(92vw, 420px);
+
+    padding: 0.65rem 0.9rem;
+
+    border-radius: var(--w-radius-lg);
+
+    background: rgba(255, 255, 255, 0.94);
+
+    border: 1px solid var(--w-border);
+
+    box-shadow: var(--w-shadow-strong);
+
+    backdrop-filter: blur(16px);
+  }
+
+  .notification-toast-icon {
+    width: 2.35rem;
+    height: 2.35rem;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: var(--w-radius-md);
+
+    background: rgba(37, 211, 102, 0.12);
+
+    color: var(--w-whatsapp-dark);
+  }
+
+  .notification-toast-content {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  .notification-toast-content span {
+    color: var(--w-heading);
+
+    font-size: 0.78rem;
+    font-weight: 900;
+
+    line-height: 1.2;
+  }
+
+  .notification-toast-content p {
+    margin: 0.15rem 0 0;
+
+    color: var(--w-muted);
+
+    font-size: 0.68rem;
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .notification-toast-in {
+    animation: notificationToastIn 0.25s ease both;
+  }
+
+  .notification-toast-out {
+    animation: notificationToastOut 0.25s ease both;
+  }
+
+  @keyframes notificationToastIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.96);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes notificationToastOut {
+    from {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.96);
+    }
+  }
+

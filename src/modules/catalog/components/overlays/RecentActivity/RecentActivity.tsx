@@ -1,3 +1,4 @@
+import "./RecentActivity.css";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { ShoppingBag } from "lucide-react";
 import { BRAND_CONFIG } from "@/tenant/config/brand";
@@ -108,6 +109,7 @@ export function RecentActivity({ products }: RecentActivityProps) {
     </div>
   );
 }
+
 
 
 
