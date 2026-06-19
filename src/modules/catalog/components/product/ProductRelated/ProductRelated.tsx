@@ -1,4 +1,4 @@
-import { ProductCard } from "@/modules/catalog/components/product/ProductCard";
+import { ProductCard } from "../ProductCard";
 import type { Product } from "@/shared/types/product";
 import type { CartItem } from "@/shared/types/product";
 
@@ -44,6 +44,7 @@ export function ProductRelated({
     </section>
   );
 }
+
 
 
 
