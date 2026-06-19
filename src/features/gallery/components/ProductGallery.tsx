@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { ZoomIn } from "lucide-react";
 
 import type { Product } from "@/shared/types/product";
-import { getBadgePresentation, sortBadges } from "@/tenant/config/badgeRules";
+import { getBadgePresentation, sortBadges } from "@/tenant/config/product";
 
 type ProductGalleryProps = {
   product: Product;
@@ -95,5 +95,6 @@ export function ProductGallery({
     </div>
   );
 }
+
 
 

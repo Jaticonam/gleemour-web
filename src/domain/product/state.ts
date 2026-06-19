@@ -1,5 +1,5 @@
 import type { Product } from "@/shared/types/product";
-import { isPreorderStatus, isSoldOutStatus } from "@/tenant/config/statuses";
+import { isPreorderStatus, isSoldOutStatus } from "@/tenant/config/product";
 import { isProductAvailable } from "@/domain/product/availability";
 
 export type ProductStateType =
@@ -65,5 +65,6 @@ export function getProductState(product: Product): {
     available: true,
   };
 }
+
 
 

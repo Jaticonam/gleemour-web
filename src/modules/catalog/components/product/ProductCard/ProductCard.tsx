@@ -10,11 +10,11 @@ import {
 } from "lucide-react";
 
 import { getEmotionalHint } from "@/domain/product/emotional";
-import { getBadgePresentation, sortBadges } from "@/tenant/config/badgeRules";
-import { getCategoryName } from "@/tenant/config/categories";
+import { getBadgePresentation, sortBadges } from "@/tenant/config/product";
+import { getCategoryName } from "@/tenant/config/catalog";
 
 import { CartItem, Product } from "@/shared/types/product";
-import { PRODUCT_CARD_CONFIG } from "@/tenant/config/productCard";
+import { PRODUCT_CARD_CONFIG } from "@/tenant/config/product";
 
 import {
   getProductPrice,
@@ -302,6 +302,7 @@ export function ProductCard({
     </article>
   );
 }
+
 
 
 

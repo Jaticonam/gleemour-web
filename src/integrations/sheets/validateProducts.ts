@@ -1,5 +1,5 @@
-import { CATEGORIES } from "@/tenant/config/categories";
-import { isVisibleProductStatus } from "@/tenant/config/statuses";
+import { CATEGORIES } from "@/tenant/config/catalog";
+import { isVisibleProductStatus } from "@/tenant/config/product";
 import type { SheetProduct } from "./normalizeProduct";
 
 const CATEGORY_IDS = new Set(CATEGORIES.map((category) => category.id));
@@ -103,5 +103,6 @@ export function validateProducts(products: SheetProduct[]): SheetProduct[] {
     return true;
   });
 }
+
 
 

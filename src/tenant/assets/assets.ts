@@ -7,3 +7,4 @@ export const ASSETS_CONFIG = {
 } as const;
 
 
+

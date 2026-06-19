@@ -7,3 +7,4 @@ export function logInfo(message: string, data?: unknown): void {
 export function logError(message: string, error?: unknown): void {
   console.error(`[Gleemour] ${message}`, error ?? "");
 }
+

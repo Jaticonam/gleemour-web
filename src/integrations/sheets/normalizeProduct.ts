@@ -1,5 +1,5 @@
 import type { Addon, Product } from "@/shared/types/product";
-import { getCategoryIdFromSheetLabel } from "@/tenant/config/categories";
+import { getCategoryIdFromSheetLabel } from "@/tenant/config/catalog";
 
 type CsvRow = Record<string, string>;
 
@@ -131,5 +131,6 @@ export function normalizeAddon(row: CsvRow): SheetAddon {
     priority: parseRequiredNumber(row.priority),
   };
 }
+
 
 

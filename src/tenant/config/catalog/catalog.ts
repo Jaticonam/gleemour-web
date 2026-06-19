@@ -11,3 +11,4 @@ export const CATALOG_CONFIG = {
 } as const;
 
 
+

@@ -7,3 +7,4 @@ export function safeJsonParse<T>(value: string | null, fallback: T): T {
     return fallback;
   }
 }
+

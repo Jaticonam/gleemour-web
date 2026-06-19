@@ -1,7 +1,7 @@
 
 import type { Product } from "@/shared/types/product";
 import { BRAND_CONFIG } from "@/tenant/config/brand";
-import { isPreorderStatus, isSoldOutStatus } from "@/tenant/config/statuses";
+import { isPreorderStatus, isSoldOutStatus } from "@/tenant/config/product";
 import { getProductPrice } from "@/domain/product/pricing";
 
 interface BuildProductWhatsAppMessageParams {
@@ -47,5 +47,6 @@ export function buildProductWhatsAppUrl(params: BuildProductWhatsAppMessageParam
     message
   )}`;
 }
+
 
 

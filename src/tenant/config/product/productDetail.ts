@@ -50,3 +50,4 @@ export const PRODUCT_DETAIL_CONFIG = {
 } as const;
 
 
+

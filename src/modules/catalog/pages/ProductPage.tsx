@@ -29,7 +29,7 @@ import {
   isProductAvailable,
 } from "@/domain/product";
 
-import { getCategoryName } from "@/tenant/config/categories";
+import { getCategoryName } from "@/tenant/config/catalog";
 
 import { getCatalogUrl, getCategoryUrl } from "@/app/routes/routes";
 
@@ -49,8 +49,8 @@ import {
 } from "@/shared/components/feedback/NotificationStack";
 import { ProductSkeleton } from "@/shared/components/skeletons/ProductSkeleton";
 
-import { getBadgePresentation, sortBadges } from "@/tenant/config/badgeRules";
-import { PRODUCT_DETAIL_CONFIG } from "@/tenant/config/productDetail";
+import { getBadgePresentation, sortBadges } from "@/tenant/config/product";
+import { PRODUCT_DETAIL_CONFIG } from "@/tenant/config/product";
 import { ProductHeader } from "@/modules/catalog/components/product";
 
 export default function ProductPage() {
@@ -551,6 +551,9 @@ export default function ProductPage() {
     </div>
   );
 }
+
+
+
 
 
 

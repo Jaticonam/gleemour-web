@@ -111,3 +111,4 @@ export default function HomeNav({ cartCount = 0, onCartClick }: HomeNavProps) {
 }
 
 
+

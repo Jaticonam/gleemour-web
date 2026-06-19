@@ -1,3 +1,4 @@
-export * from "@/tenant/config/badges";
+export * from "@/tenant/config/product";
+
 
 

@@ -65,3 +65,4 @@ export const searchProducts = (products: Product[], query: string) => {
 };
 
 
+

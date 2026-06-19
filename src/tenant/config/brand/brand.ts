@@ -1,10 +1,10 @@
-import { WHATSAPP_NUMBER } from "@/tenant/config/contact";
-import { CATEGORIES } from "@/tenant/config/categories";
+import { WHATSAPP_NUMBER } from "@/tenant/config/checkout";
+import { CATEGORIES } from "@/tenant/config/catalog";
 
 import { CATALOG_CONFIG } from "@/tenant/config/catalog";
 import { CHECKOUT_CONFIG } from "@/tenant/config/checkout";
-import { CART_CONFIG } from "@/tenant/config/cart";
-import { MODAL_CONFIG } from "@/tenant/config/modal";
+import { CART_CONFIG } from "@/tenant/config/checkout";
+import { MODAL_CONFIG } from "@/tenant/config/checkout";
 
 import { ASSETS_CONFIG } from "@/tenant/assets/assets";
 
@@ -39,5 +39,6 @@ export const BRAND_CONFIG = {
   activity: ACTIVITY_CONFIG,
   categories: CATEGORIES,
 } as const;
+
 
 

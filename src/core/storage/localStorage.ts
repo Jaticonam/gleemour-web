@@ -17,3 +17,4 @@ export function removeStorageItem(key: string): void {
 
   window.localStorage.removeItem(key);
 }
+
