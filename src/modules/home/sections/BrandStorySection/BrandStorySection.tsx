@@ -1,3 +1,4 @@
+import "./BrandStorySection.css";
 import {
   Gift,
   Heart,
@@ -116,6 +117,7 @@ export default function BrandStorySection() {
     </section>
   );
 }
+
 
 
 

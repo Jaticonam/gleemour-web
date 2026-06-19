@@ -1,3 +1,4 @@
+import "./CategoriesSection.css";
 import { Link } from "react-router-dom";
 import { ArrowRight, Building2, Flower2, Music, Sparkles } from "lucide-react";
 
@@ -100,6 +101,7 @@ export default function CategoriesSection() {
     </section>
   );
 }
+
 
 
 

@@ -4,9 +4,11 @@
 @import "./styles/base/utilities.css";
 @import "./styles/base/animations.css";
 
-/***** COMPONENTS - LEGACY *****/
-@import "./styles/components/buttons.css";
-@import "./styles/components/cards.css";
+/***** DESIGN SYSTEM *****/
+
+@import "./styles/design-system/buttons.css";
+@import "./styles/design-system/cards.css";
+@import "./styles/design-system/badges.css";
 
 /***** MODULES - CATALOG *****/
 
@@ -21,4 +23,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
