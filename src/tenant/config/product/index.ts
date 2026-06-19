@@ -1,7 +1,11 @@
-export * from "./badges";
+export * from "./addons";
+export * from "./benefits";
+export * from "./buybox";
+export * from "./gallery";
+export * from "./related";
 export * from "./badgeRules";
+export * from "./badges";
+export * from "./priceTiers";
 export * from "./productCard";
 export * from "./productDetail";
-export * from "./priceTiers";
 export * from "./statuses";
-

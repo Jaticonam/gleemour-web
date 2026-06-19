@@ -14,6 +14,9 @@
 
 /***** FEATURES *****/
 
+/***** LAYOUT *****/
+@import "./styles/layout/navbar.css";
+
 /***** PAGES - LEGACY *****/
 @import "./styles/pages/catalog.css";
 @import "./styles/pages/category.css";
@@ -23,3 +26,4 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
