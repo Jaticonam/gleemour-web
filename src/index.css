@@ -4,7 +4,7 @@
 @import "./styles/base/utilities.css";
 @import "./styles/base/animations.css";
 
-/***** COMPONENTS *****/
+/***** COMPONENTS - LEGACY *****/
 @import "./styles/components/buttons.css";
 @import "./styles/components/cards.css";
 @import "./styles/components/productcard.css";
@@ -14,7 +14,15 @@
 @import "./styles/components/addtocartmodal.css";
 @import "./styles/components/notifications.css";
 
-/***** PAGES *****/
+/***** MODULES - CATALOG *****/
+@import "./modules/catalog/components/catalog/CatalogSection.css";
+@import "./modules/catalog/components/catalog/CatalogProductGrid.css";
+@import "./modules/catalog/components/catalog/CatalogEmptyState.css";
+
+/***** FEATURES *****/
+@import "./features/gallery/gallery.css";
+
+/***** PAGES - LEGACY *****/
 @import "./styles/pages/catalog.css";
 @import "./styles/pages/category.css";
 @import "./styles/pages/productdetail.css";
