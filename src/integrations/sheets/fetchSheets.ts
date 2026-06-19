@@ -214,3 +214,6 @@ export async function loadAllAddons(): Promise<Addon[]> {
     )
     .sort((a, b) => b.priority - a.priority);
 }
+
+
+

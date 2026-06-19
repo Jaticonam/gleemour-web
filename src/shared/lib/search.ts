@@ -63,3 +63,6 @@ export const searchProducts = (products: Product[], query: string) => {
     .sort((a, b) => b.score - a.score)
     .map((x) => x.product);
 };
+
+
+

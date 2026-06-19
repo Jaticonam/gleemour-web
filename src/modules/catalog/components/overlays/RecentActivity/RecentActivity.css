@@ -1,0 +1,107 @@
+/* ===== RECENT ACTIVITY ===== */
+
+
+  .recent-activity {
+    position: fixed;
+    bottom: calc(env(safe-area-inset-bottom) + 25px);
+    left: 1rem;
+
+    z-index: 1000;
+  }
+
+  .recent-activity-card {
+    width: 18rem;
+
+    display: flex;
+    gap: 0.75rem;
+
+    padding: 0.75rem;
+
+    border-radius: var(--w-radius-lg);
+
+    background: rgba(255, 255, 255, 0.95);
+
+    border: 1px solid var(--w-border);
+
+    box-shadow: var(--w-shadow-strong);
+
+    backdrop-filter: blur(14px);
+  }
+
+  .recent-activity-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: var(--w-radius-md);
+
+    background: var(--w-secondary-soft);
+
+    color: var(--w-primary);
+  }
+
+  .recent-activity-content span {
+    font-size: 0.65rem;
+    font-weight: 900;
+
+    color: var(--w-secondary-strong);
+
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .recent-activity-content p {
+    margin: 0.2rem 0;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+
+    color: var(--w-heading);
+
+    line-height: 1.3;
+  }
+
+  .recent-activity-content small {
+    font-size: 0.65rem;
+    font-weight: 700;
+
+    color: var(--w-muted);
+  }
+
+  .recent-activity-in {
+    animation: activityIn 0.3s ease;
+  }
+
+  .recent-activity-out {
+    animation: activityOut 0.3s ease;
+  }
+
+  @keyframes activityIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes activityOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+

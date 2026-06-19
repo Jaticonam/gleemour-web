@@ -5,3 +5,6 @@ export interface ProductGalleryProps {
   available: boolean;
   onZoom: (src: string, title: string) => void;
 }
+
+
+

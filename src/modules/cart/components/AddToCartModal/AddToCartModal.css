@@ -1,0 +1,317 @@
+/* ===== ADD TO CART MODAL ===== */
+
+
+  .add-cart-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(47, 36, 55, 0.48);
+    backdrop-filter: blur(8px);
+  }
+
+  .add-cart-modal-card {
+    width: 100%;
+    max-width: 370px;
+    padding: 1rem;
+    border-radius: var(--w-radius-lg);
+    background:
+      radial-gradient(circle at top left, rgba(236, 164, 194, 0.18), transparent 40%),
+      var(--w-surface);
+    border: 1px solid var(--w-border);
+    box-shadow: var(--w-shadow-strong);
+    animation: addCartModalIn 0.22s ease both;
+  }
+
+  .add-cart-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.8rem;
+  }
+
+  .add-cart-modal-title-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .add-cart-modal-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--w-radius-full);
+    background: rgba(37, 211, 102, 0.14);
+    color: var(--w-whatsapp-dark);
+  }
+
+  .add-cart-modal-title-wrap h3 {
+    margin: 0;
+    color: var(--w-heading);
+    font-family: var(--font-brand);
+    font-size: 0.98rem;
+    font-weight: 900;
+  }
+
+  .add-cart-modal-title-wrap p {
+    margin: 0.25rem 0 0;
+    color: var(--w-muted);
+    font-size: 0.76rem;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .add-cart-modal-close {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--w-radius-sm);
+    background: var(--w-surface-soft);
+    color: var(--w-muted);
+    cursor: pointer;
+    transition:
+      transform var(--w-transition-fast),
+      background var(--w-transition),
+      color var(--w-transition);
+  }
+
+  .add-cart-modal-close:hover {
+    transform: translateY(-1px);
+    background: var(--w-secondary-soft);
+    color: var(--w-secondary-strong);
+  }
+
+  .add-cart-modal-product {
+    margin-top: 0.9rem;
+    padding: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    border-radius: var(--w-radius-md);
+    background: var(--w-surface-soft);
+    border: 1px solid var(--w-border);
+    transition: transform var(--w-transition-fast);
+  }
+
+  .add-cart-modal-product-pulse {
+    transform: scale(1.02);
+  }
+
+  .add-cart-modal-product img {
+    width: 3.6rem;
+    height: 3.6rem;
+    flex-shrink: 0;
+    border-radius: var(--w-radius-sm);
+    object-fit: cover;
+    background: var(--w-secondary-soft);
+  }
+
+  .add-cart-modal-product p {
+    margin: 0;
+    color: var(--w-muted);
+    font-size: 0.74rem;
+    font-weight: 700;
+  }
+
+  .add-cart-modal-product strong {
+    display: block;
+    margin-top: 0.15rem;
+    color: var(--w-heading);
+    font-size: 0.9rem;
+    font-weight: 900;
+  }
+
+  .add-cart-modal-message {
+    margin-top: 0.85rem;
+    padding: 0.85rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    border-radius: var(--w-radius-md);
+    background: var(--w-secondary-soft);
+    border: 1px solid rgba(236, 164, 194, 0.26);
+    color: var(--w-secondary-strong);
+  }
+
+  .add-cart-modal-message p {
+    margin: 0;
+    color: var(--w-heading);
+    font-size: 0.78rem;
+    font-weight: 900;
+  }
+
+  .add-cart-modal-message span {
+    display: block;
+    margin-top: 0.18rem;
+    color: var(--w-muted);
+    font-size: 0.72rem;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+
+  .add-cart-modal-actions {
+    margin-top: 1rem;
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .add-cart-modal-action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem;
+  }
+
+  .add-cart-modal-special,
+  .add-cart-modal-more,
+  .add-cart-modal-primary {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    min-height: 2.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border-radius: var(--w-radius-md);
+    font-size: 0.78rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition:
+      transform var(--w-transition-fast),
+      box-shadow var(--w-transition),
+      background var(--w-transition),
+      border-color var(--w-transition),
+      color var(--w-transition);
+  }
+
+  .add-cart-modal-special {
+    background: linear-gradient(
+      135deg,
+      var(--w-secondary),
+      var(--w-secondary-strong)
+    );
+    color: #ffffff;
+    box-shadow: var(--w-shadow-medium);
+  }
+
+  .add-cart-modal-special:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow:
+      0 10px 24px rgba(224, 15, 137, 0.24),
+      0 0 0 6px rgba(236, 164, 194, 0.08);
+  }
+
+  .add-cart-modal-more {
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--w-secondary-strong);
+    border: 3.5px solid rgba(236, 164, 194, 0.38);
+    backdrop-filter: blur(10px);
+  }
+
+  .add-cart-modal-more:hover {
+    transform: translateY(-2px);
+    background: var(--w-secondary-soft);
+    border-color: var(--w-secondary);
+  }
+
+  .add-cart-modal-primary {
+    background: linear-gradient(
+      135deg,
+      var(--w-primary-dark),
+      var(--w-primary)
+    );
+    color: #ffffff;
+    box-shadow: var(--w-shadow-medium);
+    animation: modalButtonPulse 2.8s infinite;
+  }
+
+  .add-cart-modal-primary:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow:
+      0 14px 30px rgba(224, 15, 137, 0.28),
+      0 0 0 8px rgba(236, 164, 194, 0.08);
+  }
+
+  .add-cart-modal-primary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -130%;
+    width: 120%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.22),
+      transparent
+    );
+    transition: left 0.85s ease;
+  }
+
+  .add-cart-modal-primary:hover::before {
+    left: 140%;
+  }
+
+  .add-cart-modal-secondary:hover {
+    transform: translateY(-2px);
+    background: var(--w-secondary-soft);
+  }
+
+  @keyframes modalButtonPulse {
+    0% {
+      transform: scale(1);
+      box-shadow: var(--w-shadow-medium);
+    }
+
+    50% {
+      transform: scale(1.015);
+      box-shadow:
+        0 10px 30px rgba(106, 90, 138, 0.24),
+        0 0 0 8px rgba(236, 164, 194, 0.08);
+    }
+
+    100% {
+      transform: scale(1);
+      box-shadow: var(--w-shadow-medium);
+    }
+  }
+
+  @keyframes addCartModalIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.96);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .add-cart-modal-action-grid {
+      gap: 0.45rem;
+    }
+
+    .add-cart-modal-special,
+    .add-cart-modal-more,
+    .add-cart-modal-primary {
+      min-height: 2.75rem;
+      font-size: 0.74rem;
+      border-radius: var(--w-radius-sm);
+    }
+  }
+

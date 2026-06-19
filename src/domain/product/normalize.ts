@@ -60,3 +60,6 @@ export function normalizeProducts(
 ): Product[] {
   return products.map(ensureCatalogProduct);
 }
+
+
+

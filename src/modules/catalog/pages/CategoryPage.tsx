@@ -10,16 +10,16 @@ import { searchProducts } from "@/shared/lib/search";
 import { sortByCommercialPriority } from "@/shared/lib/sort";
 import { Product } from "@/shared/types/product";
 
-import { CountdownTimer } from "@/modules/catalog/components/CountdownBanner";
-import { CategoryFilter } from "@/modules/catalog/components/CategoryFilter";
-import { ProductCard } from "@/modules/catalog/components/ProductCard";
-import { CartSidebar } from "@/modules/cart/components/CartSidebar";
+import { CountdownTimer } from "@/modules/catalog/components/banners/CountdownBanner";
+import { CategoryFilter } from "@/modules/catalog/components/filters/CategoryFilter";
+import { ProductCard } from "@/modules/catalog/components/product/ProductCard";
+import { CartSidebar, AddToCartModal } from "@/modules/cart/components";
 import { FloatingButtons } from "@/shared/components/overlays/FloatingButtons";
-import { RecentActivity } from "@/modules/catalog/components/RecentActivity";
-import { ImageZoomModal } from "@/modules/catalog/components/ImageZoomModal";
-import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
+import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActivity";
+import { ImageZoomModal } from "@/modules/catalog/components/overlays/ImageZoomModal";
+
 import { CategorySkeleton } from "@/shared/components/skeletons/CategorySkeleton";
-import { SearchInput } from "@/modules/catalog/components/SearchInput";
+import { SearchInput } from "@/modules/catalog/components/search/SearchInput";
 
 const CategoryPage = () => {
   const { id: paramCategoryId } = useParams<{ id: string }>();
@@ -292,3 +292,9 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
+
+
+
+
+
+

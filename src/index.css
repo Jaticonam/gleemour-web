@@ -4,17 +4,20 @@
 @import "./styles/base/utilities.css";
 @import "./styles/base/animations.css";
 
-/***** COMPONENTS *****/
-@import "./styles/components/buttons.css";
-@import "./styles/components/cards.css";
-@import "./styles/components/productcard.css";
-@import "./styles/components/categoryfilter.css";
-@import "./styles/components/floatingbuttons.css";
-@import "./styles/components/cartsidebar.css";
-@import "./styles/components/addtocartmodal.css";
-@import "./styles/components/notifications.css";
+/***** DESIGN SYSTEM *****/
 
-/***** PAGES *****/
+@import "./styles/design-system/buttons.css";
+@import "./styles/design-system/cards.css";
+@import "./styles/design-system/badges.css";
+
+/***** MODULES - CATALOG *****/
+
+/***** FEATURES *****/
+
+/***** LAYOUT *****/
+@import "./styles/layout/navbar.css";
+
+/***** PAGES - LEGACY *****/
 @import "./styles/pages/catalog.css";
 @import "./styles/pages/category.css";
 @import "./styles/pages/productdetail.css";
@@ -23,3 +26,4 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+

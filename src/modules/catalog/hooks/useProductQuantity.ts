@@ -1,19 +1,31 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
-export function useProductQuantity(initialQty = 1) {
+interface UseProductQuantityOptions {
+  initialQty?: number;
+  unitPrice?: number;
+}
+
+export function useProductQuantity({
+  initialQty = 1,
+  unitPrice = 0,
+}: UseProductQuantityOptions = {}) {
   const [qty, setQty] = useState(initialQty);
   const [qtyInput, setQtyInput] = useState(String(initialQty));
 
-  const parsedQtyInput =
-    qtyInput.trim() !== "" && /^\d+$/.test(qtyInput)
-      ? parseInt(qtyInput, 10)
-      : null;
+  const parsedQtyInput = useMemo(() => {
+    if (qtyInput.trim() === "") return null;
+    if (!/^\d+$/.test(qtyInput)) return null;
+
+    return parseInt(qtyInput, 10);
+  }, [qtyInput]);
 
   const isQtyInputValid = parsedQtyInput !== null && parsedQtyInput >= 1;
   const effectiveQty = isQtyInputValid ? parsedQtyInput : qty;
+  const total = unitPrice * effectiveQty;
 
   const updateQty = useCallback((newQty: number) => {
     const safeQty = Math.max(1, Math.floor(newQty));
+
     setQty(safeQty);
     setQtyInput(String(safeQty));
   }, []);
@@ -34,13 +46,15 @@ export function useProductQuantity(initialQty = 1) {
     setQtyInput(value);
 
     const parsed = parseInt(value, 10);
-    if (!isNaN(parsed) && parsed >= 1) setQty(parsed);
+    if (!Number.isNaN(parsed) && parsed >= 1) {
+      setQty(parsed);
+    }
   }, []);
 
   const handleQtyInputBlur = useCallback(() => {
     const parsed = parseInt(qtyInput, 10);
 
-    if (isNaN(parsed) || parsed < 1) {
+    if (Number.isNaN(parsed) || parsed < 1) {
       updateQty(1);
       return;
     }
@@ -62,7 +76,7 @@ export function useProductQuantity(initialQty = 1) {
         updateQty(Math.max(1, effectiveQty - 1));
       }
     },
-    [effectiveQty, updateQty]
+    [effectiveQty, updateQty],
   );
 
   return {
@@ -71,6 +85,7 @@ export function useProductQuantity(initialQty = 1) {
     parsedQtyInput,
     isQtyInputValid,
     effectiveQty,
+    total,
     setQty,
     setQtyInput,
     updateQty,

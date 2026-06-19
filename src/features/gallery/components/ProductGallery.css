@@ -1,0 +1,122 @@
+/* ==========================================
+   Feature: ProductGallery
+   Purpose: Product image gallery with thumbnails
+========================================== */
+
+.product-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.product-gallery-main {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2.2rem;
+  background: var(--w-surface);
+  border: 1px solid rgba(239, 227, 234, 0.7);
+  box-shadow: var(--w-shadow-medium);
+}
+
+.product-gallery-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.product-gallery-image:hover {
+  transform: scale(1.025);
+}
+
+.product-gallery-image-disabled {
+  opacity: 0.82;
+  filter: grayscale(0.1);
+}
+
+.product-gallery-badges {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.product-gallery-badge {
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--w-radius-full);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(106, 90, 138, 0.84);
+  backdrop-filter: blur(10px);
+}
+
+.product-gallery-zoom {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  width: 3rem;
+  height: 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 1.2rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--w-heading);
+  box-shadow: var(--w-shadow-soft);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: var(--w-transition);
+}
+
+.product-gallery-zoom:hover {
+  transform: translateY(-2px);
+}
+
+.product-gallery-thumbnails {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 0.2rem 0 0.35rem;
+  scrollbar-width: thin;
+}
+
+.product-gallery-thumbnail {
+  width: 68px;
+  height: 82px;
+  flex: 0 0 auto;
+  overflow: hidden;
+  border: 1px solid rgba(106, 90, 138, 0.16);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.86);
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.product-gallery-thumbnail:hover {
+  transform: translateY(-2px);
+  border-color: rgba(106, 90, 138, 0.35);
+  box-shadow: 0 12px 30px rgba(106, 90, 138, 0.12);
+}
+
+.product-gallery-thumbnail-active {
+  border-color: rgba(236, 164, 194, 0.95);
+  box-shadow: 0 12px 30px rgba(236, 164, 194, 0.22);
+}
+
+.product-gallery-thumbnail img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}

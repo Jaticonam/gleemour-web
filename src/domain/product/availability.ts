@@ -1,5 +1,5 @@
 import type { Product } from "@/shared/types/product";
-import { isSoldOutStatus } from "@/tenant/config/statuses";
+import { isSoldOutStatus } from "@/tenant/config/product";
 import { getProductPrice } from "@/domain/product/pricing";
 
 /**
@@ -15,3 +15,6 @@ export function isProductAvailable(product: Product): boolean {
 
   return true;
 }
+
+
+

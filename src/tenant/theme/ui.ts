@@ -13,3 +13,6 @@ export const UI_CONFIG = {
     whatsappLabel: "Te ayudamos",
   },
 } as const;
+
+
+

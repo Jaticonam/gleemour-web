@@ -11,3 +11,6 @@ export function productBelongsToCategory(
 
   return product.categories.includes(categoryId);
 }
+
+
+

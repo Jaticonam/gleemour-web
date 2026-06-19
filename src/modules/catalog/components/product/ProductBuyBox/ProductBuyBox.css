@@ -1,0 +1,183 @@
+/* ================================
+   Product Buy Box
+   Precio, cantidad, total y acciones
+================================ */
+
+.product-detail-buy-box {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(239, 227, 234, 0.7);
+}
+
+.product-detail-price-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.product-detail-price-box p {
+  color: var(--w-secondary-strong);
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.product-detail-price {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  color: var(--w-heading);
+}
+
+.product-detail-price span {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.product-detail-price strong {
+  font-family: var(--font-brand);
+  font-size: 3.1rem;
+  font-weight: 950;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+
+.product-detail-price-box small {
+  color: var(--w-muted);
+  font-weight: 800;
+  text-decoration: line-through;
+}
+
+.product-detail-qty-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.product-detail-qty-box p {
+  margin: 0;
+  color: var(--w-heading);
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.product-detail-qty-control {
+  display: grid;
+  grid-template-columns: 2.8rem 4rem 2.8rem;
+  width: fit-content;
+  overflow: hidden;
+  border: 1px solid rgba(239, 227, 234, 0.9);
+  border-radius: 1rem;
+  background: #fff;
+}
+
+.product-detail-qty-control button,
+.product-detail-qty-control input {
+  height: 2.8rem;
+  border: 0;
+  background: transparent;
+  text-align: center;
+  font-weight: 900;
+  color: var(--w-heading);
+}
+
+.product-detail-qty-control button {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-detail-qty-control button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.product-detail-qty-control input {
+  width: 100%;
+  outline: none;
+  border-inline: 1px solid rgba(239, 227, 234, 0.9);
+}
+
+.product-detail-error {
+  color: #b91c1c;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.product-detail-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 1.2rem;
+  background: rgba(106, 90, 138, 0.06);
+}
+
+.product-detail-total span {
+  color: var(--w-muted);
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.product-detail-total strong {
+  color: var(--w-heading);
+  font-size: 1.05rem;
+  font-weight: 950;
+}
+
+.product-detail-actions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.product-detail-primary-button,
+.product-detail-whatsapp-button {
+  min-height: 3.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  border: 0;
+  border-radius: 1.1rem;
+  font-weight: 950;
+  cursor: pointer;
+  transition: var(--w-transition);
+}
+
+.product-detail-primary-button {
+  background: var(--w-primary);
+  color: #fff;
+  box-shadow: 0 16px 38px rgba(106, 90, 138, 0.25);
+}
+
+.product-detail-primary-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.product-detail-whatsapp-button {
+  background: #22c55e;
+  color: #fff;
+}
+
+.product-detail-trust {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--w-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+@media (max-width: 640px) {
+  .product-detail-price strong {
+    font-size: 2.4rem;
+  }
+}

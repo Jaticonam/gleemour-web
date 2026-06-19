@@ -1,0 +1,54 @@
+/* ================================
+   Product Header
+   Barra superior sticky del detalle
+================================ */
+
+.product-detail-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-bottom: 1px solid rgba(239, 227, 234, 0.7);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(18px);
+}
+
+.product-detail-header-inner {
+  width: min(100%, 1380px);
+  margin: 0 auto;
+  padding: 0.9rem 1.25rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.product-detail-header-title h1 {
+  margin: 0;
+  color: var(--w-heading);
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-align: left;
+}
+
+.product-detail-header-title p {
+  margin-top: 0.15rem;
+  color: var(--w-muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.product-detail-icon-button {
+  width: 2.9rem;
+  height: 2.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.1rem;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(239, 227, 234, 0.7);
+  color: var(--w-heading);
+  transition: var(--w-transition);
+}

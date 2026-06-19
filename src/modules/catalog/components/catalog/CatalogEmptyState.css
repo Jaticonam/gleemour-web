@@ -1,0 +1,39 @@
+/* ==========================================
+   Component: CatalogEmptyState
+   Module: Catalog
+   Purpose: Empty search/category state
+========================================== */
+
+.catalog-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 18rem;
+  text-align: center;
+  color: var(--w-muted);
+}
+
+.catalog-empty-icon {
+  width: 5rem;
+  height: 5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  border-radius: var(--w-radius-full);
+  background: var(--w-secondary-soft);
+  color: var(--w-secondary-strong);
+}
+
+.catalog-empty p {
+  margin: 0;
+  color: var(--w-heading);
+  font-weight: 900;
+}
+
+.catalog-empty small {
+  margin-top: 0.35rem;
+  color: var(--w-muted);
+  font-weight: 600;
+}

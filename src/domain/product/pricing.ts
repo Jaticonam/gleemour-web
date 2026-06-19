@@ -42,3 +42,6 @@ export function getEffectivePrice(item: Product & { qty: number }): number {
 export function getMinPrice(product: Product): number {
   return getProductPrice(product);
 }
+
+
+
