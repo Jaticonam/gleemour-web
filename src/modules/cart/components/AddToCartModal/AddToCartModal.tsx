@@ -1,3 +1,4 @@
+import "./AddToCartModal.css";
 import { useEffect, useState } from "react";
 import {
   CheckCircle2,
@@ -123,6 +124,7 @@ export function AddToCartModal({
     </div>
   );
 }
+
 
 
 

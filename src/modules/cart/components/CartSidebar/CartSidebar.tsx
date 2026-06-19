@@ -1,3 +1,4 @@
+import "./CartSidebar.css";
 import { useEffect, useRef, useState } from "react";
 import { BRAND_CONFIG } from "@/tenant/config/brand";
 import {
@@ -398,6 +399,7 @@ export function CartSidebar({
     </div>
   );
 }
+
 
 
 
