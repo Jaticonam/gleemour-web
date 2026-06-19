@@ -1,3 +1,4 @@
+import "./HeroSlider.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { MessageCircle, ArrowRight } from "lucide-react";
@@ -130,6 +131,7 @@ export default function HeroSlider() {
     </section>
   );
 }
+
 
 
 

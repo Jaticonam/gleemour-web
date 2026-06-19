@@ -2,7 +2,7 @@
    HERO GLEEMOUR
 ======================================== */
 
-@layer utilities {
+
   /* ===== ZOOM DE FONDO ===== */
 
   @keyframes heroZoomSlow {
@@ -231,4 +231,4 @@
       opacity: 0;
     }
   }
-}
+
