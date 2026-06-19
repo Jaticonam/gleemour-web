@@ -1,0 +1,63 @@
+Listado de rutas de carpetas para el volumen Nuevo vol
+El número de serie del volumen es 00000280 B6E1:7057
+D:\JUNG\CODE\GLEEMOUR\GLEEMOUR-WEB\SRC\MODULES\CATALOG\COMPONENTS\PRODUCT
+¦   index.ts
+¦   ProductBuyBox.tsx
+¦   ProductBuyBox.types.ts
+¦   ProductInfo.tsx
+¦   ProductInfo.types.ts
+¦   ProductRelated.tsx
+¦   ProductRelated.types.ts
+¦   
++---ProductAddons
+¦       index.ts
+¦       ProductAddons.css
+¦       ProductAddons.tsx
+¦       ProductAddons.types.ts
+¦       
++---ProductBenefits
+¦       index.ts
+¦       ProductBenefits.css
+¦       ProductBenefits.tsx
+¦       
++---ProductBuyBox
+¦       index.ts
+¦       ProductBuyBox.css
+¦       ProductBuyBox.tsx
+¦       
++---ProductCard
+¦       index.ts
+¦       ProductCard.css
+¦       ProductCard.tsx
+¦       
++---ProductDetailContent
+¦       index.ts
+¦       ProductDetailContent.css
+¦       ProductDetailContent.tsx
+¦       
++---ProductHeader
+¦       index.ts
+¦       ProductHeader.css
+¦       ProductHeader.tsx
+¦       ProductHeader.types.ts
+¦       
++---ProductInfo
+¦       index.ts
+¦       ProductInfo.css
+¦       ProductInfo.tsx
+¦       
++---ProductMeta
+¦       index.ts
+¦       ProductMeta.css
+¦       ProductMeta.tsx
+¦       
++---ProductNotFound
+¦       index.ts
+¦       ProductNotFound.css
+¦       ProductNotFound.tsx
+¦       
++---ProductRelated
+        index.ts
+        ProductRelated.css
+        ProductRelated.tsx
+        
