@@ -15,3 +15,5 @@ export function isProductAvailable(product: Product): boolean {
 
   return true;
 }
+
+

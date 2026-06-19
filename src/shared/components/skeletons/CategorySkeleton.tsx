@@ -43,3 +43,5 @@ export function CategorySkeleton() {
     </div>
   );
 }
+
+

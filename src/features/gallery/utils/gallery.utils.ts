@@ -9,3 +9,5 @@ export function getGalleryImages(product: Product): string[] {
     )
   );
 }
+
+

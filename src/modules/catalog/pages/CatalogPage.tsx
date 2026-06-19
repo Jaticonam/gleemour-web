@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "@/modules/cart/hooks/useCart";
 import { useCatalogProducts } from "@/modules/catalog/hooks";
 
-import { CartSidebar } from "@/modules/cart/components/CartSidebar";
-import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
+import { CartSidebar, AddToCartModal } from "@/modules/cart/components";
 
-import { CategoryFilter } from "@/modules/catalog/components/CategoryFilter";
-import { RecentActivity } from "@/modules/catalog/components/RecentActivity";
-import { ImageZoomModal } from "@/modules/catalog/components/ImageZoomModal";
+
+import { CategoryFilter } from "@/modules/catalog/components/filters/CategoryFilter";
+import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActivity";
+import { ImageZoomModal } from "@/modules/catalog/components/overlays/ImageZoomModal";
 
 import type { Product } from "@/shared/types/product";
 
@@ -210,3 +210,9 @@ export default function CatalogPage() {
     </div>
   );
 }
+
+
+
+
+
+

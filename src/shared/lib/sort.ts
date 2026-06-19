@@ -26,3 +26,5 @@ export const sortByCommercialPriority = (items: Product[]) => {
     return a.title.localeCompare(b.title);
   });
 };
+
+

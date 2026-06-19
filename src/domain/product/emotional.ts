@@ -46,3 +46,5 @@ export function getEmotionalHint(product: Product): string {
 
   return "Un detalle listo para sorprender.";
 }
+
+

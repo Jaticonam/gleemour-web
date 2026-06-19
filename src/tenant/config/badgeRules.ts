@@ -1,1 +1,1 @@
-export * from "@/tenant/config/badges";
+export * from "./product/badgeRules";

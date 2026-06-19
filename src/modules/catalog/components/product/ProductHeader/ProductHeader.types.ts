@@ -4,3 +4,5 @@ export interface ProductHeaderProps {
   onBack: () => void;
   onShare: () => void;
 }
+
+

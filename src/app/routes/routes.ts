@@ -19,3 +19,5 @@ export function getProductUrl(product: Product): string {
 
   return `/catalogo/producto.html?id=${id}&cat=${category}`;
 }
+
+

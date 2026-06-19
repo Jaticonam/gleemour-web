@@ -110,3 +110,5 @@ export default function HowToBuySection() {
     </section>
   );
 }
+
+

@@ -1,4 +1,4 @@
-import { SearchInput } from "@/modules/catalog/components/SearchInput";
+import { SearchInput } from "@/modules/catalog/components/search/SearchInput";
 import { BRAND_CONFIG } from "@/tenant/config/brand";
 import type { Product } from "@/shared/types/product";
 
@@ -40,3 +40,5 @@ export function HeaderBar({
     </div>
   );
 }
+
+

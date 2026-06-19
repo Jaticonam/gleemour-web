@@ -35,12 +35,12 @@ import { getCatalogUrl, getCategoryUrl } from "@/app/routes/routes";
 
 import type { Product } from "@/shared/types/product";
 
-import { CartSidebar } from "@/modules/cart/components/CartSidebar";
-import { AddToCartModal } from "@/modules/cart/components/AddToCartModal";
-import { ProductCard } from "@/modules/catalog/components/ProductCard";
-import { RecentActivity } from "@/modules/catalog/components/RecentActivity";
-import { ImageZoomModal } from "@/modules/catalog/components/ImageZoomModal";
-import { CountdownTimer } from "@/modules/catalog/components/CountdownBanner";
+import { CartSidebar, AddToCartModal } from "@/modules/cart/components";
+
+import { ProductCard } from "@/modules/catalog/components/product/ProductCard";
+import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActivity";
+import { ImageZoomModal } from "@/modules/catalog/components/overlays/ImageZoomModal";
+import { CountdownTimer } from "@/modules/catalog/components/banners/CountdownBanner";
 
 import { FloatingButtons } from "@/shared/components/overlays/FloatingButtons";
 import {
@@ -551,3 +551,7 @@ export default function ProductPage() {
     </div>
   );
 }
+
+
+
+

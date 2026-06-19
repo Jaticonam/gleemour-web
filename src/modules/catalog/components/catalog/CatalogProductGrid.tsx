@@ -1,7 +1,7 @@
 import type { Product } from "@/shared/types/product";
 import type { CartItem } from "@/shared/types/product";
 
-import { ProductCard } from "@/modules/catalog/components/ProductCard";
+import { ProductCard } from "@/modules/catalog/components/product/ProductCard";
 
 interface CatalogProductGridProps {
   products: Product[];
@@ -30,3 +30,5 @@ export function CatalogProductGrid({
     </div>
   );
 }
+
+

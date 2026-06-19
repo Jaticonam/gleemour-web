@@ -54,3 +54,5 @@ function sortByAvailabilityAndPriority(a: Product, b: Product): number {
 
   return b.priority - a.priority;
 }
+
+

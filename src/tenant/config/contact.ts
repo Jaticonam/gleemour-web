@@ -1,1 +1,1 @@
-export const WHATSAPP_NUMBER = "51948122060";
+export * from "./checkout/contact";

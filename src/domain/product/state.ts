@@ -65,3 +65,5 @@ export function getProductState(product: Product): {
     available: true,
   };
 }
+
+
