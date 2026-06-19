@@ -1,3 +1,4 @@
+import "./CategoryFilter.css";
 import { useEffect, useRef, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { Category } from "@/shared/types/product";
@@ -139,6 +140,7 @@ export function CategoryFilter({
     </section>
   );
 }
+
 
 
 

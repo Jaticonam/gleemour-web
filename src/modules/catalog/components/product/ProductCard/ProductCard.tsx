@@ -1,3 +1,4 @@
+import "./ProductCard.css";
 import { useEffect, useState } from "react";
 import {
   PlusCircle,
@@ -302,6 +303,7 @@ export function ProductCard({
     </article>
   );
 }
+
 
 
 

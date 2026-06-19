@@ -1,3 +1,4 @@
+import "./CatalogProductGrid.css";
 import type { Product } from "@/shared/types/product";
 import type { CartItem } from "@/shared/types/product";
 
@@ -30,6 +31,7 @@ export function CatalogProductGrid({
     </div>
   );
 }
+
 
 
 

@@ -1,0 +1,43 @@
+/* ==========================================
+   Component: CatalogSection
+   Module: Catalog
+   Purpose: Commercial catalog sections
+========================================== */
+
+.catalog-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  margin-top: 1.5rem;
+}
+
+.catalog-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.catalog-section-header {
+  padding: 0 0.2rem;
+}
+
+.catalog-section-header h2 {
+  margin: 0;
+  color: var(--w-heading);
+  font-family: var(--font-brand);
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.catalog-section-header p {
+  margin: 0.25rem 0 0;
+  color: var(--w-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .catalog-sections {
+    gap: 2rem;
+  }
+}

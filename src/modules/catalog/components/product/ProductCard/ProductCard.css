@@ -1,6 +1,6 @@
 /* ===== PRODUCT CARD ===== */
 
-@layer components {
+
   .product-card {
     position: relative;
     display: flex;
@@ -665,4 +665,4 @@
       border-radius: var(--w-radius-sm);
     }
   }
-}
+

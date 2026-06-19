@@ -1,3 +1,4 @@
+import "./CatalogEmptyState.css";
 import { SearchX } from "lucide-react";
 
 export function CatalogEmptyState() {
@@ -12,6 +13,7 @@ export function CatalogEmptyState() {
     </div>
   );
 }
+
 
 
 

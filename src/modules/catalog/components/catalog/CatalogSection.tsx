@@ -1,3 +1,4 @@
+import "./CatalogSection.css";
 import type { ReactNode } from "react";
 
 interface CatalogSectionProps {
@@ -22,6 +23,7 @@ export function CatalogSection({
     </section>
   );
 }
+
 
 
 

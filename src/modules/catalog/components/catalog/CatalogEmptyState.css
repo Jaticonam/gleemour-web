@@ -1,7 +1,8 @@
-/* ================================
-   Catalog Empty State
-   Estado vacío para búsquedas sin resultados
-================================ */
+/* ==========================================
+   Component: CatalogEmptyState
+   Module: Catalog
+   Purpose: Empty search/category state
+========================================== */
 
 .catalog-empty {
   display: flex;

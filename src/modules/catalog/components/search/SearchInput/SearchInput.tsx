@@ -1,3 +1,4 @@
+import "./SearchInput.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Search, Sparkles, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -425,6 +426,9 @@ export function SearchInput({
     </div>
   );
 }
+
+
+
 
 
 

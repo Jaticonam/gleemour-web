@@ -1,7 +1,9 @@
-/* ===== CATALOG PAGE ===== */
+/* ==========================================
+   Page: Catalog
+   Purpose: Catalog layout shell only
+========================================== */
 
 @layer components {
-
   .catalog-page {
     min-height: 100vh;
     padding-bottom: 10rem;
@@ -54,96 +56,9 @@
     line-height: 1.7;
   }
 
-  .catalog-sections {
-    display: flex;
-    flex-direction: column;
-    gap: 2.4rem;
-    margin-top: 1.5rem;
-  }
-
-  .catalog-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .catalog-section-header {
-    padding: 0 0.2rem;
-  }
-
-  .catalog-section-header h2 {
-    margin: 0;
-    color: var(--w-heading);
-    font-family: var(--font-brand);
-    font-size: 1.25rem;
-    font-weight: 900;
-  }
-
-  .catalog-section-header p {
-    margin: 0.25rem 0 0;
-    color: var(--w-muted);
-    font-size: 0.82rem;
-    font-weight: 600;
-  }
-
-  .catalog-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1rem;
-  }
-
-  .catalog-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 18rem;
-    text-align: center;
-    color: var(--w-muted);
-  }
-
-  .catalog-empty-icon {
-    width: 5rem;
-    height: 5rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-    border-radius: var(--w-radius-full);
-    background: var(--w-secondary-soft);
-    color: var(--w-secondary-strong);
-  }
-
-  .catalog-empty p {
-    margin: 0;
-    color: var(--w-heading);
-    font-weight: 900;
-  }
-
-  .catalog-empty small {
-    margin-top: 0.35rem;
-    color: var(--w-muted);
-    font-weight: 600;
-  }
-
-  @media (max-width: 1024px) {
-    .catalog-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-
   @media (max-width: 720px) {
     .catalog-main {
       padding: 1.25rem 0.75rem 0;
-    }
-
-    .catalog-grid {
-      grid-template-columns: 1fr !important;
-      gap: 0.75rem;
-    }
-
-    .catalog-sections {
-      gap: 2rem;
     }
   }
 }
