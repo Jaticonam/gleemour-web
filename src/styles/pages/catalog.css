@@ -1,64 +1,173 @@
 /* ==========================================
    Page: Catalog
-   Purpose: Catalog layout shell only
+   Purpose: Main emotional catalog experience
 ========================================== */
 
-@layer components {
-  .catalog-page {
-    min-height: 100vh;
-    padding-bottom: 10rem;
-  }
+.catalog-page {
+  min-height: 100vh;
+  padding-bottom: 9rem;
+  background:
+    radial-gradient(circle at top left, rgba(236, 164, 194, 0.18), transparent 34rem),
+    radial-gradient(circle at top right, rgba(249, 201, 91, 0.14), transparent 30rem),
+    var(--w-background);
+}
 
-  .catalog-sticky-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    box-shadow: var(--w-shadow-soft);
-  }
+.catalog-sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.84);
+  border-bottom: 1px solid rgba(239, 227, 234, 0.72);
+  backdrop-filter: blur(18px);
+}
 
+.catalog-main {
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  padding: 2.4rem 1rem 0;
+}
+
+.catalog-hero {
+  max-width: 780px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.catalog-kicker {
+  margin: 0 0 0.65rem;
+  color: var(--w-secondary-strong);
+  font-size: 0.75rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+}
+
+.catalog-hero h1 {
+  margin: 0;
+  color: var(--w-heading);
+  font-family: var(--font-brand);
+  font-size: clamp(2.35rem, 5vw, 4.5rem);
+  font-weight: 950;
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.catalog-hero p:not(.catalog-kicker) {
+  margin: 1rem auto 0;
+  max-width: 620px;
+  color: var(--w-muted);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.75;
+}
+
+.catalog-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  margin-top: 2rem;
+}
+
+.catalog-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.catalog-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 0.15rem;
+}
+
+.catalog-section-header h2 {
+  margin: 0;
+  color: var(--w-heading);
+  font-family: var(--font-brand);
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  font-weight: 950;
+  letter-spacing: -0.045em;
+}
+
+.catalog-section-header p {
+  margin: 0.35rem 0 0;
+  color: var(--w-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.catalog-empty {
+  min-height: 22rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 2rem;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(239, 227, 234, 0.8);
+  box-shadow: var(--w-shadow-soft);
+}
+
+.catalog-empty p {
+  margin: 0;
+  color: var(--w-heading);
+  font-size: 1rem;
+  font-weight: 950;
+}
+
+.catalog-empty small {
+  color: var(--w-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+@media (max-width: 1080px) {
+  .catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
   .catalog-main {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 1.8rem 1rem 0;
+    padding: 1.35rem 0.75rem 0;
   }
 
   .catalog-hero {
-    max-width: 760px;
-    margin: 0 auto 1.5rem;
-    text-align: center;
-  }
-
-  .catalog-kicker {
-    margin: 0 0 0.5rem;
-    color: var(--w-secondary-strong);
-    font-size: 0.75rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.22em;
+    margin-bottom: 1.45rem;
   }
 
   .catalog-hero h1 {
-    margin: 0;
-    color: var(--w-heading);
-    font-size: clamp(2.2rem, 5vw, 4rem);
-    font-weight: 900;
-    line-height: 1;
+    font-size: clamp(2.1rem, 12vw, 3.2rem);
   }
 
-  .catalog-hero p {
-    margin: 0.8rem auto 0;
-    max-width: 620px;
-    color: var(--w-muted);
-    font-size: 0.98rem;
-    line-height: 1.7;
+  .catalog-hero p:not(.catalog-kicker) {
+    font-size: 0.9rem;
   }
 
-  @media (max-width: 720px) {
-    .catalog-main {
-      padding: 1.25rem 0.75rem 0;
-    }
+  .catalog-section-header {
+    display: block;
+  }
+
+  .catalog-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .catalog-empty {
+    min-height: 18rem;
+    border-radius: 1.5rem;
   }
 }

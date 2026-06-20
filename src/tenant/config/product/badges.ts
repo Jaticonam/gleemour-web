@@ -1,178 +1,86 @@
-export interface BadgeRule {
-  id: string;
-  label: string;
-  keywords: string[];
-  className: string;
-  animation?: string;
-  priority: number;
-}
-
-/**
- * Badges comerciales oficiales.
- * Se usan en catálogo, campañas y recomendaciones.
- */
-export const BADGE_RULES: BadgeRule[] = [
-  {
-    id: "para-mama",
-    label: "Para mamá",
-    keywords: [
-      "para mama",
-      "para mamá",
-      "dia de la madre",
-      "día de la madre",
-      "mamá",
-      "mama",
-    ],
-    className: "badge-mothers-day",
-    animation: "badge-anim",
-    priority: 0,
-  },
-
-  {
-    id: "oferta",
-    label: "Oferta",
-    keywords: [
-      "oferta",
-      "promo",
-      "promocion",
-      "promoción",
-      "descuento",
-    ],
-    className: "badge-offer",
-    priority: 1,
-  },
-
-  {
-    id: "mas-vendido",
-    label: "Más vendido",
-    keywords: [
-      "mas vendido",
-      "más vendido",
-      "top ventas",
-      "top",
-      "destacado",
-    ],
-    className: "badge-best-seller",
-    priority: 2,
-  },
-
-  {
-    id: "nuevo",
+export const BADGE_PRESENTATION = {
+  nuevo: {
+    icon: "🌸",
     label: "Nuevo",
-    keywords: ["nuevo", "new"],
-    className: "badge-new",
-    animation: "badge-anim",
-    priority: 3,
+    className: "product-badge--new",
   },
-
-  {
-    id: "preventa",
-    label: "Preventa",
-    keywords: [
-      "preventa",
-      "pre venta",
-      "lanzamiento",
-    ],
-    className: "badge-preorder",
-    animation: "badge-anim",
-    priority: 4,
+  "más vendido": {
+    icon: "🔥",
+    label: "Más vendido",
+    className: "product-badge--top",
   },
-
-  {
-    id: "edicion-especial",
-    label: "Edición especial",
-    keywords: [
-      "edicion especial",
-      "edición especial",
-      "especial",
-      "exclusivo",
-    ],
-    className: "badge-special",
-    priority: 5,
+  "mas vendido": {
+    icon: "🔥",
+    label: "Más vendido",
+    className: "product-badge--top",
   },
-
-  {
-    id: "ultimas-unidades",
-    label: "Últimas unidades",
-    keywords: [
-      "ultimas unidades",
-      "últimas unidades",
-      "ultimos",
-      "últimos",
-    ],
-    className: "badge-last-units",
-    priority: 6,
-  },
-
-  {
-    id: "premium",
+  premium: {
+    icon: "✨",
     label: "Premium",
-    keywords: ["premium", "vip", "elegante"],
-    className: "badge-premium",
-    priority: 7,
+    className: "product-badge--premium",
   },
-];
+  oferta: {
+    icon: "🎉",
+    label: "Oferta",
+    className: "product-badge--offer",
+  },
+  especial: {
+    icon: "💝",
+    label: "Especial",
+    className: "product-badge--special",
+  },
+  "últimas unidades": {
+    icon: "⏳",
+    label: "Últimas unidades",
+    className: "product-badge--last",
+  },
+  "ultimas unidades": {
+    icon: "⏳",
+    label: "Últimas unidades",
+    className: "product-badge--last",
+  },
+  express: {
+    icon: "🚚",
+    label: "Express",
+    className: "product-badge--express",
+  },
+  temporada: {
+    icon: "🌼",
+    label: "Temporada",
+    className: "product-badge--season",
+  },
+} as const;
 
-/**
- * Normaliza texto de badge.
- */
-export function normalizeBadgeText(
-  badge: string
-): string {
-  return badge
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim();
-}
+export function getBadgePresentation(badge: string) {
+  const key = badge.trim().toLowerCase();
 
-/**
- * Obtiene configuración visual de un badge.
- */
-export function getBadgePresentation(
-  badge: string
-) {
-  const value = normalizeBadgeText(badge);
-
-  const matchedRule = BADGE_RULES.find((rule) =>
-    rule.keywords.some((keyword) =>
-      value.includes(
-        normalizeBadgeText(keyword)
-      )
-    )
+  return (
+    BADGE_PRESENTATION[key as keyof typeof BADGE_PRESENTATION] ?? {
+      icon: "💐",
+      label: badge,
+      className: "product-badge--default",
+    }
   );
-
-  if (matchedRule) {
-    return {
-      className: matchedRule.className,
-      animation: matchedRule.animation || "",
-      priority: matchedRule.priority,
-    };
-  }
-
-  return {
-    className: "badge-default",
-    animation: "",
-    priority: 999,
-  };
 }
 
-/**
- * Ordena badges según prioridad visual.
- */
-export function sortBadges(
-  badges: string[]
-): string[] {
+export function sortBadges(badges: string[] = []) {
+  const priority = [
+    "oferta",
+    "más vendido",
+    "mas vendido",
+    "premium",
+    "especial",
+    "nuevo",
+    "express",
+    "últimas unidades",
+    "ultimas unidades",
+    "temporada",
+  ];
+
   return [...badges].sort((a, b) => {
-    const aPriority =
-      getBadgePresentation(a).priority;
+    const aIndex = priority.indexOf(a.trim().toLowerCase());
+    const bIndex = priority.indexOf(b.trim().toLowerCase());
 
-    const bPriority =
-      getBadgePresentation(b).priority;
-
-    return aPriority - bPriority;
+    return (aIndex === -1 ? 999 : aIndex) - (bIndex === -1 ? 999 : bIndex);
   });
 }
-
-
-

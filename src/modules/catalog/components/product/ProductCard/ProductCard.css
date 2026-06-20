@@ -666,3 +666,87 @@
     }
   }
 
+
+/* ==========================================
+   Product Badge Colors - Gleemour
+========================================== */
+
+.product-badge,
+.product-detail-badge,
+.product-gallery-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.28rem;
+  padding: 0.34rem 0.72rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 0.66rem;
+  font-weight: 950;
+  letter-spacing: 0.055em;
+  line-height: 1;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.product-badge:hover,
+.product-detail-badge:hover,
+.product-gallery-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(106, 90, 138, 0.12);
+}
+
+.product-badge--new {
+  color: #6a5a8a;
+  background: #efe8ff;
+  border-color: #d9caf8;
+}
+
+.product-badge--top {
+  color: #9a3d00;
+  background: #ffe7d4;
+  border-color: #ffd2b0;
+}
+
+.product-badge--premium {
+  color: #7d5a00;
+  background: #fff4c7;
+  border-color: #f6dd85;
+}
+
+.product-badge--offer {
+  color: #ffffff;
+  background: #ef476f;
+  border-color: rgba(239, 71, 111, 0.45);
+}
+
+.product-badge--special {
+  color: #8a2858;
+  background: #ffddeb;
+  border-color: #ffbfd7;
+}
+
+.product-badge--last {
+  color: #7b4a00;
+  background: #ffe6bb;
+  border-color: #ffd285;
+}
+
+.product-badge--express {
+  color: #0f624b;
+  background: #dff9ef;
+  border-color: #b8ecd8;
+}
+
+.product-badge--season {
+  color: #285d8a;
+  background: #e4f3ff;
+  border-color: #c3e5ff;
+}
+
+.product-badge--default {
+  color: var(--w-primary);
+  background: rgba(106, 90, 138, 0.08);
+  border-color: rgba(106, 90, 138, 0.16);
+}
