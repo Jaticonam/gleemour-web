@@ -1,48 +1,8 @@
-/* ===== NAVBAR / HEADER BAR ===== */
+/* ==========================================
+   Layout: Catalog Header Bar
+   Source of truth moved to HeaderBar.css
+========================================== */
 
-@layer components {
-  .catalog-header-bar {
-    border-bottom: 1px solid var(--w-border);
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: var(--w-shadow-soft);
-    backdrop-filter: blur(18px);
-  }
-
-  .catalog-header-bar-inner {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0.8rem 1rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .catalog-header-logo {
-    flex-shrink: 0;
-    cursor: pointer;
-    background: transparent;
-    padding: 0;
-  }
-
-  .catalog-header-logo img {
-    height: 2.25rem;
-    width: auto;
-    object-fit: contain;
-  }
-
-  .catalog-header-search {
-    flex: 1;
-    min-width: 0;
-  }
-
-  @media (max-width: 640px) {
-    .catalog-header-bar-inner {
-      padding: 0.7rem 0.85rem;
-      gap: 0.75rem;
-    }
-
-    .catalog-header-logo img {
-      height: 1.9rem;
-    }
-  }
-}
+/* Intentionally empty. HeaderBar styles live in:
+   src/shared/components/layout/HeaderBar.css
+*/
