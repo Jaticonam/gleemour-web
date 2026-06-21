@@ -18,7 +18,7 @@ export function CatalogProductGrid({
   onImageClick,
 }: CatalogProductGridProps) {
   return (
-    <div className="catalog-grid">
+    <div className="catalog-grid" data-aos="fade-up" data-aos-delay="150">
       {products.map((product) => (
         <ProductCard
           key={product.id}
@@ -31,7 +31,3 @@ export function CatalogProductGrid({
     </div>
   );
 }
-
-
-
-

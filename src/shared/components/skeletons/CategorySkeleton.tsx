@@ -2,7 +2,7 @@ import { CatalogSkeleton } from "./CatalogSkeleton";
 
 export function CategorySkeleton() {
   return (
-    <div className="catalog-grid">
+    <div className="catalog-grid" data-aos="fade-up" data-aos-delay="150">
       {Array.from({ length: 8 }).map((_, i) => (
         <div key={i} className="product-card">
           <div className="relative aspect-[1/1.2] overflow-hidden rounded-[18px]">
@@ -43,6 +43,3 @@ export function CategorySkeleton() {
     </div>
   );
 }
-
-
-

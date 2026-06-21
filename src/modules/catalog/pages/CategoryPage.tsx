@@ -30,7 +30,10 @@ const CategoryPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
-  const [zoomImage, setZoomImage] = useState<{ src: string; title: string } | null>(null);
+  const [zoomImage, setZoomImage] = useState<{
+    src: string;
+    title: string;
+  } | null>(null);
   const [categorySearch, setCategorySearch] = useState("");
 
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -68,7 +71,7 @@ const CategoryPage = () => {
   const activeCategory = categoryId || "todas";
 
   const categoryInfo = BRAND_CONFIG.categories.find(
-    (category) => category.id === activeCategory
+    (category) => category.id === activeCategory,
   );
 
   const visibleCategories = useMemo(() => {
@@ -76,14 +79,14 @@ const CategoryPage = () => {
       if (category.id === "todas") return true;
 
       return products.some((product) =>
-        productBelongsToCategory(product, category.id)
+        productBelongsToCategory(product, category.id),
       );
     });
   }, [products]);
 
   const categoryProducts = useMemo(() => {
     return products.filter((product) =>
-      productBelongsToCategory(product, activeCategory)
+      productBelongsToCategory(product, activeCategory),
     );
   }, [products, activeCategory]);
 
@@ -111,7 +114,7 @@ const CategoryPage = () => {
         navigate(`/catalogo/categoria.html?cat=${encodeURIComponent(id)}`);
       }
     },
-    [navigate]
+    [navigate],
   );
 
   const handleAddToCart = useCallback(
@@ -120,7 +123,7 @@ const CategoryPage = () => {
       setSelectedProduct(product);
       setAddModalOpen(true);
     },
-    [addToCart]
+    [addToCart],
   );
 
   const handleCloseAddModal = useCallback(() => {
@@ -132,11 +135,11 @@ const CategoryPage = () => {
       if (!selectedProduct || qty <= 0) return;
       addToCart(selectedProduct, qty);
     },
-    [addToCart, selectedProduct]
+    [addToCart, selectedProduct],
   );
 
   const currentQtyInCart = selectedProduct
-    ? cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0
+    ? (cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0)
     : 0;
 
   const hasSearch = categorySearch.trim().length > 0;
@@ -206,7 +209,11 @@ const CategoryPage = () => {
         </div>
       </header>
 
-      <main className="category-page-main">
+      <main
+        className="category-page-main"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
         <CategoryFilter
           categories={visibleCategories}
           active={activeCategory}
@@ -236,7 +243,11 @@ const CategoryPage = () => {
             )}
           </div>
         ) : (
-          <div className="category-page-grid">
+          <div
+            className="category-page-grid"
+            data-aos="fade-up"
+            data-aos-delay="150"
+          >
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}
@@ -292,9 +303,3 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
-
-
-
-
-
-

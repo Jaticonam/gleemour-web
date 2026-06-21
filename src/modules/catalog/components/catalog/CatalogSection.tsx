@@ -7,13 +7,13 @@ interface CatalogSectionProps {
   children: ReactNode;
 }
 
-export function CatalogSection({
-  title,
-  text,
-  children,
-}: CatalogSectionProps) {
+export function CatalogSection({ title, text, children }: CatalogSectionProps) {
   return (
-    <section className="catalog-section">
+    <section
+      className="catalog-section"
+      data-aos="fade-up"
+      data-aos-delay="100"
+    >
       <div className="catalog-section-header">
         <h2>{title}</h2>
         <p>{text}</p>
@@ -23,7 +23,3 @@ export function CatalogSection({
     </section>
   );
 }
-
-
-
-

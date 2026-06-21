@@ -126,7 +126,7 @@ export function SearchInput({
 
   const hasSuggestions = suggestions.length > 0;
   const showSuggestions = isOpen && hasValue && hasSuggestions;
-  const showQuickSearches = isOpen && !hasValue;
+  const showQuickSearches = false;
   const showEmptyState = isOpen && hasValue && !hasSuggestions;
 
   const footerIndex = suggestions.length;
@@ -296,7 +296,7 @@ export function SearchInput({
             setActiveIndex(-1);
           }}
           onKeyDown={handleKeyDown}
-          placeholder={`${placeholder} · ${products.length} detalles disponibles`}
+          placeholder={placeholder}
           className="search-input-field"
           role="combobox"
           aria-expanded={showSuggestions || showQuickSearches}
@@ -426,6 +426,7 @@ export function SearchInput({
     </div>
   );
 }
+
 
 
 

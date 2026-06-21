@@ -84,19 +84,14 @@ export default function CatalogPage() {
     });
   }, [products, searchQuery]);
 
-  const featuredProducts = useMemo(() => {
-    return visibleProducts.slice(0, 12);
-  }, [visibleProducts]);
+  const featuredProducts = visibleProducts;
 
   const handleAddToCart = (product: Product) => {
     addToCart(product, 1);
     setSelectedProduct(product);
     setAddModalOpen(true);
 
-    showNotification(
-      "Producto agregado",
-      "Tu detalle fue agregado al pedido.",
-    );
+    showNotification("Producto agregado", "Tu detalle fue agregado al pedido.");
   };
 
   if (loading) return <CatalogSkeleton />;
@@ -114,7 +109,7 @@ export default function CatalogPage() {
       </div>
 
       <main className="catalog-main">
-        <section className="catalog-hero">
+        <section className="catalog-hero" data-aos="fade-up">
           <p className="catalog-kicker">Catálogo emocional</p>
 
           <h1>Elige el detalle perfecto</h1>
@@ -129,14 +124,18 @@ export default function CatalogPage() {
           <section className="catalog-sections">
             <div className="catalog-section">
               <div className="catalog-section-header">
-                <h2>Detalles disponibles</h2>
+                <h2>Todo el catálogo</h2>
                 <p>
                   {featuredProducts.length} opciones listas para coordinar por
                   WhatsApp.
                 </p>
               </div>
 
-              <div className="catalog-grid">
+              <div
+                className="catalog-grid"
+                data-aos="fade-up"
+                data-aos-delay="150"
+              >
                 {featuredProducts.map((product) => (
                   <ProductCard
                     key={product.id}
@@ -157,7 +156,9 @@ export default function CatalogPage() {
         ) : (
           <div className="catalog-empty">
             <p>No encontramos detalles con esa búsqueda.</p>
-            <small>Prueba con otra palabra o revisa el catálogo completo.</small>
+            <small>
+              Prueba con otra palabra o revisa el catálogo completo.
+            </small>
           </div>
         )}
       </main>
@@ -194,7 +195,7 @@ export default function CatalogPage() {
         product={selectedProduct}
         currentQty={
           selectedProduct
-            ? cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0
+            ? (cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0)
             : 0
         }
         onClose={() => setAddModalOpen(false)}
