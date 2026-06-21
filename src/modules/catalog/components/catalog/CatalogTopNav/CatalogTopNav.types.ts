@@ -2,18 +2,22 @@ export interface CatalogNavItem {
   id: string;
   name: string;
   icon?: string;
+  colorClass?: string;
 }
 
 export interface CatalogTopNavProps {
-  topItems: CatalogNavItem[];
-  bottomItems: CatalogNavItem[];
+  campaignItems: CatalogNavItem[];
+  categoryItems: CatalogNavItem[];
 
-  activeTop?: string;
-  activeBottom?: string;
+  activeCampaign?: string;
+  activeCategory?: string;
 
-  topCounts?: Record<string, number>;
-  bottomCounts?: Record<string, number>;
+  campaignCounts?: Record<string, number>;
+  categoryCounts?: Record<string, number>;
 
-  onTopSelect?: (id: string) => void;
-  onBottomSelect?: (id: string) => void;
+  onCampaignSelect?: (id: string) => void;
+  onCategorySelect?: (id: string) => void;
+
+  searchSlot?: React.ReactNode;
+  logoSlot?: React.ReactNode;
 }

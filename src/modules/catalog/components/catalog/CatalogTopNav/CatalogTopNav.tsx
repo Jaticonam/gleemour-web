@@ -1,78 +1,85 @@
 import "./CatalogTopNav.css";
 
-import type {
-  CatalogTopNavProps,
-} from "./CatalogTopNav.types";
+import type { CatalogTopNavProps } from "./CatalogTopNav.types";
 
 export function CatalogTopNav({
-  topItems,
-  bottomItems,
-  activeTop = "",
-  activeBottom = "",
-  topCounts = {},
-  bottomCounts = {},
-  onTopSelect,
-  onBottomSelect,
+  campaignItems,
+  categoryItems,
+  activeCampaign = "",
+  activeCategory = "todas",
+  campaignCounts = {},
+  categoryCounts = {},
+  onCampaignSelect,
+  onCategorySelect,
+  searchSlot,
+  logoSlot,
 }: CatalogTopNavProps) {
   return (
     <div className="catalog-top-nav">
+      <div className="catalog-top-nav-primary">
+        <div className="catalog-top-nav-logo">{logoSlot}</div>
 
-      {topItems.length > 0 && (
-        <div className="catalog-top-nav-row catalog-top-nav-row-top">
-          {topItems.map((item) => (
+        <div className="catalog-top-nav-campaigns">
+          {campaignItems.map((item) => {
+            const isActive = activeCampaign === item.id;
+
+            return (
+              <button
+                key={item.id}
+                type="button"
+                className={[
+                  "catalog-campaign-chip",
+                  item.colorClass ?? "",
+                  isActive ? "active" : "",
+                ].join(" ")}
+                onClick={() => onCampaignSelect?.(isActive ? "" : item.id)}
+              >
+                <span className="catalog-campaign-content">
+                  <strong>{item.name}</strong>
+
+                  {campaignCounts[item.id] !== undefined && (
+                    <small>{campaignCounts[item.id]} productos</small>
+                  )}
+                </span>
+
+                {item.icon && (
+                  <span className="catalog-campaign-icon">{item.icon}</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="catalog-top-nav-search">{searchSlot}</div>
+      </div>
+
+      <div className="catalog-top-nav-secondary">
+        {categoryItems.map((item) => {
+          const isActive = activeCategory === item.id;
+
+          return (
             <button
               key={item.id}
               type="button"
-              className={`catalog-top-chip ${
-                activeTop === item.id ? "active" : ""
-              }`}
-              onClick={() => onTopSelect?.(item.id)}
+              className={[
+                "catalog-category-chip",
+                isActive ? "active" : "",
+              ].join(" ")}
+              onClick={() => onCategorySelect?.(item.id)}
             >
               {item.icon && (
-                <span className="catalog-top-chip-icon">
-                  {item.icon}
-                </span>
+                <span className="catalog-category-icon">{item.icon}</span>
               )}
 
               <span>{item.name}</span>
 
-              {topCounts[item.id] !== undefined && (
-                <small>{topCounts[item.id]}</small>
+              {categoryCounts[item.id] !== undefined && (
+                <small>({categoryCounts[item.id]})</small>
               )}
             </button>
-          ))}
-        </div>
-      )}
-
-      {bottomItems.length > 0 && (
-        <div className="catalog-top-nav-row catalog-top-nav-row-bottom">
-          {bottomItems.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              className={`catalog-bottom-chip ${
-                activeBottom === item.id ? "active" : ""
-              }`}
-              onClick={() => onBottomSelect?.(item.id)}
-            >
-              {item.icon && (
-                <span className="catalog-bottom-chip-icon">
-                  {item.icon}
-                </span>
-              )}
-
-              <span>{item.name}</span>
-
-              {bottomCounts[item.id] !== undefined && (
-                <small>
-                  ({bottomCounts[item.id]})
-                </small>
-              )}
-            </button>
-          ))}
-        </div>
-      )}
-
+          );
+        })}
+      </div>
     </div>
   );
 }

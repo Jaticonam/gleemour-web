@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { loadAllProducts } from "@/integrations/sheets/fetchSheets";
+import { BRAND_CONFIG } from "@/tenant/config/brand";
 import type { Product } from "@/shared/types/product";
 
 import { useCart } from "@/modules/cart/hooks/useCart";
 import { CartSidebar, AddToCartModal } from "@/modules/cart/components";
 
 import { ProductCard } from "@/modules/catalog/components/product/ProductCard";
-import { HeaderBar } from "@/shared/components/layout/HeaderBar";
+import { CatalogTopNav } from "@/modules/catalog/components/catalog/CatalogTopNav";
+import { SearchInput } from "@/modules/catalog/components/search/SearchInput";
 import { ImageZoomModal } from "@/modules/catalog/components/overlays/ImageZoomModal";
 import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActivity";
 
@@ -19,11 +21,41 @@ import {
 
 import { CatalogSkeleton } from "@/shared/components/skeletons/CatalogSkeleton";
 
+const CAMPAIGN_ITEMS = [
+  {
+    id: "todo-el-ano",
+    name: "Todo el año",
+    icon: "💐",
+    colorClass: "catalog-campaign-teal",
+  },
+  {
+    id: "san-valentin",
+    name: "San Valentín",
+    icon: "💕",
+    colorClass: "catalog-campaign-pink",
+  },
+  {
+    id: "flores-amarillas",
+    name: "Flores Amarillas",
+    icon: "🌼",
+    colorClass: "catalog-campaign-gold",
+  },
+  {
+    id: "dia-madre",
+    name: "Día de la Madre",
+    icon: "🌷",
+    colorClass: "catalog-campaign-purple",
+  },
+];
+
 export default function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeCampaign, setActiveCampaign] = useState("todo-el-ano");
+  const [activeCategory, setActiveCategory] = useState("todas");
+
   const [cartOpen, setCartOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -63,12 +95,52 @@ export default function CatalogPage() {
     };
   }, []);
 
+  const categoryCounts = useMemo(() => {
+    return products.reduce<Record<string, number>>((acc, product) => {
+      acc.todas = (acc.todas ?? 0) + 1;
+      acc[product.category] = (acc[product.category] ?? 0) + 1;
+      return acc;
+    }, {});
+  }, [products]);
+
+  const campaignCounts = useMemo(() => {
+    return products.reduce<Record<string, number>>((acc, product) => {
+      acc["todo-el-ano"] = (acc["todo-el-ano"] ?? 0) + 1;
+
+      const campaigns = Array.isArray((product as any).campaigns)
+        ? (product as any).campaigns
+        : [];
+
+      campaigns.forEach((campaign: string) => {
+        acc[campaign] = (acc[campaign] ?? 0) + 1;
+      });
+
+      return acc;
+    }, {});
+  }, [products]);
+
   const visibleProducts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    if (!query) return products;
+    const byCampaign =
+      activeCampaign === "todo-el-ano"
+        ? products
+        : products.filter((product) => {
+            const campaigns = Array.isArray((product as any).campaigns)
+              ? (product as any).campaigns
+              : [];
 
-    return products.filter((product) => {
+            return campaigns.includes(activeCampaign);
+          });
+
+    const byCategory =
+      activeCategory === "todas"
+        ? byCampaign
+        : byCampaign.filter((product) => product.category === activeCategory);
+
+    if (!query) return byCategory;
+
+    return byCategory.filter((product) => {
       const haystack = [
         product.id,
         product.title,
@@ -82,16 +154,17 @@ export default function CatalogPage() {
 
       return haystack.includes(query);
     });
-  }, [products, searchQuery]);
-
-  const featuredProducts = visibleProducts;
+  }, [products, searchQuery, activeCampaign, activeCategory]);
 
   const handleAddToCart = (product: Product) => {
     addToCart(product, 1);
     setSelectedProduct(product);
     setAddModalOpen(true);
 
-    showNotification("Producto agregado", "Tu detalle fue agregado al pedido.");
+    showNotification(
+      "Producto agregado",
+      "Tu detalle fue agregado al pedido.",
+    );
   };
 
   if (loading) return <CatalogSkeleton />;
@@ -100,13 +173,34 @@ export default function CatalogPage() {
     <div className="catalog-page">
       <NotificationStack />
 
-      <div className="catalog-sticky-header">
-        <HeaderBar
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          products={products}
-        />
-      </div>
+      <CatalogTopNav
+        campaignItems={CAMPAIGN_ITEMS}
+        categoryItems={BRAND_CONFIG.categories}
+        activeCampaign={activeCampaign}
+        activeCategory={activeCategory}
+        campaignCounts={campaignCounts}
+        categoryCounts={categoryCounts}
+        onCampaignSelect={(id) => setActiveCampaign(id || "todo-el-ano")}
+        onCategorySelect={setActiveCategory}
+        logoSlot={
+          <button
+            type="button"
+            className="catalog-top-nav-brand"
+            onClick={() => (window.location.href = "/")}
+            aria-label={`Ir al inicio de ${BRAND_CONFIG.name}`}
+          >
+            <img src={BRAND_CONFIG.assets.logo} alt={BRAND_CONFIG.name} />
+          </button>
+        }
+        searchSlot={
+          <SearchInput
+            value={searchQuery}
+            onChange={setSearchQuery}
+            products={products}
+            placeholder={BRAND_CONFIG.search.placeholder}
+          />
+        }
+      />
 
       <main className="catalog-main">
         <section className="catalog-hero" data-aos="fade-up">
@@ -120,45 +214,48 @@ export default function CatalogPage() {
           </p>
         </section>
 
-        {featuredProducts.length > 0 ? (
-          <section className="catalog-sections">
-            <div className="catalog-section">
-              <div className="catalog-section-header">
+        {visibleProducts.length > 0 ? (
+          <section
+            className="catalog-section"
+            data-aos="fade-up"
+            data-aos-delay="100"
+          >
+            <div className="catalog-section-header">
+              <div>
                 <h2>Todo el catálogo</h2>
                 <p>
-                  {featuredProducts.length} opciones listas para coordinar por
-                  WhatsApp.
+                  {visibleProducts.length} detalle
+                  {visibleProducts.length === 1 ? "" : "s"} disponible
+                  {visibleProducts.length === 1 ? "" : "s"}.
                 </p>
               </div>
+            </div>
 
-              <div
-                className="catalog-grid"
-                data-aos="fade-up"
-                data-aos-delay="150"
-              >
-                {featuredProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    cart={cart}
-                    onAddToCart={handleAddToCart}
-                    onImageClick={(src, title) =>
-                      setZoomImage({
-                        src,
-                        title,
-                      })
-                    }
-                  />
-                ))}
-              </div>
+            <div
+              className="catalog-grid"
+              data-aos="fade-up"
+              data-aos-delay="150"
+            >
+              {visibleProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  cart={cart}
+                  onAddToCart={handleAddToCart}
+                  onImageClick={(src, title) =>
+                    setZoomImage({
+                      src,
+                      title,
+                    })
+                  }
+                />
+              ))}
             </div>
           </section>
         ) : (
           <div className="catalog-empty">
             <p>No encontramos detalles con esa búsqueda.</p>
-            <small>
-              Prueba con otra palabra o revisa el catálogo completo.
-            </small>
+            <small>Prueba con otra palabra o revisa el catálogo completo.</small>
           </div>
         )}
       </main>
@@ -195,7 +292,7 @@ export default function CatalogPage() {
         product={selectedProduct}
         currentQty={
           selectedProduct
-            ? (cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0)
+            ? cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0
             : 0
         }
         onClose={() => setAddModalOpen(false)}
