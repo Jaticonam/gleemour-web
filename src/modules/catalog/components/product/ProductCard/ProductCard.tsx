@@ -1,5 +1,5 @@
 import "./ProductCard.css";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   PlusCircle,
   CheckCircle,
@@ -10,9 +10,7 @@ import {
   Eye,
 } from "lucide-react";
 
-import { getEmotionalHint } from "@/domain/product/emotional";
 import { getBadgePresentation, sortBadges } from "@/tenant/config/product";
-import { getCategoryName } from "@/tenant/config/catalog";
 
 import { CartItem, Product } from "@/shared/types/product";
 import { PRODUCT_CARD_CONFIG } from "@/tenant/config/product";
@@ -27,12 +25,51 @@ import {
 } from "@/domain/product";
 
 import { buildProductWhatsAppUrl } from "@/integrations/whatsapp/whatsapp";
+import { ProductCardImage } from "./ProductCardImage";
+import { ProductCardType } from "./ProductCardType";
+import { ProductCardContent } from "./ProductCardContent";
+import { ProductCardPrice } from "./ProductCardPrice";
+import { ProductCardSocial } from "./ProductCardSocial";
 
 interface ProductCardProps {
   product: Product;
   cart?: CartItem[];
   onAddToCart: (product: Product) => void;
   onImageClick?: (src: string, title: string) => void;
+}
+
+const CAMPAIGN_BADGE_KEYS = [
+  "feliz día papa",
+  "feliz dia papa",
+  "día de la madre",
+  "dia de la madre",
+  "san valentín",
+  "san valentin",
+  "flores amarillas",
+  "navidad",
+];
+
+const STATE_BADGE_KEYS = [
+  "oferta",
+  "más vendido",
+  "mas vendido",
+  "nuevo",
+  "premium",
+  "especial",
+  "edición limitada",
+  "edicion limitada",
+  "últimas unidades",
+  "ultimas unidades",
+  "express",
+  "temporada",
+];
+
+function normalizeBadge(value: string) {
+  return value.trim().toLowerCase();
+}
+
+function pickBadgeByKeys(badges: string[], keys: string[]) {
+  return badges.find((badge) => keys.includes(normalizeBadge(badge)));
 }
 
 export function ProductCard({
@@ -46,8 +83,7 @@ export function ProductCard({
   const isPreventa = productState.type === "preorder";
 
   const showWhatsAppButton =
-    productState.type === "preorder" ||
-    productState.type === "sold-out";
+    productState.type === "preorder" || productState.type === "sold-out";
 
   const price = getProductPrice(product);
   const originalPrice = getOriginalProductPrice(product);
@@ -66,6 +102,15 @@ export function ProductCard({
 
     return () => clearInterval(interval);
   }, []);
+
+  const sortedBadges = useMemo(() => {
+    return sortBadges(product.badges ?? []);
+  }, [product.badges]);
+
+  const campaignBadge = pickBadgeByKeys(sortedBadges, CAMPAIGN_BADGE_KEYS);
+  const stateBadge = pickBadgeByKeys(sortedBadges, STATE_BADGE_KEYS);
+
+  const primaryAttribute = product.attributes?.[0];
 
   const handleAdd = () => {
     if (!available || isPreventa) return;
@@ -113,140 +158,37 @@ export function ProductCard({
 
   return (
     <article className="product-card">
-      <div
-        className="product-card-image-wrap"
-        onClick={() => onImageClick?.(product.img, product.title)}
-      >
-        <img
-          src={product.img || "/placeholder.svg"}
-          alt={product.title}
-          loading="lazy"
-          className={[
-            "product-card-image",
-            !available && !isPreventa ? "product-card-image-disabled" : "",
-          ].join(" ")}
-        />
+      <ProductCardImage
+        product={product}
+        available={available}
+        isPreventa={isPreventa}
+        isInCart={isInCart}
+        qtyInCart={qtyInCart}
+        campaignBadge={campaignBadge}
+        stateBadge={stateBadge}
+        onImageClick={onImageClick}
+      />
 
-        <div className="product-card-image-overlay">
-          <span>Ver detalle</span>
-        </div>
-
-        {product.badges && product.badges.length > 0 && (
-          <div className="product-card-badges">
-            {sortBadges(product.badges)
-              .slice(0, 2)
-              .map((badge, index) => {
-                const presentation = getBadgePresentation(badge);
-
-                return (
-                  <span
-                    key={`${product.id}-badge-${index}`}
-                    className={[
-                      "product-card-badge",
-                      presentation.className,
-                      presentation.animation,
-                    ].join(" ")}
-                  >
-                    {badge}
-                  </span>
-                );
-              })}
-          </div>
-        )}
-
-        {isInCart && (
-          <div className="product-card-cart-badge">
-            <CheckCircle className="w-3.5 h-3.5" />
-            <span>
-              {qtyInCart} {PRODUCT_CARD_CONFIG.badges.inCartSuffix}
-            </span>
-          </div>
-        )}
-
-        {product.attributes?.length > 0 && (
-          <div className="product-card-attributes">
-            {product.attributes.map((attribute) => {
-              const label =
-                PRODUCT_CARD_CONFIG.badges.attributes[
-                  attribute as keyof typeof PRODUCT_CARD_CONFIG.badges.attributes
-                ];
-
-              if (!label) return null;
-
-              return (
-                <span
-                  key={attribute}
-                  className={[
-                    "product-card-attribute",
-                    `product-card-attribute-${attribute}`,
-                  ].join(" ")}
-                >
-                  {label}
-                </span>
-              );
-            })}
-          </div>
-        )}
-      </div>
+      <ProductCardType attribute={primaryAttribute} />
 
       <div className="product-card-body">
-        <div className="product-card-meta">
-          <span>{product.id}</span>
-          <span>{getCategoryName(product.category)}</span>
-        </div>
+        <ProductCardContent product={product} />
 
-        <h3 className="product-card-title">{product.title}</h3>
+        <ProductCardPrice
+          isPreventa={isPreventa}
+          hasOffer={hasOffer}
+          price={price}
+          originalPrice={originalPrice}
+        />
 
-        <p className="product-card-hint">{getEmotionalHint(product)}</p>
-
-        <div className="product-card-price-block">
-          {isPreventa ? (
-            <>
-              <span className="product-card-preorder">
-                {PRODUCT_CARD_CONFIG.price.preorder}
-              </span>
-
-              <small>{PRODUCT_CARD_CONFIG.price.preorderHelp}</small>
-            </>
-          ) : (
-            <div className="product-card-price-wrap">
-              {hasOffer && (
-                <div className="product-card-price-old">
-                  S/ {originalPrice.toFixed(2)}
-                </div>
-              )}
-
-              <div className="product-card-price">
-                <span>S/</span>
-                <strong>{price.toFixed(2)}</strong>
-              </div>
-
-              {hasOffer ? (
-                <small className="product-card-offer-text">
-                  {PRODUCT_CARD_CONFIG.price.offerText}
-                </small>
-              ) : (
-                <small>{PRODUCT_CARD_CONFIG.price.defaultText}</small>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="product-card-social-row">
-          <div className={stockClass}>
-            <StockIcon className="w-3.5 h-3.5" />
-            <span>{productState.label}</span>
-          </div>
-
-          {(available || isPreventa) && (
-            <div className="product-card-viewers">
-              <Eye className="w-3.5 h-3.5" />
-              <span>
-                {viewers} {PRODUCT_CARD_CONFIG.viewers.suffix}
-              </span>
-            </div>
-          )}
-        </div>
+        <ProductCardSocial
+          available={available}
+          isPreventa={isPreventa}
+          stockClass={stockClass}
+          StockIcon={StockIcon}
+          productStateLabel={productState.label}
+          viewers={viewers}
+        />
 
         <div className="product-card-actions">
           <button
@@ -303,8 +245,3 @@ export function ProductCard({
     </article>
   );
 }
-
-
-
-
-

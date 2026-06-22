@@ -750,3 +750,83 @@
   background: rgba(106, 90, 138, 0.08);
   border-color: rgba(106, 90, 138, 0.16);
 }
+
+/* ==========================================
+   ProductCard Badge Hierarchy
+========================================== */
+
+.product-card-badges-primary {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.product-card-badge-campaign {
+  color: var(--w-primary);
+  background: rgba(255, 255, 255, 0.66);
+  border: 1px solid rgba(106, 90, 138, 0.2);
+  box-shadow: 0 8px 18px rgba(30, 22, 42, 0.12);
+}
+
+.product-card-badge-state {
+  box-shadow: 0 8px 18px rgba(30, 22, 42, 0.12);
+}
+
+.product-card-type-wrap {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  margin: -0.75rem 0 0.5rem;
+  pointer-events: none;
+}
+
+.product-card-type-badge {
+  min-height: 1.55rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.32rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(236, 164, 194, 0.32);
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--w-secondary-strong);
+  box-shadow: 0 10px 24px rgba(106, 90, 138, 0.12);
+  font-size: 0.62rem;
+  font-weight: 950;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
+}
+
+.product-card-type-badge-naturales {
+  color: #0f624b;
+  background: #e5f9ef;
+  border-color: #b8ecd8;
+}
+
+.product-card-type-badge-artificiales {
+  color: #8a2858;
+  background: #ffddeb;
+  border-color: #ffbfd7;
+}
+
+.product-card-type-badge-corporativo {
+  color: #285d8a;
+  background: #e4f3ff;
+  border-color: #c3e5ff;
+}
+
+.product-card-emotion {
+  margin: 0 0 0.35rem;
+  color: var(--w-secondary-strong);
+  font-size: 0.72rem;
+  font-weight: 950;
+}
+
+.product-card-code {
+  margin: 0.25rem 0 0;
+  color: rgba(106, 90, 138, 0.52);
+  font-size: 0.66rem;
+  font-weight: 850;
+}
