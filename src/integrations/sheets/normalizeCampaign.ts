@@ -1,4 +1,5 @@
 import type { Campaign } from "@/shared/types/product";
+import { getCampaignColorClass } from "./campaignColors";
 
 type CsvRow = Record<string, string>;
 
@@ -52,7 +53,7 @@ export function normalizeCampaign(row: CsvRow): Campaign {
     id: row.id,
     name: row.name,
     icon: row.icon,
-    colorClass: row.colorclass,
+    colorClass: getCampaignColorClass(row.color),
     startDate: row.startdate,
     endDate: row.enddate,
     priority: Number(row.priority || 0),

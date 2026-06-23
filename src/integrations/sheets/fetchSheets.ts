@@ -41,7 +41,7 @@ const CAMPAIGN_REQUIRED_HEADERS = [
   "id",
   "name",
   "icon",
-  "colorclass",
+  "color",
   "startdate",
   "enddate",
   "priority",
