@@ -26,6 +26,8 @@ export interface Product {
    */
   categories: string[];
 
+  campaigns?: string[];
+
   /**
    * Precio base/original.
    * Si existe offer_price válido, este precio se muestra como precio anterior.
@@ -132,9 +134,9 @@ export interface Campaign {
   name: string;
   icon: string;
   colorClass: string;
-  status: string;
   startDate: string;
   endDate: string;
   priority: number;
   showInCatalog: boolean;
+  computedStatus?: "programada" | "activa" | "finalizada" | "oculta";
 }

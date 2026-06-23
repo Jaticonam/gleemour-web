@@ -103,6 +103,11 @@ export default function CatalogPage() {
     );
   }, [campaigns, campaignCounts]);
 
+  console.log("PRODUCTS", products);
+  console.log("CAMPAIGNS", campaigns);
+  console.log("CAMPAIGN COUNTS", campaignCounts);
+  console.log("VISIBLE CAMPAIGNS", visibleCampaigns);
+
   const visibleProducts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 

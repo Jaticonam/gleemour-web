@@ -23,6 +23,7 @@ const PRODUCT_REQUIRED_HEADERS = [
   "occasion",
   "message",
   "highlight",
+  "campaigns",
   "updated_at",
 ] as const;
 
@@ -41,7 +42,6 @@ const CAMPAIGN_REQUIRED_HEADERS = [
   "name",
   "icon",
   "colorclass",
-  "status",
   "startdate",
   "enddate",
   "priority",

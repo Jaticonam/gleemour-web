@@ -47,6 +47,10 @@ function parseBadges(value: unknown): string[] {
   return parsePipeList(value);
 }
 
+function parseCampaigns(value: unknown): string[] {
+  return Array.from(new Set(parsePipeList(value).map(slugify).filter(Boolean)));
+}
+
 function normalizeAttribute(value: unknown): string {
   const slug = slugify(value);
 
@@ -111,6 +115,7 @@ export function normalizeProduct(row: CsvRow): SheetProduct {
 
     status: cleanText(row.status),
     badges: parseBadges(row.badge),
+    campaigns: parseCampaigns(row.campaigns),
     priority: parseRequiredNumber(row.priority),
 
     occasion: cleanText(row.occasion),
@@ -131,6 +136,3 @@ export function normalizeAddon(row: CsvRow): SheetAddon {
     priority: parseRequiredNumber(row.priority),
   };
 }
-
-
-
