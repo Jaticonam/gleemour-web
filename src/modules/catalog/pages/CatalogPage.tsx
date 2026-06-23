@@ -23,12 +23,6 @@ import { CatalogSkeleton } from "@/shared/components/skeletons/CatalogSkeleton";
 
 const CAMPAIGN_ITEMS = [
   {
-    id: "todo-el-ano",
-    name: "Todo el año",
-    icon: "💐",
-    colorClass: "catalog-campaign-teal",
-  },
-  {
     id: "san-valentin",
     name: "San Valentín",
     icon: "💕",
@@ -53,7 +47,7 @@ export default function CatalogPage() {
   const [loading, setLoading] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeCampaign, setActiveCampaign] = useState("todo-el-ano");
+  const [activeCampaign, setActiveCampaign] = useState("");
   const [activeCategory, setActiveCategory] = useState("todas");
 
   const [cartOpen, setCartOpen] = useState(false);
@@ -99,14 +93,13 @@ export default function CatalogPage() {
     return products.reduce<Record<string, number>>((acc, product) => {
       acc.todas = (acc.todas ?? 0) + 1;
       acc[product.category] = (acc[product.category] ?? 0) + 1;
+
       return acc;
     }, {});
   }, [products]);
 
   const campaignCounts = useMemo(() => {
     return products.reduce<Record<string, number>>((acc, product) => {
-      acc["todo-el-ano"] = (acc["todo-el-ano"] ?? 0) + 1;
-
       const campaigns = Array.isArray((product as any).campaigns)
         ? (product as any).campaigns
         : [];
@@ -122,16 +115,15 @@ export default function CatalogPage() {
   const visibleProducts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    const byCampaign =
-      activeCampaign === "todo-el-ano"
-        ? products
-        : products.filter((product) => {
-            const campaigns = Array.isArray((product as any).campaigns)
-              ? (product as any).campaigns
-              : [];
+    const byCampaign = !activeCampaign
+      ? products
+      : products.filter((product) => {
+          const campaigns = Array.isArray((product as any).campaigns)
+            ? (product as any).campaigns
+            : [];
 
-            return campaigns.includes(activeCampaign);
-          });
+          return campaigns.includes(activeCampaign);
+        });
 
     const byCategory =
       activeCategory === "todas"
@@ -161,10 +153,7 @@ export default function CatalogPage() {
     setSelectedProduct(product);
     setAddModalOpen(true);
 
-    showNotification(
-      "Producto agregado",
-      "Tu detalle fue agregado al pedido.",
-    );
+    showNotification("Producto agregado", "Tu detalle fue agregado al pedido.");
   };
 
   if (loading) return <CatalogSkeleton />;
@@ -174,13 +163,17 @@ export default function CatalogPage() {
       <NotificationStack />
 
       <CatalogTopNav
-        campaignItems={CAMPAIGN_ITEMS}
-        categoryItems={BRAND_CONFIG.categories}
+        campaignItems={CAMPAIGN_ITEMS.filter(
+          (item) => (campaignCounts[item.id] ?? 0) > 0,
+        )}
+        categoryItems={BRAND_CONFIG.categories.filter(
+          (item) => item.id === "todas" || (categoryCounts[item.id] ?? 0) > 0,
+        )}
         activeCampaign={activeCampaign}
         activeCategory={activeCategory}
         campaignCounts={campaignCounts}
         categoryCounts={categoryCounts}
-        onCampaignSelect={(id) => setActiveCampaign(id || "todo-el-ano")}
+        onCampaignSelect={setActiveCampaign}
         onCategorySelect={setActiveCategory}
         logoSlot={
           <button
@@ -255,7 +248,9 @@ export default function CatalogPage() {
         ) : (
           <div className="catalog-empty">
             <p>No encontramos detalles con esa búsqueda.</p>
-            <small>Prueba con otra palabra o revisa el catálogo completo.</small>
+            <small>
+              Prueba con otra palabra o revisa el catálogo completo.
+            </small>
           </div>
         )}
       </main>
@@ -292,7 +287,7 @@ export default function CatalogPage() {
         product={selectedProduct}
         currentQty={
           selectedProduct
-            ? cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0
+            ? (cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0)
             : 0
         }
         onClose={() => setAddModalOpen(false)}

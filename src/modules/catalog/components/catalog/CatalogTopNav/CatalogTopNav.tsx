@@ -18,6 +18,7 @@ export function CatalogTopNav({
   logoSlot,
 }: CatalogTopNavProps) {
   const [exploreOpen, setExploreOpen] = useState(false);
+  const hasCampaigns = campaignItems.length > 0;
 
   const handleCampaignSelect = (id: string) => {
     onCampaignSelect?.(id);
@@ -31,45 +32,13 @@ export function CatalogTopNav({
 
   return (
     <>
-      <div className="catalog-top-nav">
-        <div className="catalog-top-nav-primary">
-          <div className="catalog-top-nav-logo">{logoSlot}</div>
-
-          <div className="catalog-top-nav-campaigns">
-            {campaignItems.map((item) => {
-              const isActive = activeCampaign === item.id;
-
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  className={[
-                    "catalog-campaign-chip",
-                    item.colorClass ?? "",
-                    isActive ? "active" : "",
-                  ].join(" ")}
-                  onClick={() => onCampaignSelect?.(isActive ? "" : item.id)}
-                >
-                  <span className="catalog-campaign-content">
-                    <strong>{item.name}</strong>
-
-                    {campaignCounts[item.id] !== undefined && (
-                      <small>{campaignCounts[item.id]} productos</small>
-                    )}
-                  </span>
-
-                  {item.icon && (
-                    <span className="catalog-campaign-icon">{item.icon}</span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="catalog-top-nav-search">{searchSlot}</div>
+      <header className="catalog-top-nav">
+        <div className="catalog-top-nav-brand-row">
+          {logoSlot}
+          <p>Detalles para emocionar</p>
         </div>
 
-        <div className="catalog-top-nav-secondary">
+        <nav className="catalog-top-nav-categories" aria-label="Categorías">
           {categoryItems.map((item) => {
             const isActive = activeCategory === item.id;
 
@@ -95,8 +64,47 @@ export function CatalogTopNav({
               </button>
             );
           })}
-        </div>
-      </div>
+        </nav>
+
+        {hasCampaigns && (
+          <div className="catalog-top-nav-campaign-row">
+            <span className="catalog-campaign-row-label">Campañas activas</span>
+
+            <div className="catalog-top-nav-campaigns">
+              {campaignItems.map((item) => {
+                const isActive = activeCampaign === item.id;
+
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={[
+                      "catalog-campaign-chip",
+                      item.colorClass ?? "",
+                      isActive ? "active" : "",
+                    ].join(" ")}
+                    onClick={() => onCampaignSelect?.(isActive ? "" : item.id)}
+                  >
+                    <span className="catalog-campaign-content">
+                      <strong>{item.name}</strong>
+
+                      {campaignCounts[item.id] !== undefined && (
+                        <small>{campaignCounts[item.id]} productos</small>
+                      )}
+                    </span>
+
+                    {item.icon && (
+                      <span className="catalog-campaign-icon">{item.icon}</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <div className="catalog-top-nav-search-row">{searchSlot}</div>
+      </header>
 
       <button
         type="button"
@@ -129,31 +137,6 @@ export function CatalogTopNav({
             </div>
 
             <div className="catalog-explore-group">
-              <p>Temporadas</p>
-
-              <div className="catalog-explore-list">
-                {campaignItems.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    className={[
-                      "catalog-explore-chip",
-                      activeCampaign === item.id ? "active" : "",
-                    ].join(" ")}
-                    onClick={() =>
-                      handleCampaignSelect(
-                        activeCampaign === item.id ? "" : item.id,
-                      )
-                    }
-                  >
-                    <span>{item.icon}</span>
-                    {item.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="catalog-explore-group">
               <p>Categorías emocionales</p>
 
               <div className="catalog-explore-list">
@@ -176,6 +159,33 @@ export function CatalogTopNav({
                 ))}
               </div>
             </div>
+
+            {hasCampaigns && (
+              <div className="catalog-explore-group">
+                <p>Campañas activas</p>
+
+                <div className="catalog-explore-list">
+                  {campaignItems.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      className={[
+                        "catalog-explore-chip",
+                        activeCampaign === item.id ? "active" : "",
+                      ].join(" ")}
+                      onClick={() =>
+                        handleCampaignSelect(
+                          activeCampaign === item.id ? "" : item.id,
+                        )
+                      }
+                    >
+                      <span>{item.icon}</span>
+                      {item.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

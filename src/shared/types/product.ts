@@ -127,5 +127,14 @@ export interface Category {
   description?: string;
 }
 
-
-
+export interface Campaign {
+  id: string;
+  name: string;
+  icon: string;
+  colorClass: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+  priority: number;
+  showInCatalog: boolean;
+}

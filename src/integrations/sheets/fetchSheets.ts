@@ -1,14 +1,10 @@
-import type { Addon, Product } from "@/shared/types/product";
+import type { Addon, Campaign, Product } from "@/shared/types/product";
 import { SHEETS_CONFIG, type SheetSource } from "./sheetsConfig";
 import { normalizeAddon, normalizeProduct } from "./normalizeProduct";
 import { validateProducts } from "./validateProducts";
 
 type CsvRow = Record<string, string>;
 
-/**
- * Columnas oficiales para productos Gleemour.
- * Deben existir exactamente en Google Sheets.
- */
 const PRODUCT_REQUIRED_HEADERS = [
   "id",
   "title",
@@ -29,9 +25,6 @@ const PRODUCT_REQUIRED_HEADERS = [
   "updated_at",
 ] as const;
 
-/**
- * Columnas oficiales para addons.
- */
 const ADDON_REQUIRED_HEADERS = [
   "id",
   "title",
@@ -42,16 +35,22 @@ const ADDON_REQUIRED_HEADERS = [
   "priority",
 ] as const;
 
-/**
- * Estados visibles en catálogo.
- * Deben coincidir exactamente con Google Sheets.
- */
+const CAMPAIGN_REQUIRED_HEADERS = [
+  "id",
+  "name",
+  "icon",
+  "colorclass",
+  "status",
+  "startdate",
+  "enddate",
+  "priority",
+  "showincatalog",
+] as const;
+
 const PUBLIC_PRODUCT_STATUSES = ["Publicado", "Preventa"] as const;
 const PUBLIC_ADDON_STATUSES = ["Publicado"] as const;
+const PUBLIC_CAMPAIGN_STATUSES = ["Activo", "active"] as const;
 
-/**
- * Parsea una línea CSV respetando comillas y comas internas.
- */
 function parseCSVLine(line: string): string[] {
   const result: string[] = [];
   let current = "";
@@ -85,9 +84,6 @@ function parseCSVLine(line: string): string[] {
   return result;
 }
 
-/**
- * Convierte texto CSV en headers normalizados y filas tipo objeto.
- */
 function parseCSV(text: string): { headers: string[]; rows: CsvRow[] } {
   const lines = text
     .replace(/\r/g, "")
@@ -99,7 +95,7 @@ function parseCSV(text: string): { headers: string[]; rows: CsvRow[] } {
   }
 
   const headers = parseCSVLine(lines[0]).map((header) =>
-    header.trim().toLowerCase()
+    header.trim().toLowerCase(),
   );
 
   const rows = lines.slice(1).map((line) => {
@@ -116,42 +112,41 @@ function parseCSV(text: string): { headers: string[]; rows: CsvRow[] } {
   return { headers, rows };
 }
 
-/**
- * Elimina filas completamente vacías.
- */
 function getMeaningfulRows(rows: CsvRow[]) {
   return rows.filter((row) =>
-    Object.values(row).some((value) => value.trim() !== "")
+    Object.values(row).some((value) => value.trim() !== ""),
   );
 }
 
-/**
- * Valida que la hoja tenga todas las columnas requeridas.
- */
 function validateHeaders(
   headers: string[],
   requiredHeaders: readonly string[],
   sourceName: string,
-  source: SheetSource
+  source: SheetSource,
 ) {
   const missing = requiredHeaders.filter(
-    (required) => !headers.includes(required.toLowerCase())
+    (required) => !headers.includes(required.toLowerCase()),
   );
 
   if (missing.length > 0) {
     throw new Error(
       `La hoja "${sourceName}" docId="${source.docId}" gid="${source.gid}" no cumple el schema. Faltan columnas: ${missing.join(
-        ", "
-      )}`
+        ", ",
+      )}`,
     );
   }
 }
 
-/**
- * Carga filas crudas desde Google Sheets.
- */
+function getRequiredHeaders(sourceName: keyof typeof SHEETS_CONFIG) {
+  if (sourceName === "products") return PRODUCT_REQUIRED_HEADERS;
+  if (sourceName === "addons") return ADDON_REQUIRED_HEADERS;
+  if (sourceName === "campaigns") return CAMPAIGN_REQUIRED_HEADERS;
+
+  return [];
+}
+
 async function loadSheetRows(
-  sourceName: keyof typeof SHEETS_CONFIG
+  sourceName: keyof typeof SHEETS_CONFIG,
 ): Promise<CsvRow[]> {
   const source = SHEETS_CONFIG[sourceName];
 
@@ -161,28 +156,54 @@ async function loadSheetRows(
 
   if (!response.ok) {
     throw new Error(
-      `Error cargando hoja "${sourceName}" docId="${source.docId}" gid="${source.gid}": HTTP ${response.status}`
+      `Error cargando hoja "${sourceName}" docId="${source.docId}" gid="${source.gid}": HTTP ${response.status}`,
     );
   }
 
   const csvText = await response.text();
   const { headers, rows } = parseCSV(csvText);
 
-  validateHeaders(
-    headers,
-    sourceName === "products"
-      ? PRODUCT_REQUIRED_HEADERS
-      : ADDON_REQUIRED_HEADERS,
-    sourceName,
-    source
-  );
+  validateHeaders(headers, getRequiredHeaders(sourceName), sourceName, source);
 
   return getMeaningfulRows(rows);
 }
 
-/**
- * Carga, normaliza, valida y ordena productos.
- */
+function parseBoolean(value: string) {
+  return ["true", "1", "sí", "si", "yes", "y"].includes(
+    value.trim().toLowerCase(),
+  );
+}
+
+function normalizeCampaign(row: CsvRow): Campaign {
+  return {
+    id: row.id,
+    name: row.name,
+    icon: row.icon,
+    colorClass: row.colorclass,
+    status: row.status,
+    startDate: row.startdate,
+    endDate: row.enddate,
+    priority: Number(row.priority || 0),
+    showInCatalog: parseBoolean(row.showincatalog),
+  };
+}
+
+function isCampaignInDateRange(campaign: Campaign) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const start = campaign.startDate ? new Date(campaign.startDate) : null;
+  const end = campaign.endDate ? new Date(campaign.endDate) : null;
+
+  if (start) start.setHours(0, 0, 0, 0);
+  if (end) end.setHours(23, 59, 59, 999);
+
+  if (start && today < start) return false;
+  if (end && today > end) return false;
+
+  return true;
+}
+
 export async function loadAllProducts(): Promise<Product[]> {
   const rows = await loadSheetRows("products");
 
@@ -190,18 +211,13 @@ export async function loadAllProducts(): Promise<Product[]> {
     .map(normalizeProduct)
     .filter((product) =>
       PUBLIC_PRODUCT_STATUSES.includes(
-        product.status.trim() as (typeof PUBLIC_PRODUCT_STATUSES)[number]
-      )
+        product.status.trim() as (typeof PUBLIC_PRODUCT_STATUSES)[number],
+      ),
     );
 
-  return validateProducts(normalized).sort(
-    (a, b) => b.priority - a.priority
-  );
+  return validateProducts(normalized).sort((a, b) => b.priority - a.priority);
 }
 
-/**
- * Carga, normaliza y ordena addons.
- */
 export async function loadAllAddons(): Promise<Addon[]> {
   const rows = await loadSheetRows("addons");
 
@@ -209,11 +225,24 @@ export async function loadAllAddons(): Promise<Addon[]> {
     .map(normalizeAddon)
     .filter((addon) =>
       PUBLIC_ADDON_STATUSES.includes(
-        addon.status.trim() as (typeof PUBLIC_ADDON_STATUSES)[number]
-      )
+        addon.status.trim() as (typeof PUBLIC_ADDON_STATUSES)[number],
+      ),
     )
     .sort((a, b) => b.priority - a.priority);
 }
 
+export async function loadAllCampaigns(): Promise<Campaign[]> {
+  const rows = await loadSheetRows("campaigns");
 
-
+  return rows
+    .map(normalizeCampaign)
+    .filter(
+      (campaign) =>
+        PUBLIC_CAMPAIGN_STATUSES.includes(
+          campaign.status.trim() as (typeof PUBLIC_CAMPAIGN_STATUSES)[number],
+        ) &&
+        campaign.showInCatalog &&
+        isCampaignInDateRange(campaign),
+    )
+    .sort((a, b) => b.priority - a.priority);
+}
