@@ -1,6 +1,7 @@
 import type { Addon, Campaign, Product } from "@/shared/types/product";
 import { SHEETS_CONFIG, type SheetSource } from "./sheetsConfig";
 import { normalizeAddon, normalizeProduct } from "./normalizeProduct";
+import { normalizeCampaign, isCampaignActive } from "./normalizeCampaign";
 import { validateProducts } from "./validateProducts";
 
 type CsvRow = Record<string, string>;
@@ -49,7 +50,6 @@ const CAMPAIGN_REQUIRED_HEADERS = [
 
 const PUBLIC_PRODUCT_STATUSES = ["Publicado", "Preventa"] as const;
 const PUBLIC_ADDON_STATUSES = ["Publicado"] as const;
-const PUBLIC_CAMPAIGN_STATUSES = ["Activo", "active"] as const;
 
 function parseCSVLine(line: string): string[] {
   const result: string[] = [];
@@ -117,7 +117,6 @@ function getMeaningfulRows(rows: CsvRow[]) {
     Object.values(row).some((value) => value.trim() !== ""),
   );
 }
-
 function validateHeaders(
   headers: string[],
   requiredHeaders: readonly string[],
@@ -168,42 +167,6 @@ async function loadSheetRows(
   return getMeaningfulRows(rows);
 }
 
-function parseBoolean(value: string) {
-  return ["true", "1", "sí", "si", "yes", "y"].includes(
-    value.trim().toLowerCase(),
-  );
-}
-
-function normalizeCampaign(row: CsvRow): Campaign {
-  return {
-    id: row.id,
-    name: row.name,
-    icon: row.icon,
-    colorClass: row.colorclass,
-    status: row.status,
-    startDate: row.startdate,
-    endDate: row.enddate,
-    priority: Number(row.priority || 0),
-    showInCatalog: parseBoolean(row.showincatalog),
-  };
-}
-
-function isCampaignInDateRange(campaign: Campaign) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const start = campaign.startDate ? new Date(campaign.startDate) : null;
-  const end = campaign.endDate ? new Date(campaign.endDate) : null;
-
-  if (start) start.setHours(0, 0, 0, 0);
-  if (end) end.setHours(23, 59, 59, 999);
-
-  if (start && today < start) return false;
-  if (end && today > end) return false;
-
-  return true;
-}
-
 export async function loadAllProducts(): Promise<Product[]> {
   const rows = await loadSheetRows("products");
 
@@ -236,13 +199,6 @@ export async function loadAllCampaigns(): Promise<Campaign[]> {
 
   return rows
     .map(normalizeCampaign)
-    .filter(
-      (campaign) =>
-        PUBLIC_CAMPAIGN_STATUSES.includes(
-          campaign.status.trim() as (typeof PUBLIC_CAMPAIGN_STATUSES)[number],
-        ) &&
-        campaign.showInCatalog &&
-        isCampaignInDateRange(campaign),
-    )
+    .filter(isCampaignActive)
     .sort((a, b) => b.priority - a.priority);
 }

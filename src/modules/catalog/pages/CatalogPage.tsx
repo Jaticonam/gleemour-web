@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { loadAllProducts } from "@/integrations/sheets/fetchSheets";
+import {
+  loadAllProducts,
+  loadAllCampaigns,
+} from "@/integrations/sheets/fetchSheets";
+import type { Campaign, Product } from "@/shared/types/product";
 import { BRAND_CONFIG } from "@/tenant/config/brand";
-import type { Product } from "@/shared/types/product";
 
 import { useCart } from "@/modules/cart/hooks/useCart";
 import { CartSidebar, AddToCartModal } from "@/modules/cart/components";
@@ -21,29 +24,9 @@ import {
 
 import { CatalogSkeleton } from "@/shared/components/skeletons/CatalogSkeleton";
 
-const CAMPAIGN_ITEMS = [
-  {
-    id: "san-valentin",
-    name: "San Valentín",
-    icon: "💕",
-    colorClass: "catalog-campaign-pink",
-  },
-  {
-    id: "flores-amarillas",
-    name: "Flores Amarillas",
-    icon: "🌼",
-    colorClass: "catalog-campaign-gold",
-  },
-  {
-    id: "dia-madre",
-    name: "Día de la Madre",
-    icon: "🌷",
-    colorClass: "catalog-campaign-purple",
-  },
-];
-
 export default function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -74,10 +57,12 @@ export default function CatalogPage() {
   useEffect(() => {
     let mounted = true;
 
-    loadAllProducts()
-      .then((data) => {
+    Promise.all([loadAllProducts(), loadAllCampaigns()])
+      .then(([productsData, campaignsData]) => {
         if (!mounted) return;
-        setProducts(data);
+
+        setProducts(productsData);
+        setCampaigns(campaignsData);
       })
       .finally(() => {
         if (!mounted) return;
@@ -111,6 +96,12 @@ export default function CatalogPage() {
       return acc;
     }, {});
   }, [products]);
+
+  const visibleCampaigns = useMemo(() => {
+    return campaigns.filter(
+      (campaign) => (campaignCounts[campaign.id] ?? 0) > 0,
+    );
+  }, [campaigns, campaignCounts]);
 
   const visibleProducts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -163,9 +154,7 @@ export default function CatalogPage() {
       <NotificationStack />
 
       <CatalogTopNav
-        campaignItems={CAMPAIGN_ITEMS.filter(
-          (item) => (campaignCounts[item.id] ?? 0) > 0,
-        )}
+        campaignItems={visibleCampaigns}
         categoryItems={BRAND_CONFIG.categories.filter(
           (item) => item.id === "todas" || (categoryCounts[item.id] ?? 0) > 0,
         )}
@@ -215,7 +204,11 @@ export default function CatalogPage() {
           >
             <div className="catalog-section-header">
               <div>
-                <h2>Todo el catálogo</h2>
+                <h2>
+                  {activeCampaign || activeCategory !== "todas"
+                    ? "Detalles encontrados"
+                    : "Todo el catálogo"}
+                </h2>
                 <p>
                   {visibleProducts.length} detalle
                   {visibleProducts.length === 1 ? "" : "s"} disponible
@@ -260,7 +253,7 @@ export default function CatalogPage() {
         onCartClick={() => setCartOpen(true)}
       />
 
-      <RecentActivity products={products} />
+      <RecentActivity products={visibleProducts} />
 
       <CartSidebar
         isOpen={cartOpen}
