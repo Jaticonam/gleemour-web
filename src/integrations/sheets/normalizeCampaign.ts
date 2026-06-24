@@ -3,12 +3,6 @@ import { getCampaignColorClass } from "./campaignColors";
 
 type CsvRow = Record<string, string>;
 
-function parseBoolean(value: string) {
-  return ["true", "1", "si", "sí", "yes", "y"].includes(
-    value.trim().toLowerCase(),
-  );
-}
-
 function parseSheetDate(value: string) {
   const clean = value.trim();
 
@@ -28,10 +22,36 @@ function parseSheetDate(value: string) {
   return Number.isNaN(isoDate.getTime()) ? null : isoDate;
 }
 
+function normalizePublicationStatus(value: string) {
+  const status = value.trim().toLowerCase();
+
+  const map: Record<string, Campaign["computedStatus"]> = {
+    publicado: "activa",
+    publicada: "activa",
+    publicadas: "activa",
+    active: "activa",
+    published: "activa",
+
+    oculto: "oculta",
+    oculta: "oculta",
+    hidden: "oculta",
+
+    borrador: "borrador",
+    draft: "borrador",
+  };
+
+  return map[status] ?? "borrador";
+}
+
 export function getCampaignComputedStatus(
-  campaign: Pick<Campaign, "startDate" | "endDate" | "showInCatalog">,
+  campaign: Pick<Campaign, "startDate" | "endDate" | "publicationStatus">,
 ): Campaign["computedStatus"] {
-  if (!campaign.showInCatalog) return "oculta";
+  const publicationStatus = normalizePublicationStatus(
+    campaign.publicationStatus,
+  );
+
+  if (publicationStatus === "oculta") return "oculta";
+  if (publicationStatus === "borrador") return "borrador";
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -57,7 +77,7 @@ export function normalizeCampaign(row: CsvRow): Campaign {
     startDate: row.startdate,
     endDate: row.enddate,
     priority: Number(row.priority || 0),
-    showInCatalog: parseBoolean(row.showincatalog),
+    publicationStatus: row.publicationstatus,
   };
 
   return {

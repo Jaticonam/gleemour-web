@@ -406,6 +406,265 @@
   margin-top: 0.8rem;
 }
 
+/* ==========================================
+   Campaign Color Variants
+========================================== */
+
+.catalog-campaign-yellow {
+  background: linear-gradient(135deg, #ffd84d, #f9c95b);
+  color: #4b3510;
+}
+
+.catalog-campaign-sky {
+  background: linear-gradient(135deg, #7cc8f8, #a8ddff);
+  color: #17415f;
+}
+
+.catalog-campaign-copper {
+  background: linear-gradient(135deg, #c97a56, #e9a47f);
+  color: #ffffff;
+}
+
+.catalog-campaign-emerald {
+  background: linear-gradient(135deg, #0f9d7a, #34c9a6);
+  color: #ffffff;
+}
+
+.catalog-campaign-fuchsia {
+  background: linear-gradient(135deg, #e94fb5, #ff8bd4);
+  color: #ffffff;
+}
+
+.catalog-campaign-lavender {
+  background: linear-gradient(135deg, #a78bfa, #c4b5fd);
+  color: #ffffff;
+}
+
+.catalog-campaign-orange {
+  background: linear-gradient(135deg, #f28c28, #ffb347);
+  color: #ffffff;
+}
+
+.catalog-campaign-dark {
+  background: linear-gradient(135deg, #2c2c2c, #555555);
+  color: #ffffff;
+}
+
+.catalog-campaign-silver {
+  background: linear-gradient(135deg, #bfc5d2, #e5e7eb);
+  color: #2c2c2c;
+}
+
+.catalog-campaign-red {
+  background: linear-gradient(135deg, #e5484d, #ff7a7f);
+  color: #ffffff;
+}
+
+.catalog-campaign-green {
+  background: linear-gradient(135deg, #38b56a, #68d391);
+  color: #ffffff;
+}
+
+.catalog-campaign-wine {
+  background: linear-gradient(135deg, #8b1e3f, #b8325f);
+  color: #ffffff;
+}
+
+/* ==========================================
+   Premium Campaign Chips V3 - Clean Gleemour
+========================================== */
+
+.catalog-campaign-row-label {
+  position: relative;
+  width: min(100%, 980px);
+  margin: 1rem auto 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  color: var(--w-primary);
+  font-size: 0.74rem;
+  font-weight: 850;
+  letter-spacing: 0.18em;
+  text-align: center;
+}
+
+.catalog-campaign-row-label::before,
+.catalog-campaign-row-label::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  max-width: 20rem;
+  background: linear-gradient(90deg, transparent, rgba(236, 164, 194, 0.45));
+}
+
+.catalog-campaign-row-label::after {
+  background: linear-gradient(90deg, rgba(236, 164, 194, 0.45), transparent);
+}
+
+.catalog-campaign-row-label span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.catalog-top-nav-campaigns {
+  width: min(100%, 1220px);
+  margin: 0 auto;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+.catalog-campaign-chip {
+  position: relative;
+  overflow: hidden;
+  min-width: 13.9rem;
+  min-height: 4.05rem;
+  display: inline-flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.62rem 0.65rem 0.62rem 0.9rem;
+  border: 0;
+  border-radius: 0.9rem;
+  box-shadow: 0 10px 24px rgba(30, 22, 42, 0.12);
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+.catalog-campaign-chip:hover,
+.catalog-campaign-chip.active {
+  transform: translateY(-2px);
+  filter: saturate(1.04);
+  box-shadow: 0 15px 34px rgba(30, 22, 42, 0.18);
+}
+
+.catalog-campaign-chip::before,
+.catalog-campaign-chip::after {
+  display: none;
+}
+
+.catalog-campaign-content {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  line-height: 1.05;
+}
+
+.catalog-campaign-content strong {
+  color: inherit;
+  font-size: 0.95rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+
+.catalog-campaign-content small {
+  margin-top: 0.2rem;
+  color: inherit;
+  font-size: 0.74rem;
+  font-weight: 750;
+  line-height: 1;
+  opacity: 0.94;
+}
+
+.catalog-campaign-icon {
+  width: 3.05rem;
+  min-height: 100%;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.78rem;
+  font-size: 1.8rem;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.16);
+}
+
+/* Color refinements - clean premium */
+
+.catalog-campaign-purple {
+  background: linear-gradient(135deg, #7a56e8, #8b6ff4);
+  color: #ffffff;
+}
+
+.catalog-campaign-pink {
+  background: linear-gradient(135deg, #e94fb5, #f06abf);
+  color: #ffffff;
+}
+
+.catalog-campaign-blue {
+  background: linear-gradient(135deg, #2f64cf, #3f7ee8);
+  color: #ffffff;
+}
+
+.catalog-campaign-gold,
+.catalog-campaign-yellow {
+  background: linear-gradient(135deg, #f2b84d, #f9c95b);
+  color: #4b3510;
+}
+
+.catalog-campaign-green {
+  background: linear-gradient(135deg, #13a77f, #2dbc9a);
+  color: #ffffff;
+}
+
+.catalog-campaign-red {
+  background: linear-gradient(135deg, #dc3545, #ef5c66);
+  color: #ffffff;
+}
+
+.catalog-campaign-teal {
+  background: linear-gradient(135deg, #269f98, #37b8b0);
+  color: #ffffff;
+}
+
+.catalog-campaign-dark {
+  background: linear-gradient(135deg, #252525, #3d3d3d);
+  color: #ffffff;
+}
+
+.catalog-campaign-orange {
+  background: linear-gradient(135deg, #ef7d1a, #f59a3d);
+  color: #ffffff;
+}
+
+.catalog-campaign-lavender {
+  background: linear-gradient(135deg, #8b7cf6, #a78bfa);
+  color: #ffffff;
+}
+
+.catalog-campaign-sky {
+  background: linear-gradient(135deg, #37aee2, #68c7f5);
+  color: #ffffff;
+}
+
+.catalog-campaign-copper {
+  background: linear-gradient(135deg, #b66a42, #cf7d52);
+  color: #ffffff;
+}
+
+.catalog-campaign-emerald {
+  background: linear-gradient(135deg, #0f8f72, #16aa88);
+  color: #ffffff;
+}
+
+.catalog-campaign-fuchsia {
+  background: linear-gradient(135deg, #d946ef, #ec5ff4);
+  color: #ffffff;
+}
+
+.catalog-campaign-silver {
+  background: linear-gradient(135deg, #b8c0cc, #d7dce5);
+  color: #2c2c2c;
+}
+
+.catalog-campaign-wine {
+  background: linear-gradient(135deg, #7f1734, #9f2448);
+  color: #ffffff;
+}
+
 @media (max-width: 720px) {
   .catalog-top-nav-search-row {
     margin-top: 0.65rem;

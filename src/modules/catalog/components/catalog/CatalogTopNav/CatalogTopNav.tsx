@@ -162,7 +162,9 @@ export function CatalogTopNav({
 
             {hasCampaigns && (
               <div className="catalog-explore-group">
-                <p>Campañas activas</p>
+                <span className="catalog-campaign-row-label">
+                  <span>Campañas activas</span>
+                </span>
 
                 <div className="catalog-explore-list">
                   {campaignItems.map((item) => (

@@ -45,7 +45,7 @@ const CAMPAIGN_REQUIRED_HEADERS = [
   "startdate",
   "enddate",
   "priority",
-  "showincatalog",
+  "publicationstatus",
 ] as const;
 
 const PUBLIC_PRODUCT_STATUSES = ["Publicado", "Preventa"] as const;

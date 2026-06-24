@@ -138,5 +138,11 @@ export interface Campaign {
   endDate: string;
   priority: number;
   showInCatalog: boolean;
-  computedStatus?: "programada" | "activa" | "finalizada" | "oculta";
+  publicationStatus: string;
+  computedStatus?:
+    | "borrador"
+    | "programada"
+    | "activa"
+    | "finalizada"
+    | "oculta";
 }

@@ -192,13 +192,8 @@ export default function CatalogPage() {
       <main className="catalog-main">
         <section className="catalog-hero" data-aos="fade-up">
           <p className="catalog-kicker">Catálogo emocional</p>
-
           <h1>Elige el detalle perfecto</h1>
-
-          <p>
-            Ramos, arreglos y detalles creados para convertir momentos
-            importantes en recuerdos memorables.
-          </p>
+          <p>Ramos, arreglos y detalles para cada momento especial.</p>
         </section>
 
         {visibleProducts.length > 0 ? (
@@ -207,21 +202,6 @@ export default function CatalogPage() {
             data-aos="fade-up"
             data-aos-delay="100"
           >
-            <div className="catalog-section-header">
-              <div>
-                <h2>
-                  {activeCampaign || activeCategory !== "todas"
-                    ? "Detalles encontrados"
-                    : "Todo el catálogo"}
-                </h2>
-                <p>
-                  {visibleProducts.length} detalle
-                  {visibleProducts.length === 1 ? "" : "s"} disponible
-                  {visibleProducts.length === 1 ? "" : "s"}.
-                </p>
-              </div>
-            </div>
-
             <div
               className="catalog-grid"
               data-aos="fade-up"
