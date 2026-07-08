@@ -1,6 +1,8 @@
 import "./ProductCard.css";
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
+import { getProductUrl } from "@/app/routes/routes";
 import { sortBadges } from "@/tenant/config/product";
 
 import { CartItem, Product } from "@/shared/types/product";
@@ -41,8 +43,9 @@ export function ProductCard({
   product,
   cart = [],
   onAddToCart,
-  onImageClick,
 }: ProductCardProps) {
+  const navigate = useNavigate();
+
   const available = isProductAvailable(product);
   const productState = getProductState(product);
   const isPreventa = productState.type === "preorder";
@@ -90,6 +93,10 @@ export function ProductCard({
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
+  const handleViewDetail = () => {
+    navigate(getProductUrl(product));
+  };
+
   const { StockIcon, stockClass } = getStockPresentation(productState.type);
 
   return (
@@ -102,7 +109,7 @@ export function ProductCard({
         qtyInCart={qtyInCart}
         campaignBadge={campaignBadge}
         stateBadge={stateBadge}
-        onImageClick={onImageClick}
+        onImageClick={handleViewDetail}
       />
 
       <ProductCardType attribute={primaryAttribute} />

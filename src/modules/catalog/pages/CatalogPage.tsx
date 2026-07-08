@@ -24,6 +24,37 @@ import {
 
 import { CatalogSkeleton } from "@/shared/components/skeletons/CatalogSkeleton";
 
+function normalizeFilterKey(value: unknown): string {
+  return String(value ?? "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/_/g, "-")
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]+/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function titleFromSlug(value: string): string {
+  return value
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function productBelongsToCategory(product: Product, categoryId: string): boolean {
+  if (categoryId === "todas") return true;
+
+  const productCategories = Array.isArray(product.categories)
+    ? product.categories
+    : [];
+
+  return product.category === categoryId || productCategories.includes(categoryId);
+}
+
 export default function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -57,12 +88,26 @@ export default function CatalogPage() {
   useEffect(() => {
     let mounted = true;
 
-    Promise.all([loadAllProducts(), loadAllCampaigns()])
-      .then(([productsData, campaignsData]) => {
+    Promise.allSettled([loadAllProducts(), loadAllCampaigns()])
+      .then(([productsResult, campaignsResult]) => {
         if (!mounted) return;
 
-        setProducts(productsData);
-        setCampaigns(campaignsData);
+        if (productsResult.status === "fulfilled") {
+          setProducts(productsResult.value);
+        } else {
+          console.error("Error cargando productos:", productsResult.reason);
+          setProducts([]);
+        }
+
+        if (campaignsResult.status === "fulfilled") {
+          setCampaigns(campaignsResult.value);
+        } else {
+          console.warn(
+            "Error cargando campañas. Se usarán campañas detectadas desde productos:",
+            campaignsResult.reason,
+          );
+          setCampaigns([]);
+        }
       })
       .finally(() => {
         if (!mounted) return;
@@ -77,7 +122,18 @@ export default function CatalogPage() {
   const categoryCounts = useMemo(() => {
     return products.reduce<Record<string, number>>((acc, product) => {
       acc.todas = (acc.todas ?? 0) + 1;
-      acc[product.category] = (acc[product.category] ?? 0) + 1;
+
+      const productCategories = Array.isArray(product.categories)
+        ? product.categories
+        : [];
+
+      const categoryIds = Array.from(
+        new Set([product.category, ...productCategories].filter(Boolean)),
+      );
+
+      categoryIds.forEach((categoryId) => {
+        acc[categoryId] = (acc[categoryId] ?? 0) + 1;
+      });
 
       return acc;
     }, {});
@@ -85,12 +141,16 @@ export default function CatalogPage() {
 
   const campaignCounts = useMemo(() => {
     return products.reduce<Record<string, number>>((acc, product) => {
-      const campaigns = Array.isArray((product as any).campaigns)
+      const productCampaigns = Array.isArray((product as any).campaigns)
         ? (product as any).campaigns
         : [];
 
-      campaigns.forEach((campaign: string) => {
-        acc[campaign] = (acc[campaign] ?? 0) + 1;
+      productCampaigns.forEach((campaign: string) => {
+        const campaignId = normalizeFilterKey(campaign);
+
+        if (!campaignId) return;
+
+        acc[campaignId] = (acc[campaignId] ?? 0) + 1;
       });
 
       return acc;
@@ -98,33 +158,59 @@ export default function CatalogPage() {
   }, [products]);
 
   const visibleCampaigns = useMemo(() => {
-    return campaigns.filter(
-      (campaign) => (campaignCounts[campaign.id] ?? 0) > 0,
+    const campaignById = new Map(
+      campaigns.map((campaign) => [normalizeFilterKey(campaign.id), campaign]),
     );
+
+    return Object.keys(campaignCounts)
+      .map((campaignId) => {
+        const sheetCampaign = campaignById.get(campaignId);
+
+        return {
+          id: campaignId,
+          name: sheetCampaign?.name || titleFromSlug(campaignId),
+          icon: sheetCampaign?.icon || "✨",
+          colorClass: sheetCampaign?.colorClass || "catalog-campaign-purple",
+          priority: sheetCampaign?.priority ?? 0,
+        };
+      })
+      .sort((a, b) => b.priority - a.priority);
   }, [campaigns, campaignCounts]);
 
-  console.log("PRODUCTS", products);
-  console.log("CAMPAIGNS", campaigns);
-  console.log("CAMPAIGN COUNTS", campaignCounts);
-  console.log("VISIBLE CAMPAIGNS", visibleCampaigns);
+  const handleCampaignSelect = (campaignId: string) => {
+    setActiveCampaign(campaignId);
+    setActiveCategory("todas");
+    setSearchQuery("");
+  };
+
+  const handleCategorySelect = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    setActiveCampaign("");
+    setSearchQuery("");
+  };
 
   const visibleProducts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
+    const normalizedActiveCampaign = normalizeFilterKey(activeCampaign);
 
-    const byCampaign = !activeCampaign
+    const byCampaign = !normalizedActiveCampaign
       ? products
       : products.filter((product) => {
-          const campaigns = Array.isArray((product as any).campaigns)
+          const productCampaigns = Array.isArray((product as any).campaigns)
             ? (product as any).campaigns
             : [];
 
-          return campaigns.includes(activeCampaign);
+          return productCampaigns
+            .map(normalizeFilterKey)
+            .includes(normalizedActiveCampaign);
         });
 
     const byCategory =
       activeCategory === "todas"
         ? byCampaign
-        : byCampaign.filter((product) => product.category === activeCategory);
+        : byCampaign.filter((product) =>
+            productBelongsToCategory(product, activeCategory),
+          );
 
     if (!query) return byCategory;
 
@@ -134,7 +220,11 @@ export default function CatalogPage() {
         product.title,
         product.description,
         product.category,
+        product.occasion,
+        product.message,
+        product.highlight,
         ...(product.badges ?? []),
+        ...((product as any).campaigns ?? []),
       ]
         .filter(Boolean)
         .join(" ")
@@ -167,8 +257,8 @@ export default function CatalogPage() {
         activeCategory={activeCategory}
         campaignCounts={campaignCounts}
         categoryCounts={categoryCounts}
-        onCampaignSelect={setActiveCampaign}
-        onCategorySelect={setActiveCategory}
+        onCampaignSelect={handleCampaignSelect}
+        onCategorySelect={handleCategorySelect}
         logoSlot={
           <button
             type="button"

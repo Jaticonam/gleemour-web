@@ -43,7 +43,7 @@ export default function ProductPage() {
   const navigate = useNavigate();
 
   const currentCategory = searchParams.get("cat") || "";
-  const productId = searchParams.get("id") || paramId;
+  const productId = (searchParams.get("id") || paramId || "").trim();
 
   const {
     cart,

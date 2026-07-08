@@ -3,8 +3,31 @@ import { getCampaignColorClass } from "./campaignColors";
 
 type CsvRow = Record<string, string>;
 
+function cleanText(value: unknown): string {
+  return String(value ?? "").trim();
+}
+
+function slugify(value: unknown): string {
+  return cleanText(value)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/_/g, "-")
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]+/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function parseNumber(value: unknown): number {
+  const cleaned = cleanText(value).replace(/\s/g, "").replace(",", ".");
+  const num = Number(cleaned);
+
+  return Number.isFinite(num) ? num : 0;
+}
+
 function parseSheetDate(value: string) {
-  const clean = value.trim();
+  const clean = cleanText(value);
 
   if (!clean) return null;
 
@@ -23,21 +46,28 @@ function parseSheetDate(value: string) {
 }
 
 function normalizePublicationStatus(value: string) {
-  const status = value.trim().toLowerCase();
+  const status = slugify(value);
 
   const map: Record<string, Campaign["computedStatus"]> = {
     publicado: "activa",
     publicada: "activa",
     publicadas: "activa",
     active: "activa",
+    activa: "activa",
+    activo: "activa",
     published: "activa",
+    visible: "activa",
 
     oculto: "oculta",
     oculta: "oculta",
+    ocultar: "oculta",
     hidden: "oculta",
+    inactivo: "oculta",
+    inactiva: "oculta",
 
     borrador: "borrador",
     draft: "borrador",
+    pendiente: "borrador",
   };
 
   return map[status] ?? "borrador";
@@ -69,15 +99,18 @@ export function getCampaignComputedStatus(
 }
 
 export function normalizeCampaign(row: CsvRow): Campaign {
+  const name = cleanText(row.name);
+  const id = slugify(row.id || name);
+
   const campaign: Campaign = {
-    id: row.id,
-    name: row.name,
-    icon: row.icon,
+    id,
+    name,
+    icon: cleanText(row.icon),
     colorClass: getCampaignColorClass(row.color),
-    startDate: row.startdate,
-    endDate: row.enddate,
-    priority: Number(row.priority || 0),
-    publicationStatus: row.publicationstatus,
+    startDate: cleanText(row.startdate),
+    endDate: cleanText(row.enddate),
+    priority: parseNumber(row.priority),
+    publicationStatus: cleanText(row.publicationstatus),
   };
 
   return {

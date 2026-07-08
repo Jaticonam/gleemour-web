@@ -10,6 +10,18 @@ function cleanText(value: unknown): string {
   return String(value ?? "").trim();
 }
 
+function getRowValue(row: CsvRow, ...keys: string[]): string {
+  for (const key of keys) {
+    const value = row[key.toLowerCase()];
+
+    if (cleanText(value)) {
+      return cleanText(value);
+    }
+  }
+
+  return "";
+}
+
 function slugify(value: unknown): string {
   return cleanText(value)
     .toLowerCase()
@@ -87,6 +99,47 @@ function parseAddons(value: unknown): string[] {
   return parsePipeList(value).map(slugify).filter(Boolean);
 }
 
+function normalizeSheetStatus(value: unknown): string {
+  const raw = cleanText(value);
+  const slug = slugify(raw);
+
+  const map: Record<string, string> = {
+    publicado: "Publicado",
+    publicada: "Publicado",
+    publica: "Publicado",
+    activo: "Publicado",
+    activa: "Publicado",
+    disponible: "Publicado",
+    visibles: "Publicado",
+    visible: "Publicado",
+    "en-stock": "Publicado",
+
+    preventa: "Preventa",
+    "pre-venta": "Preventa",
+    reserva: "Preventa",
+    reservado: "Preventa",
+
+    borrador: "Borrador",
+    draft: "Borrador",
+    pendiente: "Borrador",
+
+    oculto: "Oculto",
+    oculta: "Oculto",
+    privado: "Oculto",
+    privada: "Oculto",
+    inactivo: "Oculto",
+    inactiva: "Oculto",
+
+    agotado: "Agotado",
+    agotada: "Agotado",
+    "sin-stock": "Agotado",
+    soldout: "Agotado",
+    "sold-out": "Agotado",
+  };
+
+  return map[slug] ?? raw;
+}
+
 export function normalizeProduct(row: CsvRow): SheetProduct {
   const primaryCategory = getCategoryIdFromSheetLabel(row.category);
   const extraCategories = parseCategories(row.categories);
@@ -113,8 +166,11 @@ export function normalizeProduct(row: CsvRow): SheetProduct {
     img: cleanText(row.img),
     images: parsePipeList(row.images),
 
-    status: cleanText(row.status),
-    badges: parseBadges(row.badge),
+    status: normalizeSheetStatus(row.status),
+
+    // Acepta ambos formatos: badge y badges.
+    badges: parseBadges(getRowValue(row, "badges", "badge")),
+
     campaigns: parseCampaigns(row.campaigns),
     priority: parseRequiredNumber(row.priority),
 
@@ -132,7 +188,7 @@ export function normalizeAddon(row: CsvRow): SheetAddon {
     price: parseRequiredNumber(row.price),
     img: cleanText(row.img),
     category: slugify(row.category),
-    status: cleanText(row.status),
+    status: normalizeSheetStatus(row.status),
     priority: parseRequiredNumber(row.priority),
   };
 }

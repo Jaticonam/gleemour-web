@@ -18,22 +18,81 @@ interface UseProductDetailOptions {
   relatedLimit?: number;
 }
 
+function cleanText(value: unknown): string {
+  return String(value ?? "").trim();
+}
+
+function safeDecode(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+function normalizeLookup(value: unknown): string {
+  return safeDecode(cleanText(value))
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/_/g, "-")
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]+/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function matchesProduct(product: Product, productId: string): boolean {
+  const lookup = normalizeLookup(productId);
+
+  if (!lookup) return false;
+
+  const candidates = [
+    product.id,
+    normalizeLookup(product.id),
+    product.title,
+    normalizeLookup(product.title),
+  ];
+
+  return candidates.some((candidate) => {
+    const normalizedCandidate = normalizeLookup(candidate);
+
+    return normalizedCandidate === lookup;
+  });
+}
+
 export function useProductDetail({
   productId,
   relatedLimit = 4,
 }: UseProductDetailOptions) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<Error | null>(null);
 
   useEffect(() => {
     let mounted = true;
 
-    loadAllProducts().then((data) => {
-      if (!mounted) return;
+    setLoading(true);
+    setLoadError(null);
 
-      setProducts(data);
-      setLoading(false);
-    });
+    loadAllProducts()
+      .then((data) => {
+        if (!mounted) return;
+
+        setProducts(data);
+      })
+      .catch((error) => {
+        if (!mounted) return;
+
+        console.error("Error cargando productos para ProductPage:", error);
+        setProducts([]);
+        setLoadError(error instanceof Error ? error : new Error(String(error)));
+      })
+      .finally(() => {
+        if (!mounted) return;
+
+        setLoading(false);
+      });
 
     return () => {
       mounted = false;
@@ -43,7 +102,9 @@ export function useProductDetail({
   const product = useMemo(() => {
     if (!productId) return undefined;
 
-    return products.find((item) => item.id === productId);
+    const cleanProductId = cleanText(productId);
+
+    return products.find((item) => matchesProduct(item, cleanProductId));
   }, [products, productId]);
 
   const relatedProducts = useMemo(() => {
@@ -69,6 +130,7 @@ export function useProductDetail({
     products,
     product,
     loading,
+    loadError,
     notFound: !loading && !product,
     relatedProducts,
     available,

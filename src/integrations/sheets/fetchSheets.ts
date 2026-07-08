@@ -3,43 +3,57 @@ import { SHEETS_CONFIG, type SheetSource } from "./sheetsConfig";
 import { normalizeAddon, normalizeProduct } from "./normalizeProduct";
 import { normalizeCampaign, isCampaignActive } from "./normalizeCampaign";
 import { validateProducts } from "./validateProducts";
+import { isVisibleProductStatus } from "@/tenant/config/product";
 
 type CsvRow = Record<string, string>;
 
-const PRODUCT_REQUIRED_HEADERS = [
-  "id",
-  "title",
+/**
+ * Columnas mínimas para que el catálogo pueda vender.
+ * Si falta una de estas, sí hay problema estructural real.
+ */
+const PRODUCT_REQUIRED_HEADERS = ["id", "title", "price", "status"] as const;
+
+/**
+ * Columnas útiles para buena experiencia, pero no deben tumbar la tienda.
+ */
+const PRODUCT_RECOMMENDED_HEADERS = [
   "description",
   "category",
-  "price",
+  "categories",
   "offer_price",
   "addons",
   "stock",
   "img",
-  "status",
+  "images",
   "badge",
-  "attributes",
+  "badges",
   "priority",
-  "occasion",
-  "message",
-  "highlight",
   "campaigns",
   "updated_at",
 ] as const;
 
-const ADDON_REQUIRED_HEADERS = [
-  "id",
-  "title",
-  "price",
+/**
+ * Columnas premium/emocionales.
+ * Perfectas para Product Detail Premium, pero jamás deben romper ventas.
+ */
+const PRODUCT_PREMIUM_HEADERS = [
+  "attributes",
+  "occasion",
+  "message",
+  "highlight",
+] as const;
+
+const ADDON_REQUIRED_HEADERS = ["id", "title", "price", "status"] as const;
+
+const ADDON_RECOMMENDED_HEADERS = [
   "img",
   "category",
-  "status",
   "priority",
 ] as const;
 
-const CAMPAIGN_REQUIRED_HEADERS = [
-  "id",
-  "name",
+const CAMPAIGN_REQUIRED_HEADERS = ["id", "name"] as const;
+
+const CAMPAIGN_RECOMMENDED_HEADERS = [
   "icon",
   "color",
   "startdate",
@@ -48,7 +62,6 @@ const CAMPAIGN_REQUIRED_HEADERS = [
   "publicationstatus",
 ] as const;
 
-const PUBLIC_PRODUCT_STATUSES = ["Publicado", "Preventa"] as const;
 const PUBLIC_ADDON_STATUSES = ["Publicado"] as const;
 
 function parseCSVLine(line: string): string[] {
@@ -117,31 +130,126 @@ function getMeaningfulRows(rows: CsvRow[]) {
     Object.values(row).some((value) => value.trim() !== ""),
   );
 }
-function validateHeaders(
+
+function getMissingHeaders(
+  headers: string[],
+  expectedHeaders: readonly string[],
+): string[] {
+  const normalizedHeaders = new Set(headers.map((header) => header.toLowerCase()));
+
+  return expectedHeaders.filter(
+    (expected) => !normalizedHeaders.has(expected.toLowerCase()),
+  );
+}
+
+function throwMissingRequiredHeaders(
   headers: string[],
   requiredHeaders: readonly string[],
   sourceName: string,
   source: SheetSource,
 ) {
-  const missing = requiredHeaders.filter(
-    (required) => !headers.includes(required.toLowerCase()),
-  );
+  const missing = getMissingHeaders(headers, requiredHeaders);
 
   if (missing.length > 0) {
     throw new Error(
-      `La hoja "${sourceName}" docId="${source.docId}" gid="${source.gid}" no cumple el schema. Faltan columnas: ${missing.join(
+      `La hoja "${sourceName}" docId="${source.docId}" gid="${source.gid}" no cumple el schema mínimo de venta. Faltan columnas críticas: ${missing.join(
         ", ",
       )}`,
     );
   }
 }
 
-function getRequiredHeaders(sourceName: keyof typeof SHEETS_CONFIG) {
-  if (sourceName === "products") return PRODUCT_REQUIRED_HEADERS;
-  if (sourceName === "addons") return ADDON_REQUIRED_HEADERS;
-  if (sourceName === "campaigns") return CAMPAIGN_REQUIRED_HEADERS;
+function warnMissingOptionalHeaders(
+  headers: string[],
+  optionalHeaders: readonly string[],
+  sourceName: string,
+  label: "recomendadas" | "premium",
+) {
+  const missing = getMissingHeaders(headers, optionalHeaders);
 
-  return [];
+  if (missing.length === 0) return;
+
+  // Las columnas premium no deben ensuciar consola ni asustar.
+  // Son mejora comercial, no condición de venta.
+  if (label === "premium") {
+    if (import.meta.env.DEV) {
+      console.info(
+        `La hoja "${sourceName}" no tiene columnas premium. Se usarán fallbacks:`,
+        missing,
+      );
+    }
+
+    return;
+  }
+
+  // Las recomendadas sí merecen aviso en desarrollo,
+  // pero no deberían verse como error fatal.
+  if (import.meta.env.DEV) {
+    console.info(
+      `La hoja "${sourceName}" no tiene columnas ${label}. Se usarán fallbacks:`,
+      missing,
+    );
+  }
+}
+
+function validateSheetHeaders(
+  headers: string[],
+  sourceName: keyof typeof SHEETS_CONFIG,
+  source: SheetSource,
+) {
+  if (sourceName === "products") {
+    throwMissingRequiredHeaders(
+      headers,
+      PRODUCT_REQUIRED_HEADERS,
+      sourceName,
+      source,
+    );
+
+    warnMissingOptionalHeaders(
+      headers,
+      PRODUCT_RECOMMENDED_HEADERS,
+      sourceName,
+      "recomendadas",
+    );
+
+    warnMissingOptionalHeaders(
+      headers,
+      PRODUCT_PREMIUM_HEADERS,
+      sourceName,
+      "premium",
+    );
+
+    return;
+  }
+
+  if (sourceName === "addons") {
+    throwMissingRequiredHeaders(headers, ADDON_REQUIRED_HEADERS, sourceName, source);
+
+    warnMissingOptionalHeaders(
+      headers,
+      ADDON_RECOMMENDED_HEADERS,
+      sourceName,
+      "recomendadas",
+    );
+
+    return;
+  }
+
+  if (sourceName === "campaigns") {
+    throwMissingRequiredHeaders(
+      headers,
+      CAMPAIGN_REQUIRED_HEADERS,
+      sourceName,
+      source,
+    );
+
+    warnMissingOptionalHeaders(
+      headers,
+      CAMPAIGN_RECOMMENDED_HEADERS,
+      sourceName,
+      "recomendadas",
+    );
+  }
 }
 
 async function loadSheetRows(
@@ -162,7 +270,7 @@ async function loadSheetRows(
   const csvText = await response.text();
   const { headers, rows } = parseCSV(csvText);
 
-  validateHeaders(headers, getRequiredHeaders(sourceName), sourceName, source);
+  validateSheetHeaders(headers, sourceName, source);
 
   return getMeaningfulRows(rows);
 }
@@ -170,15 +278,11 @@ async function loadSheetRows(
 export async function loadAllProducts(): Promise<Product[]> {
   const rows = await loadSheetRows("products");
 
-  const normalized = rows
-    .map(normalizeProduct)
-    .filter((product) =>
-      PUBLIC_PRODUCT_STATUSES.includes(
-        product.status.trim() as (typeof PUBLIC_PRODUCT_STATUSES)[number],
-      ),
-    );
+  const normalized = rows.map(normalizeProduct);
 
-  return validateProducts(normalized).sort((a, b) => b.priority - a.priority);
+  return validateProducts(normalized)
+    .filter((product) => isVisibleProductStatus(product.status.trim()))
+    .sort((a, b) => b.priority - a.priority);
 }
 
 export async function loadAllAddons(): Promise<Addon[]> {

@@ -3,22 +3,45 @@ import { isVisibleProductStatus } from "@/tenant/config/product";
 import type { SheetProduct } from "./normalizeProduct";
 
 const CATEGORY_IDS = new Set(CATEGORIES.map((category) => category.id));
+const FALLBACK_CATEGORY_ID = CATEGORIES[0]?.id ?? "";
 
 function hasValidBasePrice(product: SheetProduct): boolean {
   return Number.isFinite(product.price) && product.price > 0;
 }
 
-function hasValidImage(product: SheetProduct): boolean {
-  return product.img.trim() !== "";
-}
-
 function getInvalidCategories(product: SheetProduct): string[] {
   if (!product.category) return ["category vacío"];
+
   if (!product.categories || product.categories.length === 0) {
     return ["categories vacío"];
   }
 
   return product.categories.filter((categoryId) => !CATEGORY_IDS.has(categoryId));
+}
+
+function fixInvalidCategories(product: SheetProduct): void {
+  const validCategories = (product.categories ?? []).filter((categoryId) =>
+    CATEGORY_IDS.has(categoryId),
+  );
+
+  const hasValidPrimaryCategory =
+    product.category && CATEGORY_IDS.has(product.category);
+
+  if (hasValidPrimaryCategory) {
+    product.categories = Array.from(
+      new Set([product.category, ...validCategories].filter(Boolean)),
+    );
+    return;
+  }
+
+  if (validCategories.length > 0) {
+    product.category = validCategories[0];
+    product.categories = validCategories;
+    return;
+  }
+
+  product.category = FALLBACK_CATEGORY_ID;
+  product.categories = FALLBACK_CATEGORY_ID ? [FALLBACK_CATEGORY_ID] : [];
 }
 
 function hasInvalidOffer(product: SheetProduct): boolean {
@@ -56,21 +79,6 @@ export function validateProducts(products: SheetProduct[]): SheetProduct[] {
       return false;
     }
 
-    const invalidCategories = getInvalidCategories(product);
-
-    if (invalidCategories.length > 0) {
-      console.warn("Producto descartado: categoría inválida ->", {
-        id: product.id,
-        title: product.title,
-        category: product.category,
-        categories: product.categories,
-        invalidCategories,
-        validCategories: CATEGORIES.map((category) => category.sheetLabel),
-      });
-
-      return false;
-    }
-
     if (!hasValidBasePrice(product)) {
       console.warn("Producto descartado: precio base inválido ->", {
         id: product.id,
@@ -78,6 +86,22 @@ export function validateProducts(products: SheetProduct[]): SheetProduct[] {
         price: product.price,
       });
       return false;
+    }
+
+    const invalidCategories = getInvalidCategories(product);
+
+    if (invalidCategories.length > 0) {
+      console.warn("Producto con categoría incompleta o inválida. Se aplica fallback ->", {
+        id: product.id,
+        title: product.title,
+        category: product.category,
+        categories: product.categories,
+        invalidCategories,
+        fallbackCategory: FALLBACK_CATEGORY_ID,
+        validCategories: CATEGORIES.map((category) => category.sheetLabel),
+      });
+
+      fixInvalidCategories(product);
     }
 
     if (hasInvalidOffer(product)) {
@@ -91,18 +115,14 @@ export function validateProducts(products: SheetProduct[]): SheetProduct[] {
       product.offer_price = null;
     }
 
-    if (!hasValidImage(product)) {
-      console.warn("Producto descartado: sin imagen ->", {
+    if (!product.img.trim()) {
+      console.warn("Producto sin imagen. Se mantiene publicado, revisar ficha ->", {
         id: product.id,
         title: product.title,
       });
-      return false;
     }
 
     seen.add(product.id);
     return true;
   });
 }
-
-
-
