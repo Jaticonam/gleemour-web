@@ -1,7 +1,7 @@
 import type { Addon, Campaign, Product } from "@/shared/types/product";
 import { SHEETS_CONFIG, type SheetSource } from "./sheetsConfig";
 import { normalizeAddon, normalizeProduct } from "./normalizeProduct";
-import { normalizeCampaign, isCampaignActive } from "./normalizeCampaign";
+import { normalizeCampaign } from "./normalizeCampaign";
 import { validateProducts } from "./validateProducts";
 import { isVisibleProductStatus } from "@/tenant/config/product";
 
@@ -45,11 +45,7 @@ const PRODUCT_PREMIUM_HEADERS = [
 
 const ADDON_REQUIRED_HEADERS = ["id", "title", "price", "status"] as const;
 
-const ADDON_RECOMMENDED_HEADERS = [
-  "img",
-  "category",
-  "priority",
-] as const;
+const ADDON_RECOMMENDED_HEADERS = ["img", "category", "priority"] as const;
 
 const CAMPAIGN_REQUIRED_HEADERS = ["id", "name"] as const;
 
@@ -135,7 +131,9 @@ function getMissingHeaders(
   headers: string[],
   expectedHeaders: readonly string[],
 ): string[] {
-  const normalizedHeaders = new Set(headers.map((header) => header.toLowerCase()));
+  const normalizedHeaders = new Set(
+    headers.map((header) => header.toLowerCase()),
+  );
 
   return expectedHeaders.filter(
     (expected) => !normalizedHeaders.has(expected.toLowerCase()),
@@ -223,7 +221,12 @@ function validateSheetHeaders(
   }
 
   if (sourceName === "addons") {
-    throwMissingRequiredHeaders(headers, ADDON_REQUIRED_HEADERS, sourceName, source);
+    throwMissingRequiredHeaders(
+      headers,
+      ADDON_REQUIRED_HEADERS,
+      sourceName,
+      source,
+    );
 
     warnMissingOptionalHeaders(
       headers,
@@ -257,7 +260,9 @@ async function loadSheetRows(
 ): Promise<CsvRow[]> {
   const source = SHEETS_CONFIG[sourceName];
 
-  const url = `https://docs.google.com/spreadsheets/d/${source.docId}/export?format=csv&gid=${source.gid}`;
+  const cacheBust = `&t=${Date.now()}`;
+
+  const url = `https://docs.google.com/spreadsheets/d/${source.docId}/export?format=csv&gid=${source.gid}${cacheBust}`;
 
   const response = await fetch(url);
 
@@ -301,8 +306,18 @@ export async function loadAllAddons(): Promise<Addon[]> {
 export async function loadAllCampaigns(): Promise<Campaign[]> {
   const rows = await loadSheetRows("campaigns");
 
-  return rows
-    .map(normalizeCampaign)
-    .filter(isCampaignActive)
-    .sort((a, b) => b.priority - a.priority);
+  const normalized = rows.map(normalizeCampaign);
+
+  console.table(
+    rows.map((row, index) => ({
+      index,
+      id: row.id,
+      name: row.name,
+      rawColor: row.color,
+      publicationStatus: row.publicationstatus,
+      normalizedColorClass: normalized[index]?.colorClass,
+    })),
+  );
+
+  return normalized.sort((a, b) => b.priority - a.priority);
 }

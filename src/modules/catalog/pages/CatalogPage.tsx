@@ -37,6 +37,47 @@ function normalizeFilterKey(value: unknown): string {
     .replace(/^-|-$/g, "");
 }
 
+/**
+ * Normalizador canónico de campañas.
+ *
+ * Regla de negocio:
+ * El ID técnico de campaña debe quedar corto y comercial.
+ *
+ * Ejemplos:
+ * "Día de la Novia"  -> "dia-novia"
+ * "Día del Maestro"  -> "dia-maestro"
+ * "Día de la Madre"  -> "dia-madre"
+ * "San Valentín"     -> "san-valentin"
+ * "Cyber Gleemour"   -> "cyber-gleemour"
+ */
+function normalizeCampaignKey(value: unknown): string {
+  const normalized = normalizeFilterKey(value);
+
+  if (!normalized) return "";
+
+  const stopWords = new Set(["de", "del", "la", "el", "las", "los", "al"]);
+
+  return normalized
+    .split("-")
+    .filter((part) => part && !stopWords.has(part))
+    .join("-");
+}
+
+function isPublishedCampaignStatus(value: unknown): boolean {
+  const status = normalizeFilterKey(value);
+
+  return [
+    "publicado",
+    "publicada",
+    "publicadas",
+    "activo",
+    "activa",
+    "active",
+    "published",
+    "visible",
+  ].includes(status);
+}
+
 function titleFromSlug(value: string): string {
   return value
     .split("-")
@@ -45,14 +86,19 @@ function titleFromSlug(value: string): string {
     .join(" ");
 }
 
-function productBelongsToCategory(product: Product, categoryId: string): boolean {
+function productBelongsToCategory(
+  product: Product,
+  categoryId: string,
+): boolean {
   if (categoryId === "todas") return true;
 
   const productCategories = Array.isArray(product.categories)
     ? product.categories
     : [];
 
-  return product.category === categoryId || productCategories.includes(categoryId);
+  return (
+    product.category === categoryId || productCategories.includes(categoryId)
+  );
 }
 
 export default function CatalogPage() {
@@ -146,7 +192,7 @@ export default function CatalogPage() {
         : [];
 
       productCampaigns.forEach((campaign: string) => {
-        const campaignId = normalizeFilterKey(campaign);
+        const campaignId = normalizeCampaignKey(campaign);
 
         if (!campaignId) return;
 
@@ -158,24 +204,55 @@ export default function CatalogPage() {
   }, [products]);
 
   const visibleCampaigns = useMemo(() => {
-    const campaignById = new Map(
-      campaigns.map((campaign) => [normalizeFilterKey(campaign.id), campaign]),
-    );
+    return campaigns
+      .filter((campaign) =>
+        isPublishedCampaignStatus(campaign.publicationStatus),
+      )
+      .map((campaign) => {
+        const possibleIds = [
+          normalizeCampaignKey(campaign.id),
+          normalizeCampaignKey(campaign.name),
+        ].filter(Boolean);
 
-    return Object.keys(campaignCounts)
-      .map((campaignId) => {
-        const sheetCampaign = campaignById.get(campaignId);
+        const countKey = possibleIds.find(
+          (id) => (campaignCounts[id] ?? 0) > 0,
+        );
+
+        if (!countKey) return null;
 
         return {
-          id: campaignId,
-          name: sheetCampaign?.name || titleFromSlug(campaignId),
-          icon: sheetCampaign?.icon || "✨",
-          colorClass: sheetCampaign?.colorClass || "catalog-campaign-purple",
-          priority: sheetCampaign?.priority ?? 0,
+          id: countKey,
+          name: campaign.name,
+          icon: campaign.icon || "✨",
+          colorClass: campaign.colorClass || "catalog-campaign-gleemour",
+          priority: campaign.priority ?? 0,
         };
       })
+      .filter(
+        (
+          campaign,
+        ): campaign is {
+          id: string;
+          name: string;
+          icon: string;
+          colorClass: string;
+          priority: number;
+        } => campaign !== null,
+      )
       .sort((a, b) => b.priority - a.priority);
   }, [campaigns, campaignCounts]);
+
+  console.table(
+    campaigns.map((campaign) => ({
+      id: campaign.id,
+      name: campaign.name,
+      publicationStatus: campaign.publicationStatus,
+      computedStatus: campaign.computedStatus,
+      colorClass: campaign.colorClass,
+      countById: campaignCounts[normalizeCampaignKey(campaign.id)] ?? 0,
+      countByName: campaignCounts[normalizeCampaignKey(campaign.name)] ?? 0,
+    })),
+  );
 
   const handleCampaignSelect = (campaignId: string) => {
     setActiveCampaign(campaignId);
@@ -191,7 +268,7 @@ export default function CatalogPage() {
 
   const visibleProducts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
-    const normalizedActiveCampaign = normalizeFilterKey(activeCampaign);
+    const normalizedActiveCampaign = normalizeCampaignKey(activeCampaign);
 
     const byCampaign = !normalizedActiveCampaign
       ? products
@@ -201,7 +278,7 @@ export default function CatalogPage() {
             : [];
 
           return productCampaigns
-            .map(normalizeFilterKey)
+            .map(normalizeCampaignKey)
             .includes(normalizedActiveCampaign);
         });
 

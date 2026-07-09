@@ -1,6 +1,17 @@
 /* ==========================================
-   CatalogTopNav
-   Gleemour Header Definitive V1
+   CatalogTopNav.css
+   Gleemour Catalog Header / Campaign Nav
+   ------------------------------------------------
+   Objetivo:
+   - Header sticky premium.
+   - Categorías limpias y legibles.
+   - Campañas con colores completos desde Google Sheets.
+   - Mobile con panel "Explorar".
+   - CSS sin duplicados ni overrides fantasma.
+========================================== */
+
+/* ==========================================
+   01. Header principal
 ========================================== */
 
 .catalog-top-nav {
@@ -18,6 +29,10 @@
   border-bottom: 1px solid rgba(239, 227, 234, 0.78);
   backdrop-filter: blur(18px);
 }
+
+/* ==========================================
+   02. Logo / marca
+========================================== */
 
 .catalog-top-nav-brand-row {
   width: min(100%, 1480px);
@@ -56,10 +71,9 @@
   text-transform: uppercase;
 }
 
-.catalog-top-nav-search-row {
-  width: min(100%, 920px);
-  margin: 0 auto 0.75rem;
-}
+/* ==========================================
+   03. Categorías desktop
+========================================== */
 
 .catalog-top-nav-categories {
   width: min(100%, 1480px);
@@ -88,12 +102,14 @@
   background: rgba(255, 255, 255, 0.92);
   color: var(--w-heading);
   font-size: 0.82rem;
-  font-weight: 650;
+  font-weight: 750;
   cursor: pointer;
   transition:
     transform 180ms ease,
     box-shadow 180ms ease,
-    background 180ms ease;
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
 }
 
 .catalog-category-chip:hover,
@@ -115,25 +131,51 @@
   font-size: 0.95rem;
 }
 
+/* ==========================================
+   04. Fila de campañas desktop
+========================================== */
+
 .catalog-top-nav-campaign-row {
   width: min(100%, 1480px);
-  margin: 0.75rem auto 0;
+  margin: 0.95rem auto 0;
 }
 
 .catalog-campaign-row-label {
-  display: block;
-  margin: 0 0 0.45rem;
-  color: rgba(106, 90, 138, 0.6);
-  font-size: 0.68rem;
-  font-weight: 950;
+  position: relative;
+  width: min(100%, 980px);
+  margin: 0 auto 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  color: var(--w-primary);
+  font-size: 0.74rem;
+  font-weight: 850;
+  letter-spacing: 0.18em;
+  text-align: center;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+}
+
+.catalog-campaign-row-label::before,
+.catalog-campaign-row-label::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  max-width: 20rem;
+  background: linear-gradient(90deg, transparent, rgba(236, 164, 194, 0.45));
+}
+
+.catalog-campaign-row-label::after {
+  background: linear-gradient(90deg, rgba(236, 164, 194, 0.45), transparent);
 }
 
 .catalog-top-nav-campaigns {
+  width: min(100%, 1220px);
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  justify-content: center;
+  gap: 0.7rem;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -142,82 +184,106 @@
   display: none;
 }
 
+/* ==========================================
+   05. Chip de campaña base
+   ------------------------------------------------
+   El color real viene por variables:
+   --campaign-bg
+   --campaign-text
+   --campaign-icon-bg
+========================================== */
+
 .catalog-campaign-chip {
+  --campaign-bg: linear-gradient(135deg, #6a5a8a, #9a8bba);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+
+  position: relative;
+  overflow: hidden;
   flex-shrink: 0;
-  min-width: 11rem;
-  min-height: 3.05rem;
+  min-width: 13.9rem;
+  min-height: 4.05rem;
   display: inline-flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
-  gap: 0.85rem;
-  padding: 0.55rem 0.85rem;
-  border: 1px solid transparent;
+  gap: 0.75rem;
+  padding: 0.62rem 0.65rem 0.62rem 0.9rem;
+  border: 0;
   border-radius: 0.9rem;
-  background: #ffffff;
-  color: var(--w-heading);
-  box-shadow: 0 8px 20px rgba(106, 90, 138, 0.08);
+  background: var(--campaign-bg);
+  color: var(--campaign-text);
+  box-shadow: 0 10px 24px rgba(30, 22, 42, 0.12);
   cursor: pointer;
   transition:
     transform 180ms ease,
-    box-shadow 180ms ease;
+    box-shadow 180ms ease,
+    filter 180ms ease;
 }
 
 .catalog-campaign-chip:hover,
 .catalog-campaign-chip.active {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 28px rgba(106, 90, 138, 0.14);
+  transform: translateY(-2px);
+  filter: saturate(1.04);
+  box-shadow: 0 15px 34px rgba(30, 22, 42, 0.18);
+}
+
+.catalog-campaign-chip.active {
+  outline: 2px solid rgba(255, 255, 255, 0.72);
+  outline-offset: -4px;
 }
 
 .catalog-campaign-content {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
   line-height: 1.05;
+  color: inherit;
 }
 
 .catalog-campaign-content strong {
-  font-size: 0.83rem;
-  font-weight: 950;
+  color: inherit;
+  font-size: 0.95rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
 }
 
 .catalog-campaign-content small {
   margin-top: 0.2rem;
-  font-size: 0.67rem;
-  font-weight: 850;
-  opacity: 0.82;
+  color: inherit;
+  font-size: 0.74rem;
+  font-weight: 750;
+  line-height: 1;
+  opacity: 0.94;
 }
 
 .catalog-campaign-icon {
-  font-size: 1.35rem;
-}
-
-.catalog-campaign-teal {
-  background: linear-gradient(135deg, #2ea8a0, #42bfae);
-  color: #ffffff;
-}
-
-.catalog-campaign-pink {
-  background: linear-gradient(135deg, #ec7db6, #f3a5ca);
-  color: #ffffff;
-}
-
-.catalog-campaign-blue {
-  background: linear-gradient(135deg, #3f68c9, #6c93ff);
-  color: #ffffff;
-}
-
-.catalog-campaign-gold {
-  background: linear-gradient(135deg, #f2b94b, #ffd978);
-  color: #4b3510;
-}
-
-.catalog-campaign-purple {
-  background: linear-gradient(135deg, #7d65b1, #b99bdd);
-  color: #ffffff;
+  width: 3.05rem;
+  min-height: 100%;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.78rem;
+  font-size: 1.8rem;
+  background: var(--campaign-icon-bg);
+  color: inherit;
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.16);
 }
 
 /* ==========================================
-   Mobile Explore Button
+   06. Buscador
+========================================== */
+
+.catalog-top-nav-search-row {
+  width: min(100%, 920px);
+  margin: 0.8rem auto 0;
+}
+
+/* ==========================================
+   07. Botón flotante mobile
 ========================================== */
 
 .catalog-explore-fab {
@@ -227,6 +293,481 @@
 .catalog-explore-overlay {
   display: none;
 }
+
+/* ==========================================
+   Campaign Palette A-Z
+   Gleemour Campaign Color System
+   ------------------------------------------
+   Uso:
+   Google Sheets color -> campaignColors.ts -> catalog-campaign-*
+========================================== */
+
+/* Base visual para cualquier campaña */
+.catalog-campaign-chip,
+.catalog-explore-campaign-chip {
+  --campaign-bg: linear-gradient(135deg, #6a5a8a, #9a8bba);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* Aplica color completo al chip desktop */
+.catalog-campaign-chip[class*="catalog-campaign-"] {
+  background: var(--campaign-bg);
+  color: var(--campaign-text);
+}
+
+/* Aplica color completo al chip mobile */
+.catalog-explore-campaign-chip[class*="catalog-campaign-"] {
+  background: var(--campaign-bg);
+  color: var(--campaign-text);
+  border-color: transparent;
+}
+
+/* Icono interno desktop */
+.catalog-campaign-chip[class*="catalog-campaign-"] .catalog-campaign-icon {
+  background: var(--campaign-icon-bg);
+  color: inherit;
+}
+
+/* Active state desktop */
+.catalog-campaign-chip.active {
+  outline: 2px solid rgba(255, 255, 255, 0.72);
+  outline-offset: -4px;
+}
+
+/* Active state mobile */
+.catalog-explore-campaign-chip.active {
+  background: var(--campaign-bg);
+  color: var(--campaign-text);
+  filter: saturate(1.08);
+  box-shadow: 0 14px 30px rgba(30, 22, 42, 0.18);
+}
+
+/* ==========================================
+   A
+========================================== */
+
+/* amarillo */
+.catalog-campaign-yellow {
+  --campaign-bg: linear-gradient(135deg, #ffd84d, #f9c95b);
+  --campaign-text: #4b3510;
+  --campaign-icon-bg: rgba(75, 53, 16, 0.1);
+}
+
+/* aqua */
+.catalog-campaign-aqua {
+  --campaign-bg: linear-gradient(135deg, #00b4d8, #90e0ef);
+  --campaign-text: #073b4c;
+  --campaign-icon-bg: rgba(7, 59, 76, 0.1);
+}
+
+/* azul */
+.catalog-campaign-blue {
+  --campaign-bg: linear-gradient(135deg, #2f64cf, #3f7ee8);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* azul bebe */
+.catalog-campaign-baby-blue {
+  --campaign-bg: linear-gradient(135deg, #93c5fd, #bfdbfe);
+  --campaign-text: #17365f;
+  --campaign-icon-bg: rgba(23, 54, 95, 0.1);
+}
+
+/* azul cielo */
+.catalog-campaign-sky {
+  --campaign-bg: linear-gradient(135deg, #37aee2, #68c7f5);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* azul cobalto */
+.catalog-campaign-cobalt {
+  --campaign-bg: linear-gradient(135deg, #0047ab, #2f6fed);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* azul electrico */
+.catalog-campaign-electric-blue {
+  --campaign-bg: linear-gradient(135deg, #0077ff, #00c2ff);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* azul hielo */
+.catalog-campaign-ice-blue {
+  --campaign-bg: linear-gradient(135deg, #dbeafe, #eff6ff);
+  --campaign-text: #1e3a8a;
+  --campaign-icon-bg: rgba(30, 58, 138, 0.1);
+}
+
+/* azul marino */
+.catalog-campaign-navy {
+  --campaign-bg: linear-gradient(135deg, #0f172a, #1e3a8a);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* azul petroleo */
+.catalog-campaign-petrol {
+  --campaign-bg: linear-gradient(135deg, #005f73, #0a9396);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* azul rey */
+.catalog-campaign-royal-blue {
+  --campaign-bg: linear-gradient(135deg, #1d4ed8, #2563eb);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   B
+========================================== */
+
+/* blanco */
+.catalog-campaign-white {
+  --campaign-bg: linear-gradient(135deg, #ffffff, #f8fafc);
+  --campaign-text: #2f2437;
+  --campaign-icon-bg: rgba(47, 36, 55, 0.08);
+}
+
+/* borgona */
+.catalog-campaign-burgundy {
+  --campaign-bg: linear-gradient(135deg, #58111a, #8a2332);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   C
+========================================== */
+
+/* celeste */
+.catalog-campaign-sky {
+  --campaign-bg: linear-gradient(135deg, #37aee2, #68c7f5);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* champagne */
+.catalog-campaign-champagne {
+  --campaign-bg: linear-gradient(135deg, #e8c98a, #fff1c7);
+  --campaign-text: #4b3510;
+  --campaign-icon-bg: rgba(75, 53, 16, 0.1);
+}
+
+/* cobre */
+.catalog-campaign-copper {
+  --campaign-bg: linear-gradient(135deg, #b66a42, #cf7d52);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* coral */
+.catalog-campaign-coral {
+  --campaign-bg: linear-gradient(135deg, #ff6f61, #ff9a8b);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* crema */
+.catalog-campaign-cream {
+  --campaign-bg: linear-gradient(135deg, #f7e7ce, #fff8e7);
+  --campaign-text: #4b3510;
+  --campaign-icon-bg: rgba(75, 53, 16, 0.1);
+}
+
+/* ==========================================
+   D
+========================================== */
+
+/* dorado */
+.catalog-campaign-gold {
+  --campaign-bg: linear-gradient(135deg, #f2b84d, #f9c95b);
+  --campaign-text: #4b3510;
+  --campaign-icon-bg: rgba(75, 53, 16, 0.1);
+}
+
+/* durazno */
+.catalog-campaign-peach {
+  --campaign-bg: linear-gradient(135deg, #f6ad97, #ffd1bd);
+  --campaign-text: #5a2c1e;
+  --campaign-icon-bg: rgba(90, 44, 30, 0.1);
+}
+
+/* ==========================================
+   E
+========================================== */
+
+/* elegante */
+.catalog-campaign-elegant {
+  --campaign-bg: linear-gradient(135deg, #2f2437, #6a5a8a);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* esmeralda */
+.catalog-campaign-emerald {
+  --campaign-bg: linear-gradient(135deg, #0f8f72, #16aa88);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   F
+========================================== */
+
+/* fucsia */
+.catalog-campaign-fuchsia {
+  --campaign-bg: linear-gradient(135deg, #d946ef, #ec5ff4);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   G
+========================================== */
+
+/* gleemour */
+.catalog-campaign-gleemour {
+  --campaign-bg: linear-gradient(135deg, #6a5a8a, #eca4c2);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* gris */
+.catalog-campaign-gray {
+  --campaign-bg: linear-gradient(135deg, #6b7280, #9ca3af);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   H
+========================================== */
+
+/* halloween */
+.catalog-campaign-halloween {
+  --campaign-bg: linear-gradient(135deg, #111827, #f97316);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   J
+========================================== */
+
+/* jade */
+.catalog-campaign-jade {
+  --campaign-bg: linear-gradient(135deg, #00a86b, #34d399);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   L
+========================================== */
+
+/* lavanda */
+.catalog-campaign-lavender {
+  --campaign-bg: linear-gradient(135deg, #8b7cf6, #c4b5fd);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* lila */
+.catalog-campaign-lilac {
+  --campaign-bg: linear-gradient(135deg, #b794f4, #d8b4fe);
+  --campaign-text: #3b2a52;
+  --campaign-icon-bg: rgba(59, 42, 82, 0.1);
+}
+
+/* lima */
+.catalog-campaign-lime {
+  --campaign-bg: linear-gradient(135deg, #a3e635, #d9f99d);
+  --campaign-text: #365314;
+  --campaign-icon-bg: rgba(54, 83, 20, 0.1);
+}
+
+/* ==========================================
+   M
+========================================== */
+
+/* magenta */
+.catalog-campaign-magenta {
+  --campaign-bg: linear-gradient(135deg, #c026d3, #e879f9);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* menta */
+.catalog-campaign-mint {
+  --campaign-bg: linear-gradient(135deg, #99f6e4, #ccfbf1);
+  --campaign-text: #064e3b;
+  --campaign-icon-bg: rgba(6, 78, 59, 0.1);
+}
+
+/* morado */
+.catalog-campaign-purple {
+  --campaign-bg: linear-gradient(135deg, #6a5a8a, #8b6ff4);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   N
+========================================== */
+
+/* naranja */
+.catalog-campaign-orange {
+  --campaign-bg: linear-gradient(135deg, #ef7d1a, #f59a3d);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* navidad */
+.catalog-campaign-christmas {
+  --campaign-bg: linear-gradient(135deg, #0f5132, #dc3545);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* negro */
+.catalog-campaign-dark {
+  --campaign-bg: linear-gradient(135deg, #252525, #3d3d3d);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   O
+========================================== */
+
+/* oliva */
+.catalog-campaign-olive {
+  --campaign-bg: linear-gradient(135deg, #6b8e23, #9caf3c);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   P
+========================================== */
+
+/* palo rosa */
+.catalog-campaign-dusty-rose {
+  --campaign-bg: linear-gradient(135deg, #c98da3, #e8b7c8);
+  --campaign-text: #4a2533;
+  --campaign-icon-bg: rgba(74, 37, 51, 0.1);
+}
+
+/* premium */
+.catalog-campaign-premium {
+  --campaign-bg: linear-gradient(135deg, #111827, #d4af37);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* primavera */
+.catalog-campaign-spring {
+  --campaign-bg: linear-gradient(135deg, #86efac, #f9a8d4);
+  --campaign-text: #24422d;
+  --campaign-icon-bg: rgba(36, 66, 45, 0.1);
+}
+
+/* ==========================================
+   R
+========================================== */
+
+/* rojo */
+.catalog-campaign-red {
+  --campaign-bg: linear-gradient(135deg, #dc3545, #ef5c66);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* rosa pastel */
+.catalog-campaign-soft-pink {
+  --campaign-bg: linear-gradient(135deg, #f9a8d4, #fbcfe8);
+  --campaign-text: #5b2445;
+  --campaign-icon-bg: rgba(91, 36, 69, 0.1);
+}
+
+/* rosado */
+.catalog-campaign-pink {
+  --campaign-bg: linear-gradient(135deg, #e94fb5, #f06abf);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   S
+========================================== */
+
+/* salmon */
+.catalog-campaign-salmon {
+  --campaign-bg: linear-gradient(135deg, #fa8072, #ffb199);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   T
+========================================== */
+
+/* terracota */
+.catalog-campaign-terracotta {
+  --campaign-bg: linear-gradient(135deg, #b85c38, #d9825b);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* turquesa */
+.catalog-campaign-teal {
+  --campaign-bg: linear-gradient(135deg, #269f98, #37b8b0);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   V
+========================================== */
+
+/* verde */
+.catalog-campaign-green {
+  --campaign-bg: linear-gradient(135deg, #13a77f, #2dbc9a);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* verano */
+.catalog-campaign-summer {
+  --campaign-bg: linear-gradient(135deg, #facc15, #fb923c);
+  --campaign-text: #4b3510;
+  --campaign-icon-bg: rgba(75, 53, 16, 0.1);
+}
+
+/* vino */
+.catalog-campaign-wine {
+  --campaign-bg: linear-gradient(135deg, #7f1734, #9f2448);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* violeta */
+.catalog-campaign-violet {
+  --campaign-bg: linear-gradient(135deg, #7c3aed, #a78bfa);
+  --campaign-text: #ffffff;
+  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================
+   09. Mobile
+========================================== */
 
 @media (max-width: 720px) {
   .catalog-top-nav {
@@ -247,7 +788,7 @@
   }
 
   .catalog-top-nav-search-row {
-    margin-bottom: 0;
+    margin-top: 0.65rem;
   }
 
   .catalog-top-nav-categories,
@@ -375,6 +916,7 @@
     font-size: 0.8rem;
     font-weight: 900;
     cursor: pointer;
+    box-shadow: 0 8px 18px rgba(30, 22, 42, 0.06);
   }
 
   .catalog-explore-chip.active {
@@ -383,290 +925,24 @@
     color: #ffffff;
   }
 
+  .catalog-explore-campaign-chip {
+    --campaign-bg: linear-gradient(135deg, #6a5a8a, #9a8bba);
+    --campaign-text: #ffffff;
+
+    background: var(--campaign-bg);
+    border-color: transparent;
+    color: var(--campaign-text);
+  }
+
+  .catalog-explore-campaign-chip.active {
+    background: var(--campaign-bg);
+    color: var(--campaign-text);
+    filter: saturate(1.08);
+    box-shadow: 0 14px 30px rgba(30, 22, 42, 0.18);
+  }
+
   .catalog-explore-chip small {
     opacity: 0.72;
     font-size: 0.72rem;
-  }
-}
-
-/* ==========================================
-   Header Search Placement
-========================================== */
-
-.catalog-top-nav-search-row {
-  margin-top: 0.75rem;
-  margin-bottom: 0;
-}
-
-.catalog-top-nav-categories {
-  margin-bottom: 0;
-}
-
-.catalog-top-nav-campaign-row + .catalog-top-nav-search-row {
-  margin-top: 0.8rem;
-}
-
-/* ==========================================
-   Campaign Color Variants
-========================================== */
-
-.catalog-campaign-yellow {
-  background: linear-gradient(135deg, #ffd84d, #f9c95b);
-  color: #4b3510;
-}
-
-.catalog-campaign-sky {
-  background: linear-gradient(135deg, #7cc8f8, #a8ddff);
-  color: #17415f;
-}
-
-.catalog-campaign-copper {
-  background: linear-gradient(135deg, #c97a56, #e9a47f);
-  color: #ffffff;
-}
-
-.catalog-campaign-emerald {
-  background: linear-gradient(135deg, #0f9d7a, #34c9a6);
-  color: #ffffff;
-}
-
-.catalog-campaign-fuchsia {
-  background: linear-gradient(135deg, #e94fb5, #ff8bd4);
-  color: #ffffff;
-}
-
-.catalog-campaign-lavender {
-  background: linear-gradient(135deg, #a78bfa, #c4b5fd);
-  color: #ffffff;
-}
-
-.catalog-campaign-orange {
-  background: linear-gradient(135deg, #f28c28, #ffb347);
-  color: #ffffff;
-}
-
-.catalog-campaign-dark {
-  background: linear-gradient(135deg, #2c2c2c, #555555);
-  color: #ffffff;
-}
-
-.catalog-campaign-silver {
-  background: linear-gradient(135deg, #bfc5d2, #e5e7eb);
-  color: #2c2c2c;
-}
-
-.catalog-campaign-red {
-  background: linear-gradient(135deg, #e5484d, #ff7a7f);
-  color: #ffffff;
-}
-
-.catalog-campaign-green {
-  background: linear-gradient(135deg, #38b56a, #68d391);
-  color: #ffffff;
-}
-
-.catalog-campaign-wine {
-  background: linear-gradient(135deg, #8b1e3f, #b8325f);
-  color: #ffffff;
-}
-
-/* ==========================================
-   Premium Campaign Chips V3 - Clean Gleemour
-========================================== */
-
-.catalog-campaign-row-label {
-  position: relative;
-  width: min(100%, 980px);
-  margin: 1rem auto 0.9rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.85rem;
-  color: var(--w-primary);
-  font-size: 0.74rem;
-  font-weight: 850;
-  letter-spacing: 0.18em;
-  text-align: center;
-}
-
-.catalog-campaign-row-label::before,
-.catalog-campaign-row-label::after {
-  content: "";
-  height: 1px;
-  flex: 1;
-  max-width: 20rem;
-  background: linear-gradient(90deg, transparent, rgba(236, 164, 194, 0.45));
-}
-
-.catalog-campaign-row-label::after {
-  background: linear-gradient(90deg, rgba(236, 164, 194, 0.45), transparent);
-}
-
-.catalog-campaign-row-label span {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.catalog-top-nav-campaigns {
-  width: min(100%, 1220px);
-  margin: 0 auto;
-  justify-content: center;
-  gap: 0.7rem;
-}
-
-.catalog-campaign-chip {
-  position: relative;
-  overflow: hidden;
-  min-width: 13.9rem;
-  min-height: 4.05rem;
-  display: inline-flex;
-  align-items: stretch;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.62rem 0.65rem 0.62rem 0.9rem;
-  border: 0;
-  border-radius: 0.9rem;
-  box-shadow: 0 10px 24px rgba(30, 22, 42, 0.12);
-  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
-}
-
-.catalog-campaign-chip:hover,
-.catalog-campaign-chip.active {
-  transform: translateY(-2px);
-  filter: saturate(1.04);
-  box-shadow: 0 15px 34px rgba(30, 22, 42, 0.18);
-}
-
-.catalog-campaign-chip::before,
-.catalog-campaign-chip::after {
-  display: none;
-}
-
-.catalog-campaign-content {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  line-height: 1.05;
-}
-
-.catalog-campaign-content strong {
-  color: inherit;
-  font-size: 0.95rem;
-  font-weight: 900;
-  letter-spacing: -0.025em;
-  line-height: 1.05;
-}
-
-.catalog-campaign-content small {
-  margin-top: 0.2rem;
-  color: inherit;
-  font-size: 0.74rem;
-  font-weight: 750;
-  line-height: 1;
-  opacity: 0.94;
-}
-
-.catalog-campaign-icon {
-  width: 3.05rem;
-  min-height: 100%;
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.78rem;
-  font-size: 1.8rem;
-  background: rgba(255, 255, 255, 0.16);
-  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.16);
-}
-
-/* Color refinements - clean premium */
-
-.catalog-campaign-purple {
-  background: linear-gradient(135deg, #7a56e8, #8b6ff4);
-  color: #ffffff;
-}
-
-.catalog-campaign-pink {
-  background: linear-gradient(135deg, #e94fb5, #f06abf);
-  color: #ffffff;
-}
-
-.catalog-campaign-blue {
-  background: linear-gradient(135deg, #2f64cf, #3f7ee8);
-  color: #ffffff;
-}
-
-.catalog-campaign-gold,
-.catalog-campaign-yellow {
-  background: linear-gradient(135deg, #f2b84d, #f9c95b);
-  color: #4b3510;
-}
-
-.catalog-campaign-green {
-  background: linear-gradient(135deg, #13a77f, #2dbc9a);
-  color: #ffffff;
-}
-
-.catalog-campaign-red {
-  background: linear-gradient(135deg, #dc3545, #ef5c66);
-  color: #ffffff;
-}
-
-.catalog-campaign-teal {
-  background: linear-gradient(135deg, #269f98, #37b8b0);
-  color: #ffffff;
-}
-
-.catalog-campaign-dark {
-  background: linear-gradient(135deg, #252525, #3d3d3d);
-  color: #ffffff;
-}
-
-.catalog-campaign-orange {
-  background: linear-gradient(135deg, #ef7d1a, #f59a3d);
-  color: #ffffff;
-}
-
-.catalog-campaign-lavender {
-  background: linear-gradient(135deg, #8b7cf6, #a78bfa);
-  color: #ffffff;
-}
-
-.catalog-campaign-sky {
-  background: linear-gradient(135deg, #37aee2, #68c7f5);
-  color: #ffffff;
-}
-
-.catalog-campaign-copper {
-  background: linear-gradient(135deg, #b66a42, #cf7d52);
-  color: #ffffff;
-}
-
-.catalog-campaign-emerald {
-  background: linear-gradient(135deg, #0f8f72, #16aa88);
-  color: #ffffff;
-}
-
-.catalog-campaign-fuchsia {
-  background: linear-gradient(135deg, #d946ef, #ec5ff4);
-  color: #ffffff;
-}
-
-.catalog-campaign-silver {
-  background: linear-gradient(135deg, #b8c0cc, #d7dce5);
-  color: #2c2c2c;
-}
-
-.catalog-campaign-wine {
-  background: linear-gradient(135deg, #7f1734, #9f2448);
-  color: #ffffff;
-}
-
-@media (max-width: 720px) {
-  .catalog-top-nav-search-row {
-    margin-top: 0.65rem;
   }
 }

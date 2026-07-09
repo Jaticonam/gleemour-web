@@ -102,7 +102,7 @@ export function normalizeCampaign(row: CsvRow): Campaign {
   const name = cleanText(row.name);
   const id = slugify(row.id || name);
 
-  const campaign: Campaign = {
+  const campaignBase: Campaign = {
     id,
     name,
     icon: cleanText(row.icon),
@@ -111,11 +111,15 @@ export function normalizeCampaign(row: CsvRow): Campaign {
     endDate: cleanText(row.enddate),
     priority: parseNumber(row.priority),
     publicationStatus: cleanText(row.publicationstatus),
+    showInCatalog: false,
   };
 
+  const computedStatus = getCampaignComputedStatus(campaignBase);
+
   return {
-    ...campaign,
-    computedStatus: getCampaignComputedStatus(campaign),
+    ...campaignBase,
+    computedStatus,
+    showInCatalog: computedStatus === "activa",
   };
 }
 
