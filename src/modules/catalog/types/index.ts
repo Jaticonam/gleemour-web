@@ -1,2 +1,7 @@
-export * from "./catalog.types";
-export * from "./product.types";
+export type {
+  Addon,
+  Campaign,
+  CartItem,
+  Category,
+  Product,
+} from "@/shared/types/product";

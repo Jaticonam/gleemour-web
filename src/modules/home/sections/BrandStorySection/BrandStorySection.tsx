@@ -10,7 +10,6 @@ import {
   Star,
 } from "lucide-react";
 
-import { WhatsAppIcon } from "../ui/SocialIcons";
 import { HomeSectionHeader } from "../../components/HomeSectionHeader";
 
 const emotionalCategories = [
@@ -117,6 +116,7 @@ export default function BrandStorySection() {
     </section>
   );
 }
+
 
 
 

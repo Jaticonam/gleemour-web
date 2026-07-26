@@ -15,25 +15,30 @@ export function hasOfferPrice(product: Product): boolean {
 
 /**
  * Devuelve el precio final de venta.
- * Si hay oferta válida, devuelve offer_price.
+ * Si existe una oferta válida, devuelve offer_price.
  */
 export function getProductPrice(product: Product): number {
-  return hasOfferPrice(product) ? Number(product.offer_price) : product.price;
+  return hasOfferPrice(product)
+    ? Number(product.offer_price)
+    : product.price;
 }
 
 /**
  * Devuelve el precio original.
- * Se usa para mostrar precio tachado cuando hay oferta.
+ * Se utiliza para mostrar el precio tachado cuando existe oferta.
  */
 export function getOriginalProductPrice(product: Product): number {
   return product.price;
 }
 
 /**
- * Precio efectivo dentro del carrito.
+ * Precio efectivo utilizado en carrito, detalle y pedidos.
+ *
+ * La cantidad pertenece al CartItem, pero no participa
+ * en el cálculo unitario del modelo B2C de Gleemour.
  */
-export function getEffectivePrice(item: Product & { qty: number }): number {
-  return getProductPrice(item);
+export function getEffectivePrice(product: Product): number {
+  return getProductPrice(product);
 }
 
 /**
@@ -42,6 +47,3 @@ export function getEffectivePrice(item: Product & { qty: number }): number {
 export function getMinPrice(product: Product): number {
   return getProductPrice(product);
 }
-
-
-
