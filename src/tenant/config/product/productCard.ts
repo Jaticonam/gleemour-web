@@ -27,6 +27,7 @@ export const PRODUCT_CARD_CONFIG = {
   },
 
   actions: {
+    viewDetail: "Ver detalle",
     whatsappPreorder: "Consultar",
     whatsappSoldOut: "Consultar disponibilidad",
     addMore: "Agregar más",
@@ -34,6 +35,3 @@ export const PRODUCT_CARD_CONFIG = {
     soldOut: "Agotado",
   },
 } as const;
-
-
-

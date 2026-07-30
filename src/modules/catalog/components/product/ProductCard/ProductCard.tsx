@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getProductUrl } from "@/app/routes/routes";
 import { sortBadges } from "@/tenant/config/product";
 
-import { CartItem, Product } from "@/shared/types/product";
+import type { Product } from "@/shared/types/product";
 
 import {
   getProductPrice,
@@ -15,8 +15,6 @@ import {
   getProductState,
   getLiveViewers,
 } from "@/domain/product";
-
-import { buildProductWhatsAppUrl } from "@/integrations/whatsapp/whatsapp";
 
 import { ProductCardImage } from "./ProductCardImage";
 import { ProductCardType } from "./ProductCardType";
@@ -34,32 +32,18 @@ import {
 
 interface ProductCardProps {
   product: Product;
-  cart?: CartItem[];
-  onAddToCart: (product: Product) => void;
-  onImageClick?: (src: string, title: string) => void;
 }
 
-export function ProductCard({
-  product,
-  cart = [],
-  onAddToCart,
-}: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   const navigate = useNavigate();
 
   const available = isProductAvailable(product);
   const productState = getProductState(product);
   const isPreventa = productState.type === "preorder";
 
-  const showWhatsAppButton =
-    productState.type === "preorder" || productState.type === "sold-out";
-
   const price = getProductPrice(product);
   const originalPrice = getOriginalProductPrice(product);
   const hasOffer = hasOfferPrice(product);
-
-  const cartItem = cart.find((item) => item.id === product.id);
-  const qtyInCart = cartItem?.qty ?? 0;
-  const isInCart = qtyInCart > 0;
 
   const [viewers, setViewers] = useState(getLiveViewers());
 
@@ -79,20 +63,6 @@ export function ProductCard({
   const stateBadge = pickBadgeByKeys(sortedBadges, STATE_BADGE_KEYS);
   const primaryAttribute = product.attributes?.[0];
 
-  const handleAdd = () => {
-    if (!available || isPreventa) return;
-    onAddToCart(product);
-  };
-
-  const handleWhatsApp = () => {
-    const url = buildProductWhatsAppUrl({
-      product,
-      qty: 1,
-    });
-
-    window.open(url, "_blank", "noopener,noreferrer");
-  };
-
   const handleViewDetail = () => {
     navigate(getProductUrl(product));
   };
@@ -105,8 +75,6 @@ export function ProductCard({
         product={product}
         available={available}
         isPreventa={isPreventa}
-        isInCart={isInCart}
-        qtyInCart={qtyInCart}
         campaignBadge={campaignBadge}
         stateBadge={stateBadge}
         onImageClick={handleViewDetail}
@@ -133,14 +101,7 @@ export function ProductCard({
           viewers={viewers}
         />
 
-        <ProductCardActions
-          available={available}
-          isPreventa={isPreventa}
-          isInCart={isInCart}
-          showWhatsAppButton={showWhatsAppButton}
-          onAdd={handleAdd}
-          onWhatsApp={handleWhatsApp}
-        />
+        <ProductCardActions onViewDetail={handleViewDetail} />
       </div>
     </article>
   );

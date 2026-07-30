@@ -8,12 +8,12 @@ import type { Campaign, Product } from "@/shared/types/product";
 import { BRAND_CONFIG } from "@/tenant/config/brand";
 
 import { useCart } from "@/modules/cart/hooks/useCart";
-import { CartSidebar, AddToCartModal } from "@/modules/cart/components";
+import { CartSidebar } from "@/modules/cart/components";
 
 import { ProductCard } from "@/modules/catalog/components/product/ProductCard";
 import { CatalogTopNav } from "@/modules/catalog/components/catalog/CatalogTopNav";
 import { SearchInput } from "@/modules/catalog/components/search/SearchInput";
-import { ImageZoomModal } from "@/modules/catalog/components/overlays/ImageZoomModal";
+
 import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActivity";
 
 import { FloatingButtons } from "@/shared/components/overlays/FloatingButtons";
@@ -111,16 +111,10 @@ export default function CatalogPage() {
   const [activeCategory, setActiveCategory] = useState("todas");
 
   const [cartOpen, setCartOpen] = useState(false);
-  const [addModalOpen, setAddModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [zoomImage, setZoomImage] = useState<{
-    src: string;
-    title: string;
-  } | null>(null);
 
   const {
     cart,
-    addToCart,
+
     removeFromCart,
     changeQty,
     setExactQty,
@@ -187,8 +181,8 @@ export default function CatalogPage() {
 
   const campaignCounts = useMemo(() => {
     return products.reduce<Record<string, number>>((acc, product) => {
-      const productCampaigns = Array.isArray((product as any).campaigns)
-        ? (product as any).campaigns
+      const productCampaigns = Array.isArray(product.campaigns)
+        ? product.campaigns
         : [];
 
       productCampaigns.forEach((campaign: string) => {
@@ -273,8 +267,8 @@ export default function CatalogPage() {
     const byCampaign = !normalizedActiveCampaign
       ? products
       : products.filter((product) => {
-          const productCampaigns = Array.isArray((product as any).campaigns)
-            ? (product as any).campaigns
+          const productCampaigns = Array.isArray(product.campaigns)
+            ? product.campaigns
             : [];
 
           return productCampaigns
@@ -301,7 +295,7 @@ export default function CatalogPage() {
         product.message,
         product.highlight,
         ...(product.badges ?? []),
-        ...((product as any).campaigns ?? []),
+        ...(product.campaigns ?? []),
       ]
         .filter(Boolean)
         .join(" ")
@@ -311,13 +305,6 @@ export default function CatalogPage() {
     });
   }, [products, searchQuery, activeCampaign, activeCategory]);
 
-  const handleAddToCart = (product: Product) => {
-    addToCart(product, 1);
-    setSelectedProduct(product);
-    setAddModalOpen(true);
-
-    showNotification("Producto agregado", "Tu detalle fue agregado al pedido.");
-  };
 
   if (loading) return <CatalogSkeleton />;
 
@@ -378,14 +365,6 @@ export default function CatalogPage() {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  cart={cart}
-                  onAddToCart={handleAddToCart}
-                  onImageClick={(src, title) =>
-                    setZoomImage({
-                      src,
-                      title,
-                    })
-                  }
                 />
               ))}
             </div>
@@ -421,30 +400,8 @@ export default function CatalogPage() {
         onClearCart={clearCart}
       />
 
-      <ImageZoomModal
-        src={zoomImage?.src ?? null}
-        title={zoomImage?.title ?? ""}
-        onClose={() => setZoomImage(null)}
-      />
 
-      <AddToCartModal
-        open={addModalOpen}
-        product={selectedProduct}
-        currentQty={
-          selectedProduct
-            ? (cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0)
-            : 0
-        }
-        onClose={() => setAddModalOpen(false)}
-        onAddExtra={(qty) => {
-          if (!selectedProduct) return;
-          addToCart(selectedProduct, qty);
-        }}
-        onOpenCart={() => {
-          setAddModalOpen(false);
-          setCartOpen(true);
-        }}
-      />
+
     </div>
   );
 }

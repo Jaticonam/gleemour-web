@@ -13,10 +13,10 @@ import { Product } from "@/shared/types/product";
 import { CountdownTimer } from "@/modules/catalog/components/banners/CountdownBanner";
 import { CategoryFilter } from "@/modules/catalog/components/filters/CategoryFilter";
 import { ProductCard } from "@/modules/catalog/components/product/ProductCard";
-import { CartSidebar, AddToCartModal } from "@/modules/cart/components";
+import { CartSidebar } from "@/modules/cart/components";
 import { FloatingButtons } from "@/shared/components/overlays/FloatingButtons";
 import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActivity";
-import { ImageZoomModal } from "@/modules/catalog/components/overlays/ImageZoomModal";
+
 
 import { CategorySkeleton } from "@/shared/components/skeletons/CategorySkeleton";
 import { SearchInput } from "@/modules/catalog/components/search/SearchInput";
@@ -30,18 +30,11 @@ const CategoryPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
-  const [zoomImage, setZoomImage] = useState<{
-    src: string;
-    title: string;
-  } | null>(null);
   const [categorySearch, setCategorySearch] = useState("");
-
-  const [addModalOpen, setAddModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const {
     cart,
-    addToCart,
+
     removeFromCart,
     changeQty,
     setExactQty,
@@ -117,30 +110,6 @@ const CategoryPage = () => {
     [navigate],
   );
 
-  const handleAddToCart = useCallback(
-    (product: Product) => {
-      addToCart(product, 1);
-      setSelectedProduct(product);
-      setAddModalOpen(true);
-    },
-    [addToCart],
-  );
-
-  const handleCloseAddModal = useCallback(() => {
-    setAddModalOpen(false);
-  }, []);
-
-  const handleAddExtra = useCallback(
-    (qty: number) => {
-      if (!selectedProduct || qty <= 0) return;
-      addToCart(selectedProduct, qty);
-    },
-    [addToCart, selectedProduct],
-  );
-
-  const currentQtyInCart = selectedProduct
-    ? (cart.find((item) => item.id === selectedProduct.id)?.qty ?? 0)
-    : 0;
 
   const hasSearch = categorySearch.trim().length > 0;
 
@@ -252,9 +221,6 @@ const CategoryPage = () => {
               <ProductCard
                 key={product.id}
                 product={product}
-                cart={cart}
-                onAddToCart={handleAddToCart}
-                onImageClick={(src, title) => setZoomImage({ src, title })}
               />
             ))}
           </div>
@@ -281,23 +247,8 @@ const CategoryPage = () => {
         onChangeNote={setItemNote}
       />
 
-      <ImageZoomModal
-        src={zoomImage?.src ?? null}
-        title={zoomImage?.title ?? ""}
-        onClose={() => setZoomImage(null)}
-      />
 
-      <AddToCartModal
-        open={addModalOpen}
-        product={selectedProduct}
-        currentQty={currentQtyInCart}
-        onClose={handleCloseAddModal}
-        onAddExtra={handleAddExtra}
-        onOpenCart={() => {
-          setAddModalOpen(false);
-          setCartOpen(true);
-        }}
-      />
+
     </div>
   );
 };

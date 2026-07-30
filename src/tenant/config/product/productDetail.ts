@@ -33,6 +33,10 @@ export const PRODUCT_DETAIL_CONFIG = {
     whatsappSoldOut: "Consultar disponibilidad",
   },
 
+  trust: {
+    text: "Coordinamos contigo cada detalle antes de confirmar.",
+  },
+
   description: {
     fallback:
       "Un detalle pensado para emocionar, sorprender y hacer sentir especial a alguien importante.",

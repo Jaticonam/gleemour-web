@@ -1,6 +1,5 @@
 import { ProductCard } from "../ProductCard";
 import type { Product } from "@/shared/types/product";
-import type { CartItem } from "@/shared/types/product";
 
 import "./ProductRelated.css";
 
@@ -8,18 +7,12 @@ export interface ProductRelatedProps {
   title: string;
   description?: string;
   products: Product[];
-  cart: CartItem[];
-  onAddToCart: (product: Product) => void;
-  onImageClick: (src: string, title: string) => void;
 }
 
 export function ProductRelated({
   title,
   description,
   products,
-  cart,
-  onAddToCart,
-  onImageClick,
 }: ProductRelatedProps) {
   if (products.length === 0) return null;
 
@@ -35,16 +28,9 @@ export function ProductRelated({
           <ProductCard
             key={product.id}
             product={product}
-            cart={cart}
-            onAddToCart={onAddToCart}
-            onImageClick={onImageClick}
           />
         ))}
       </div>
     </section>
   );
 }
-
-
-
-

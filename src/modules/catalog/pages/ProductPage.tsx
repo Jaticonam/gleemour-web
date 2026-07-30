@@ -31,10 +31,7 @@ import {
 import { getProductStatusPresentation } from "@/modules/catalog/mappers";
 
 import { FloatingButtons } from "@/shared/components/overlays/FloatingButtons";
-import {
-  NotificationStack,
-  showNotification,
-} from "@/shared/components/feedback/NotificationStack";
+import { NotificationStack } from "@/shared/components/feedback/NotificationStack";
 import { ProductSkeleton } from "@/shared/components/skeletons/ProductSkeleton";
 
 export default function ProductPage() {
@@ -184,15 +181,6 @@ export default function ProductPage() {
           title={PRODUCT_DETAIL_CONFIG.related.title}
           description={PRODUCT_DETAIL_CONFIG.related.description}
           products={relatedProducts}
-          cart={cart}
-          onAddToCart={(selected) => {
-            addToCart(selected, 1);
-            showNotification(
-              PRODUCT_DETAIL_CONFIG.notifications.addedTitle,
-              PRODUCT_DETAIL_CONFIG.notifications.addedDescription,
-            );
-          }}
-          onImageClick={() => {}}
         />
       </main>
 

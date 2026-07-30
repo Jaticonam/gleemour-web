@@ -1,7 +1,4 @@
-import { CheckCircle } from "lucide-react";
-
 import { getBadgePresentation } from "@/tenant/config/product";
-import { PRODUCT_CARD_CONFIG } from "@/tenant/config/product";
 
 import type { Product } from "@/shared/types/product";
 
@@ -9,19 +6,15 @@ interface ProductCardImageProps {
   product: Product;
   available: boolean;
   isPreventa: boolean;
-  isInCart: boolean;
-  qtyInCart: number;
   campaignBadge?: string;
   stateBadge?: string;
-  onImageClick?: (src: string, title: string) => void;
+  onImageClick?: () => void;
 }
 
 export function ProductCardImage({
   product,
   available,
   isPreventa,
-  isInCart,
-  qtyInCart,
   campaignBadge,
   stateBadge,
   onImageClick,
@@ -33,7 +26,16 @@ export function ProductCardImage({
   return (
     <div
       className="product-card-image-wrap"
-      onClick={() => onImageClick?.(product.img, product.title)}
+      onClick={onImageClick}
+      role="button"
+      tabIndex={0}
+      aria-label={`Ver detalle de ${product.title}`}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onImageClick?.();
+        }
+      }}
     >
       <img
         src={product.img || "/placeholder.svg"}
@@ -68,15 +70,6 @@ export function ProductCardImage({
               {statePresentation.icon} {statePresentation.label}
             </span>
           )}
-        </div>
-      )}
-
-      {isInCart && (
-        <div className="product-card-cart-badge">
-          <CheckCircle className="w-3.5 h-3.5" />
-          <span>
-            {qtyInCart} {PRODUCT_CARD_CONFIG.badges.inCartSuffix}
-          </span>
         </div>
       )}
     </div>
