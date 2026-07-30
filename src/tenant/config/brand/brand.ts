@@ -4,7 +4,6 @@ import { CATEGORIES } from "@/tenant/config/catalog";
 import { CATALOG_CONFIG } from "@/tenant/config/catalog";
 import { CHECKOUT_CONFIG } from "@/tenant/config/checkout";
 import { CART_CONFIG } from "@/tenant/config/checkout";
-import { MODAL_CONFIG } from "@/tenant/config/checkout";
 
 import { ASSETS_CONFIG } from "@/tenant/assets/assets";
 
@@ -27,7 +26,6 @@ export const BRAND_CONFIG = {
   catalog: CATALOG_CONFIG,
   checkout: CHECKOUT_CONFIG,
   cart: CART_CONFIG,
-  modal: MODAL_CONFIG,
   productCard: {
     whatsappDefault: "Hola, quiero enviar este detalle",
     whatsappPreventa: "Hola, quiero consultar este detalle",

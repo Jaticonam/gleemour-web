@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import type {
   ProductAddon,
@@ -7,10 +7,10 @@ import type {
 
 export function useProductAddons(addons: ProductAddon[] = []) {
   const [selectedAddons, setSelectedAddons] = useState<SelectedProductAddon[]>(
-    []
+    [],
   );
 
-  function toggleAddon(addon: ProductAddon) {
+  const toggleAddon = useCallback((addon: ProductAddon) => {
     setSelectedAddons((current) => {
       const exists = current.some((item) => item.id === addon.id);
 
@@ -26,16 +26,16 @@ export function useProductAddons(addons: ProductAddon[] = []) {
         },
       ];
     });
-  }
+  }, []);
 
-  function clearAddons() {
+  const clearAddons = useCallback(() => {
     setSelectedAddons([]);
-  }
+  }, []);
 
   const addonsTotal = useMemo(() => {
     return selectedAddons.reduce(
       (total, addon) => total + addon.price * addon.qty,
-      0
+      0,
     );
   }, [selectedAddons]);
 

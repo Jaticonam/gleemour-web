@@ -1,11 +1,11 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { getCatalogUrl, getCategoryUrl } from "@/app/routes/routes";
 import { PRODUCT_DETAIL_CONFIG } from "@/tenant/config/product";
 
 import { useCart } from "@/modules/cart/hooks/useCart";
-import { AddToCartModal, CartSidebar } from "@/modules/cart/components";
+import { CartSidebar } from "@/modules/cart/components";
 
 import { ProductGallery } from "@/features/gallery";
 
@@ -81,23 +81,18 @@ export default function ProductPage() {
     initialQty: 1,
     unitPrice: finalPrice,
   });
+  const { resetQty } = quantity;
 
   const productAddons = useProductAddons();
+  const { clearAddons } = productAddons;
 
-  const currentCartQty = useMemo(() => {
-    if (!product) return 0;
-    return cart.find((item) => item.id === product.id)?.qty ?? 0;
-  }, [cart, product]);
 
   const productCart = useProductCart({
     product,
     available,
     isQtyInputValid: quantity.isQtyInputValid,
     parsedQtyInput: quantity.parsedQtyInput,
-    currentCartQty,
     addToCart,
-    setQty: quantity.setQty,
-    setQtyInput: quantity.setQtyInput,
   });
 
   const productActions = useProductActions({
@@ -111,10 +106,9 @@ export default function ProductPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 
-    quantity.resetQty();
-    productCart.resetProductCartState();
-    productAddons.clearAddons();
-  }, [productId]);
+    resetQty();
+    clearAddons();
+  }, [productId, resetQty, clearAddons]);
 
   if (loading) return <ProductSkeleton />;
 
@@ -205,14 +199,7 @@ export default function ProductPage() {
         onClearCart={clearCart}
       />
 
-      <AddToCartModal
-        open={productCart.addModalOpen}
-        product={product}
-        currentQty={productCart.effectiveCartQty}
-        onClose={productCart.closeAddModal}
-        onAddExtra={productCart.handleAddExtraFromModal}
-        onOpenCart={productCart.openCartFromModal}
-      />
+
     </div>
   );
 }

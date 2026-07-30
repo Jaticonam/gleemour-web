@@ -50,6 +50,7 @@ export const PRODUCT_DETAIL_CONFIG = {
     linkCopiedTitle: "Enlace copiado",
     linkCopiedDescription: "Comparte este detalle",
     addedToCartTitle: "Agregado al pedido",
+    addedToCartDescription: "Tu detalle ya está en el pedido.",
   },
 } as const;
 
