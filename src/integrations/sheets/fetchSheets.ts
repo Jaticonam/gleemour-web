@@ -264,7 +264,10 @@ async function loadSheetRows(
 
   const url = `https://docs.google.com/spreadsheets/d/${source.docId}/export?format=csv&gid=${source.gid}${cacheBust}`;
 
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    cache: "no-store",
+  });
+
 
   if (!response.ok) {
     throw new Error(
