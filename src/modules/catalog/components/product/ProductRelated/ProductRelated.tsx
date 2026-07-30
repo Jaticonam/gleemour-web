@@ -23,7 +23,7 @@ export function ProductRelated({
         {description && <p>{description}</p>}
       </div>
 
-      <div className="catalog-grid">
+      <div className="product-detail-related-grid">
         {products.map((product) => (
           <ProductCard
             key={product.id}

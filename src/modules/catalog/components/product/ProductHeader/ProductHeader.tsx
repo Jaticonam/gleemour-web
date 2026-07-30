@@ -1,6 +1,8 @@
 import { ArrowLeft, Share2 } from "lucide-react";
 import type { ProductHeaderProps } from "./ProductHeader.types";
 
+import "./ProductHeader.css";
+
 export function ProductHeader({
   title,
   code,
