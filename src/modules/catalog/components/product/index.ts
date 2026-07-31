@@ -9,3 +9,4 @@ export * from "./ProductMeta";
 export * from "./ProductNotFound";
 export * from "./ProductRelated";
 export * from "./ProductMobileBar";
+export * from "./ProductIntentionNav";

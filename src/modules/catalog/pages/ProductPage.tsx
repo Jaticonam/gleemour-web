@@ -18,6 +18,7 @@ import { ProductMusicLibrary } from "@/modules/catalog/components/product/Produc
 import { ProductRelated } from "@/modules/catalog/components/product/ProductRelated";
 import { ProductMobileBar } from "@/modules/catalog/components/product/ProductMobileBar";
 import { ProductNotFound } from "@/modules/catalog/components/product/ProductNotFound";
+import { ProductIntentionNav } from "@/modules/catalog/components/product/ProductIntentionNav";
 
 import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActivity";
 
@@ -144,13 +145,23 @@ export default function ProductPage() {
       />
 
       <main className="product-detail-main">
-        <section className="product-detail-grid">
-          <div className="product-detail-gallery">
-            <ProductGallery product={product} available={available} />
-          </div>
+        <section className="product-detail-experience">
+          <ProductIntentionNav
+            activeCategory={product.category}
+            onSelect={(categoryId) =>
+              navigate(getCategoryUrl(categoryId))
+            }
+          />
 
-          <div className="product-detail-info">
-            <div className="product-detail-purchase-panel">
+          <section
+            className="product-detail-configurator"
+            aria-label="Producto y personalización"
+          >
+            <div className="product-detail-gallery">
+              <ProductGallery product={product} available={available} />
+            </div>
+
+            <div className="product-detail-product-card">
               <ProductMeta
                 product={product}
                 available={available}
@@ -159,40 +170,45 @@ export default function ProductPage() {
                 stockClass={stockClass}
                 StockIcon={StockIcon}
               />
-
-              <ProductBuyBox
-                finalPrice={finalPrice}
-                originalPrice={originalPrice}
-                hasOffer={hasOffer}
-                quantity={quantity}
-                available={available}
-                onAddToCart={productCart.handleAddToCart}
-                onWhatsApp={productActions.handleWhatsApp}
-              />
             </div>
-          </div>
+
+            <ProductAddons
+              addons={productAddons.addons}
+              selectedAddons={productAddons.selectedAddons}
+              onToggleAddon={productAddons.toggleAddon}
+            />
+
+            {musicLibrary.loading ||
+            musicLibrary.error ||
+            musicLibrary.tracks.length > 0 ? (
+              <ProductMusicLibrary
+                tracks={musicLibrary.tracks}
+                selectedMusicId={selectedMusicId}
+                loading={musicLibrary.loading}
+                error={musicLibrary.error}
+                onSelectMusic={setSelectedMusicId}
+              />
+            ) : null}
+          </section>
+
+          <aside
+            className="product-detail-summary"
+            aria-label="Resumen y acciones del producto"
+          >
+            <ProductBuyBox
+              finalPrice={finalPrice}
+              originalPrice={originalPrice}
+              hasOffer={hasOffer}
+              quantity={quantity}
+              available={available}
+              onAddToCart={productCart.handleAddToCart}
+              onWhatsApp={productActions.handleWhatsApp}
+            />
+          </aside>
         </section>
 
         <section className="product-detail-support">
           <ProductBenefits />
-
-          <ProductAddons
-            addons={productAddons.addons}
-            selectedAddons={productAddons.selectedAddons}
-            onToggleAddon={productAddons.toggleAddon}
-          />
-
-          {musicLibrary.loading ||
-          musicLibrary.error ||
-          musicLibrary.tracks.length > 0 ? (
-            <ProductMusicLibrary
-              tracks={musicLibrary.tracks}
-              selectedMusicId={selectedMusicId}
-              loading={musicLibrary.loading}
-              error={musicLibrary.error}
-              onSelectMusic={setSelectedMusicId}
-            />
-          ) : null}
         </section>
 
         <ProductRelated

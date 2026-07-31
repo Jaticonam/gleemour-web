@@ -16,46 +16,64 @@
       linear-gradient(180deg, #fffdfd 0%, var(--w-bg) 100%);
   }
 
+  .product-detail-header-inner,
   .product-detail-main {
-    width: min(100%, 1320px);
-    margin: 0 auto;
-    padding: 2rem 1.5rem 6rem;
-    display: flex;
-    flex-direction: column;
-    gap: 4.5rem;
+    width: min(100%, 1560px);
   }
 
-  .product-detail-grid {
+  .product-detail-main {
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+
+  .product-detail-experience {
     display: grid;
     grid-template-columns:
-      minmax(0, 1.14fr)
-      minmax(23rem, 0.86fr);
+      minmax(12.5rem, 14rem)
+      minmax(32rem, 1fr)
+      minmax(19rem, 21rem);
     align-items: start;
-    gap: clamp(2.5rem, 5vw, 5rem);
+    gap: clamp(1.15rem, 2vw, 1.8rem);
+  }
+
+  .product-detail-configurator,
+  .product-detail-summary {
+    min-width: 0;
+  }
+
+  .product-detail-configurator {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
   .product-detail-gallery {
     min-width: 0;
+  }
+
+  .product-detail-product-card,
+  .product-detail-summary {
+    padding: clamp(1.3rem, 2.4vw, 1.8rem);
+    border: 1px solid rgba(106, 90, 138, 0.1);
+    border-radius: 1.7rem;
+    background: rgba(255, 255, 255, 0.88);
+    box-shadow:
+      0 1.5rem 3.8rem rgba(106, 90, 138, 0.09),
+      0 0.45rem 1.4rem rgba(236, 164, 194, 0.06);
+    backdrop-filter: blur(16px);
+  }
+
+  .product-detail-summary {
     position: sticky;
     top: 6.25rem;
   }
 
-  .product-detail-info {
-    min-width: 0;
-  }
-
-  .product-detail-purchase-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 1.8rem;
-    padding: clamp(1.5rem, 3vw, 2.25rem);
-    border: 1px solid rgba(106, 90, 138, 0.1);
-    border-radius: 2rem;
-    background: rgba(255, 255, 255, 0.88);
-    box-shadow:
-      0 28px 70px rgba(106, 90, 138, 0.1),
-      0 8px 24px rgba(236, 164, 194, 0.07);
-    backdrop-filter: blur(16px);
+  .product-detail-summary .product-detail-buy-box {
+    padding-top: 0;
+    border-top: 0;
   }
 
   .product-detail-support {
@@ -72,43 +90,78 @@
     display: contents;
   }
 
-  @media (max-width: 1100px) {
+  @media (max-width: 1279px) {
+    .product-detail-header-inner,
     .product-detail-main {
-      width: min(100%, 820px);
-      padding-top: 1.5rem;
+      width: min(100%, 1180px);
+    }
+
+    .product-detail-main {
+      padding-top: 1.25rem;
       gap: 3.5rem;
     }
 
-    .product-detail-grid {
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
+    .product-detail-experience {
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(19rem, 22rem);
     }
 
-    .product-detail-gallery {
+    .product-intention-nav {
+      grid-column: 1 / -1;
+    }
+
+    .product-detail-summary {
+      top: 6rem;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .product-detail-header-inner,
+    .product-detail-main {
+      width: min(100%, 820px);
+    }
+
+    .product-detail-experience {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+
+    .product-intention-nav {
+      grid-column: auto;
+    }
+
+    .product-detail-summary {
       position: static;
+    }
+
+    .product-detail-product-card,
+    .product-detail-summary {
+      padding: 1.4rem;
     }
   }
 
   @media (max-width: 640px) {
     .product-detail-main {
       padding:
-        1rem
+        0.9rem
         1rem
         calc(8.5rem + env(safe-area-inset-bottom, 0px));
       gap: 3rem;
     }
 
-    .product-detail-grid {
-      gap: 1.5rem;
+    .product-detail-experience,
+    .product-detail-configurator {
+      gap: 1rem;
     }
 
-    .product-detail-purchase-panel {
-      gap: 1.4rem;
-      padding: 1.25rem;
-      border-radius: 1.5rem;
+    .product-detail-product-card,
+    .product-detail-summary {
+      padding: 1.15rem;
+      border-radius: 1.4rem;
       box-shadow:
-        0 18px 42px rgba(106, 90, 138, 0.08),
-        0 5px 15px rgba(236, 164, 194, 0.05);
+        0 1rem 2.6rem rgba(106, 90, 138, 0.08),
+        0 0.3rem 1rem rgba(236, 164, 194, 0.05);
     }
 
     .product-detail-support {
