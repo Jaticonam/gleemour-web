@@ -4,6 +4,7 @@ import {
   Heart,
   MessageCircle,
   Music,
+  Sparkles,
 } from "lucide-react";
 
 import type { ProductConfiguration } from "@/modules/catalog/types/ProductConfiguration.types";
@@ -17,6 +18,7 @@ interface ProductOrderSummaryProps {
   originalPrice: number;
   hasOffer: boolean;
   configuration: ProductConfiguration;
+  onPersonalize: () => void;
   onWhatsApp: () => void;
 }
 
@@ -26,6 +28,7 @@ export function ProductOrderSummary({
   originalPrice,
   hasOffer,
   configuration,
+  onPersonalize,
   onWhatsApp,
 }: ProductOrderSummaryProps) {
   const dedication = configuration.dedication.trim();
@@ -135,6 +138,15 @@ export function ProductOrderSummary({
       </div>
 
       <div className="product-order-summary__actions">
+        <button
+          type="button"
+          className="product-order-summary__experience"
+          onClick={onPersonalize}
+        >
+          <Sparkles className="w-5 h-5" aria-hidden="true" />
+          Personalizar experiencia
+        </button>
+
         <button
           type="button"
           className="product-order-summary__whatsapp"

@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
-import { getCatalogUrl, getCategoryUrl } from "@/app/routes/routes";
+import {
+  getCatalogUrl,
+  getCategoryUrl,
+  getExperienceUrl,
+} from "@/app/routes/routes";
 import { PRODUCT_DETAIL_CONFIG } from "@/tenant/config/product";
 
 import { ProductGallery } from "@/features/gallery";
@@ -205,6 +209,9 @@ export default function ProductPage() {
               originalPrice={originalPrice}
               hasOffer={hasOffer}
               configuration={productConfiguration}
+              onPersonalize={() =>
+                navigate(getExperienceUrl("producto", product.id))
+              }
               onWhatsApp={productActions.handleWhatsApp}
             />
           </aside>
@@ -228,6 +235,9 @@ export default function ProductPage() {
 
       <ProductMobileBar
         total={productConfiguration.configuredTotal}
+        onPersonalize={() =>
+          navigate(getExperienceUrl("producto", product.id))
+        }
         onWhatsApp={productActions.handleWhatsApp}
       />
 

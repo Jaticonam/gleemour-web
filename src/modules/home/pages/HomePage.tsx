@@ -1,5 +1,6 @@
 import HeroSlider from "../sections/HeroSlider";
 import CategoriesSection from "../sections/CategoriesSection";
+import ExperienceInvitationSection from "../sections/ExperienceInvitationSection";
 import HowToBuySection from "../sections/HowToBuySection";
 import StatsSection from "../sections/StatsSection";
 import ShippingSection from "../sections/ShippingSection";
@@ -31,6 +32,7 @@ export default function HomePage() {
       />
 
       <CategoriesSection />
+      <ExperienceInvitationSection />
       <HowToBuySection />
       <CorporateSection />
       <StatsSection />

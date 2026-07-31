@@ -1,4 +1,9 @@
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import { useEffect } from "react";
 
 import HomePage from "@/modules/home/pages/HomePage";
@@ -6,6 +11,8 @@ import HomePage from "@/modules/home/pages/HomePage";
 import CatalogPage from "@/modules/catalog/pages/CatalogPage";
 import CategoryPage from "@/modules/catalog/pages/CategoryPage";
 import ProductPage from "@/modules/catalog/pages/ProductPage";
+
+import { ExperiencePage } from "@/modules/experience";
 
 import NotFound from "@/app/routes/NotFound";
 
@@ -18,9 +25,8 @@ function AppShortcuts() {
 
   useEffect(() => {
     const handleBackNavigation = (
-      event: KeyboardEvent
+      event: KeyboardEvent,
     ) => {
-
       const target =
         event.target as HTMLElement | null;
 
@@ -40,13 +46,13 @@ function AppShortcuts() {
 
     window.addEventListener(
       "keydown",
-      handleBackNavigation
+      handleBackNavigation,
     );
 
     return () => {
       window.removeEventListener(
         "keydown",
-        handleBackNavigation
+        handleBackNavigation,
       );
     };
   }, [navigate]);
@@ -59,14 +65,11 @@ function AppShortcuts() {
 ========================================================= */
 
 export default function App() {
-
   return (
     <BrowserRouter>
-
       <AppShortcuts />
 
       <Routes>
-
         <Route
           path="/"
           element={<HomePage />}
@@ -88,15 +91,15 @@ export default function App() {
         />
 
         <Route
+          path="/experiencia"
+          element={<ExperiencePage />}
+        />
+
+        <Route
           path="*"
           element={<NotFound />}
         />
-
       </Routes>
-
     </BrowserRouter>
   );
 }
-
-
-

@@ -1,4 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { Sparkles } from "lucide-react";
+
+import { getExperienceUrl } from "@/app/routes/routes";
 
 import {
   loadAllProducts,
@@ -333,6 +337,14 @@ useEffect(() => {
           <p className="catalog-kicker">Catálogo emocional</p>
           <h1>Elige el detalle perfecto</h1>
           <p>Ramos, arreglos y detalles para cada momento especial.</p>
+
+          <Link
+            to={getExperienceUrl("catalogo")}
+            className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-[rgba(106,90,138,0.18)] bg-[linear-gradient(135deg,var(--w-primary),var(--w-primary-dark))] px-5 py-3 text-sm font-black text-white no-underline shadow-[0_14px_30px_rgba(106,90,138,0.22)] transition-transform hover:-translate-y-0.5"
+          >
+            <Sparkles className="h-5 w-5" aria-hidden="true" />
+            Ayúdame a elegir
+          </Link>
         </section>
 
         {visibleProducts.length > 0 ? (
