@@ -10,3 +10,6 @@ export * from "./ProductNotFound";
 export * from "./ProductRelated";
 export * from "./ProductMobileBar";
 export * from "./ProductIntentionNav";
+export * from "./ProductQuantityControl";
+export * from "./ProductDedication";
+export * from "./ProductOrderSummary";

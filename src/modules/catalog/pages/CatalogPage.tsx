@@ -7,8 +7,6 @@ import {
 import type { Campaign, Product } from "@/shared/types/product";
 import { BRAND_CONFIG } from "@/tenant/config/brand";
 
-import { useCart } from "@/modules/cart/hooks/useCart";
-import { CartSidebar } from "@/modules/cart/components";
 
 import { ProductCard } from "@/modules/catalog/components/product/ProductCard";
 import { CatalogTopNav } from "@/modules/catalog/components/catalog/CatalogTopNav";
@@ -110,22 +108,9 @@ export default function CatalogPage() {
   const [activeCampaign, setActiveCampaign] = useState("");
   const [activeCategory, setActiveCategory] = useState("todas");
 
-  const [cartOpen, setCartOpen] = useState(false);
 
-  const {
-    cart,
 
-    removeFromCart,
-    changeQty,
-    setExactQty,
-    setItemNote,
-    totalItems,
-    totalPrice,
-    savings,
-    clearCart,
-  } = useCart();
-
-  useEffect(() => {
+useEffect(() => {
     let mounted = true;
 
     Promise.allSettled([loadAllProducts(), loadAllCampaigns()])
@@ -379,26 +364,9 @@ export default function CatalogPage() {
         )}
       </main>
 
-      <FloatingButtons
-        cartCount={totalItems}
-        onCartClick={() => setCartOpen(true)}
-      />
+      <FloatingButtons />
 
       <RecentActivity products={visibleProducts} />
-
-      <CartSidebar
-        isOpen={cartOpen}
-        onClose={() => setCartOpen(false)}
-        cart={cart}
-        totalItems={totalItems}
-        totalPrice={totalPrice}
-        savings={savings}
-        onRemove={removeFromCart}
-        onChangeQty={changeQty}
-        onSetQty={setExactQty}
-        onChangeNote={setItemNote}
-        onClearCart={clearCart}
-      />
 
 
 

@@ -4,14 +4,10 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { getCatalogUrl, getCategoryUrl } from "@/app/routes/routes";
 import { PRODUCT_DETAIL_CONFIG } from "@/tenant/config/product";
 
-import { useCart } from "@/modules/cart/hooks/useCart";
-import { CartSidebar } from "@/modules/cart/components";
-
 import { ProductGallery } from "@/features/gallery";
 
 import { ProductHeader } from "@/modules/catalog/components/product/ProductHeader";
 import { ProductMeta } from "@/modules/catalog/components/product/ProductMeta";
-import { ProductBuyBox } from "@/modules/catalog/components/product/ProductBuyBox";
 import { ProductBenefits } from "@/modules/catalog/components/product/ProductBenefits";
 import { ProductAddons } from "@/modules/catalog/components/product/ProductAddons";
 import { ProductMusicLibrary } from "@/modules/catalog/components/product/ProductMusicLibrary";
@@ -19,6 +15,9 @@ import { ProductRelated } from "@/modules/catalog/components/product/ProductRela
 import { ProductMobileBar } from "@/modules/catalog/components/product/ProductMobileBar";
 import { ProductNotFound } from "@/modules/catalog/components/product/ProductNotFound";
 import { ProductIntentionNav } from "@/modules/catalog/components/product/ProductIntentionNav";
+import { ProductQuantityControl } from "@/modules/catalog/components/product/ProductQuantityControl";
+import { ProductDedication } from "@/modules/catalog/components/product/ProductDedication";
+import { ProductOrderSummary } from "@/modules/catalog/components/product/ProductOrderSummary";
 
 import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActivity";
 
@@ -28,14 +27,13 @@ import {
   useProductActions,
   useProductAddonOptions,
   useProductAddons,
-  useProductCart,
+  useProductConfiguration,
   useProductDetail,
   useProductQuantity,
 } from "@/modules/catalog/hooks";
 
 import { getProductStatusPresentation } from "@/modules/catalog/mappers";
 
-import { FloatingButtons } from "@/shared/components/overlays/FloatingButtons";
 import { NotificationStack } from "@/shared/components/feedback/NotificationStack";
 import { ProductSkeleton } from "@/shared/components/skeletons/ProductSkeleton";
 
@@ -47,18 +45,6 @@ export default function ProductPage() {
   const currentCategory = searchParams.get("cat") || "";
   const productId = (searchParams.get("id") || paramId || "").trim();
 
-  const {
-    cart,
-    addToCart,
-    removeFromCart,
-    changeQty,
-    setExactQty,
-    setItemNote,
-    totalItems,
-    totalPrice,
-    savings,
-    clearCart,
-  } = useCart();
 
   const {
     products,
@@ -86,6 +72,7 @@ export default function ProductPage() {
     initialQty: 1,
     unitPrice: finalPrice,
   });
+
   const { resetQty } = quantity;
 
   const addonOptions = useProductAddonOptions(product?.addons ?? []);
@@ -94,14 +81,18 @@ export default function ProductPage() {
 
   const musicLibrary = useMusicLibrary(product?.music ?? []);
   const [selectedMusicId, setSelectedMusicId] = useState("");
+  const [dedication, setDedication] = useState("");
 
-  const productCart = useProductCart({
-    product,
-    available,
-    isQtyInputValid: quantity.isQtyInputValid,
-    parsedQtyInput: quantity.parsedQtyInput,
-    addToCart,
+  const productConfiguration = useProductConfiguration({
+    unitPrice: finalPrice,
+    quantity: quantity.effectiveQty,
+    selectedAddons: productAddons.selectedAddons,
+    addonsTotal: productAddons.addonsTotal,
+    tracks: musicLibrary.tracks,
+    selectedMusicId,
+    dedication,
   });
+
 
   const productActions = useProductActions({
     product,
@@ -117,6 +108,7 @@ export default function ProductPage() {
     resetQty();
     clearAddons();
     setSelectedMusicId("");
+    setDedication("");
   }, [productId, resetQty, clearAddons]);
 
   if (loading) return <ProductSkeleton />;
@@ -126,7 +118,9 @@ export default function ProductPage() {
       <ProductNotFound
         onBack={() =>
           navigate(
-            currentCategory ? getCategoryUrl(currentCategory) : getCatalogUrl(),
+            currentCategory
+              ? getCategoryUrl(currentCategory)
+              : getCatalogUrl(),
           )
         }
       />
@@ -161,7 +155,7 @@ export default function ProductPage() {
               <ProductGallery product={product} available={available} />
             </div>
 
-            <div className="product-detail-product-card">
+            <div className="product-detail-overview">
               <ProductMeta
                 product={product}
                 available={available}
@@ -169,6 +163,11 @@ export default function ProductPage() {
                 productState={productState}
                 stockClass={stockClass}
                 StockIcon={StockIcon}
+              />
+
+              <ProductQuantityControl
+                quantity={quantity}
+                unitPrice={finalPrice}
               />
             </div>
 
@@ -189,19 +188,23 @@ export default function ProductPage() {
                 onSelectMusic={setSelectedMusicId}
               />
             ) : null}
+
+            <ProductDedication
+              value={dedication}
+              onChange={setDedication}
+            />
           </section>
 
           <aside
             className="product-detail-summary"
-            aria-label="Resumen y acciones del producto"
+            aria-label="Resumen de la configuración"
           >
-            <ProductBuyBox
-              finalPrice={finalPrice}
+            <ProductOrderSummary
+              productTitle={product.title}
+              unitPrice={finalPrice}
               originalPrice={originalPrice}
               hasOffer={hasOffer}
-              quantity={quantity}
-              available={available}
-              onAddToCart={productCart.handleAddToCart}
+              configuration={productConfiguration}
               onWhatsApp={productActions.handleWhatsApp}
             />
           </aside>
@@ -218,38 +221,15 @@ export default function ProductPage() {
         />
       </main>
 
-      <div className="product-detail-floating-actions">
-        <FloatingButtons
-          cartCount={totalItems}
-          onCartClick={() => productCart.setCartOpen(true)}
-        />
-      </div>
 
       <div className="product-detail-recent-activity">
         <RecentActivity products={products} />
       </div>
 
       <ProductMobileBar
-        total={quantity.total}
-        cartCount={totalItems}
-        onCartClick={() => productCart.setCartOpen(true)}
+        total={productConfiguration.configuredTotal}
         onWhatsApp={productActions.handleWhatsApp}
       />
-
-      <CartSidebar
-        isOpen={productCart.cartOpen}
-        onClose={() => productCart.setCartOpen(false)}
-        cart={cart}
-        totalItems={totalItems}
-        totalPrice={totalPrice}
-        savings={savings}
-        onRemove={removeFromCart}
-        onChangeQty={changeQty}
-        onSetQty={setExactQty}
-        onChangeNote={setItemNote}
-        onClearCart={clearCart}
-      />
-
 
     </div>
   );

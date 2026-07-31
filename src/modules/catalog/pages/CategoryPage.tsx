@@ -3,7 +3,6 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, SearchX } from "lucide-react";
 
 import { BRAND_CONFIG } from "@/tenant/config/brand";
-import { useCart } from "@/modules/cart/hooks/useCart";
 import { loadAllProducts } from "@/integrations/sheets/fetchSheets";
 import { productBelongsToCategory } from "@/domain/product/categories";
 import { searchProducts } from "@/shared/lib/search";
@@ -13,7 +12,6 @@ import { Product } from "@/shared/types/product";
 import { CountdownTimer } from "@/modules/catalog/components/banners/CountdownBanner";
 import { CategoryFilter } from "@/modules/catalog/components/filters/CategoryFilter";
 import { ProductCard } from "@/modules/catalog/components/product/ProductCard";
-import { CartSidebar } from "@/modules/cart/components";
 import { FloatingButtons } from "@/shared/components/overlays/FloatingButtons";
 import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActivity";
 
@@ -29,22 +27,10 @@ const CategoryPage = () => {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [cartOpen, setCartOpen] = useState(false);
   const [categorySearch, setCategorySearch] = useState("");
 
-  const {
-    cart,
 
-    removeFromCart,
-    changeQty,
-    setExactQty,
-    setItemNote,
-    totalItems,
-    totalPrice,
-    savings,
-  } = useCart();
-
-  useEffect(() => {
+useEffect(() => {
     loadAllProducts().then((loadedProducts) => {
       setProducts(loadedProducts);
       setLoading(false);
@@ -227,25 +213,9 @@ const CategoryPage = () => {
         )}
       </main>
 
-      <FloatingButtons
-        cartCount={totalItems}
-        onCartClick={() => setCartOpen(true)}
-      />
+      <FloatingButtons />
 
       <RecentActivity products={products} />
-
-      <CartSidebar
-        isOpen={cartOpen}
-        onClose={() => setCartOpen(false)}
-        cart={cart}
-        totalItems={totalItems}
-        totalPrice={totalPrice}
-        savings={savings}
-        onRemove={removeFromCart}
-        onChangeQty={changeQty}
-        onSetQty={setExactQty}
-        onChangeNote={setItemNote}
-      />
 
 
 
