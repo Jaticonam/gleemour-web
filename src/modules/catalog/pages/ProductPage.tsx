@@ -91,7 +91,7 @@ export default function ProductPage() {
   const productAddons = useProductAddons(addonOptions);
   const { clearAddons } = productAddons;
 
-  const musicLibrary = useMusicLibrary();
+  const musicLibrary = useMusicLibrary(product?.music ?? []);
   const [selectedMusicId, setSelectedMusicId] = useState("");
 
   const productCart = useProductCart({
@@ -182,13 +182,17 @@ export default function ProductPage() {
             onToggleAddon={productAddons.toggleAddon}
           />
 
-          <ProductMusicLibrary
-            tracks={musicLibrary.tracks}
-            selectedMusicId={selectedMusicId}
-            loading={musicLibrary.loading}
-            error={musicLibrary.error}
-            onSelectMusic={setSelectedMusicId}
-          />
+          {musicLibrary.loading ||
+          musicLibrary.error ||
+          musicLibrary.tracks.length > 0 ? (
+            <ProductMusicLibrary
+              tracks={musicLibrary.tracks}
+              selectedMusicId={selectedMusicId}
+              loading={musicLibrary.loading}
+              error={musicLibrary.error}
+              onSelectMusic={setSelectedMusicId}
+            />
+          ) : null}
         </section>
 
         <ProductRelated

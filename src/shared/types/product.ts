@@ -83,6 +83,7 @@ export interface Product {
    * Ejemplo: chocolates, globos, peluches, tarjetas.
    */
   addons: string[];
+  music?: string[];
 
   /** Ocasión emocional principal. */
   occasion?: string;

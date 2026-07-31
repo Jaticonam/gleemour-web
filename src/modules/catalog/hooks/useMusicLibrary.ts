@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import type { MusicTrack } from "@/domain/music";
+import {
+  resolveProductMusic,
+  type MusicTrack,
+} from "@/domain/music";
 import { loadMusicLibrary } from "@/integrations/sheets/fetchSheets";
 
 export interface UseMusicLibraryResult {
@@ -9,36 +12,69 @@ export interface UseMusicLibraryResult {
   error: string | null;
 }
 
-export function useMusicLibrary(): UseMusicLibraryResult {
-  const [tracks, setTracks] = useState<MusicTrack[]>([]);
-  const [loading, setLoading] = useState(true);
+export function useMusicLibrary(
+  musicIds: readonly string[] = [],
+): UseMusicLibraryResult {
+  const musicKey = musicIds.join("|");
+
+  const requestedMusicIds = useMemo(
+    () => musicKey.split("|").filter(Boolean),
+    [musicKey],
+  );
+
+  const [musicCatalog, setMusicCatalog] = useState<MusicTrack[]>([]);
+  const [loadedKey, setLoadedKey] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!musicKey) {
+      setMusicCatalog([]);
+      setLoadedKey("");
+      setError(null);
+      return;
+    }
+
     let active = true;
 
-    setLoading(true);
     setError(null);
 
     loadMusicLibrary()
       .then((musicTracks) => {
         if (!active) return;
 
-        setTracks(musicTracks);
-        setLoading(false);
+        setMusicCatalog(musicTracks);
+        setLoadedKey(musicKey);
       })
       .catch(() => {
         if (!active) return;
 
-        setTracks([]);
+        setMusicCatalog([]);
+        setLoadedKey(musicKey);
         setError("No pudimos cargar la biblioteca musical.");
-        setLoading(false);
       });
 
     return () => {
       active = false;
     };
-  }, []);
+  }, [musicKey]);
+
+  const loading = Boolean(musicKey) && loadedKey !== musicKey;
+
+  const tracks = useMemo(() => {
+    if (loading || error) {
+      return [];
+    }
+
+    return resolveProductMusic(
+      requestedMusicIds,
+      musicCatalog,
+    );
+  }, [
+    error,
+    loading,
+    musicCatalog,
+    requestedMusicIds,
+  ]);
 
   return {
     tracks,

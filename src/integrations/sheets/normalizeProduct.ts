@@ -1,4 +1,6 @@
 import type { Addon, Product } from "@/shared/types/product";
+import { parseMusicIds } from "@/domain/music";
+
 import { getCategoryIdFromSheetLabel } from "@/tenant/config/catalog";
 
 type CsvRow = Record<string, string>;
@@ -160,6 +162,7 @@ export function normalizeProduct(row: CsvRow): SheetProduct {
     offer_price: parseNumber(row.offer_price),
 
     addons: parseAddons(row.addons),
+    music: parseMusicIds(row.music),
     attributes: parseAttributes(row.attributes),
 
     stock: parseNumber(row.stock),
