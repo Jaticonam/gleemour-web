@@ -23,6 +23,7 @@ import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActi
 import {
   useLiveViewers,
   useProductActions,
+  useProductAddonOptions,
   useProductAddons,
   useProductCart,
   useProductDetail,
@@ -84,7 +85,8 @@ export default function ProductPage() {
   });
   const { resetQty } = quantity;
 
-  const productAddons = useProductAddons();
+  const addonOptions = useProductAddonOptions(product?.addons ?? []);
+  const productAddons = useProductAddons(addonOptions);
   const { clearAddons } = productAddons;
 
 

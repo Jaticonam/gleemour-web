@@ -6,3 +6,5 @@ export * from "./useProductCart";
 export * from "./useProductDetail";
 export * from "./useProductQuantity";
 export * from "./useProductView";
+
+export * from "./useProductAddonOptions";

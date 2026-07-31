@@ -1,11 +1,7 @@
-export interface ProductAddon {
-  id: string;
-  title: string;
-  description?: string;
-  price: number;
-  emoji?: string;
-}
+import type { Addon } from "@/shared/types/product";
 
-export interface SelectedProductAddon extends ProductAddon {
+export type ProductAddon = Addon;
+
+export interface SelectedProductAddon extends Addon {
   qty: number;
 }

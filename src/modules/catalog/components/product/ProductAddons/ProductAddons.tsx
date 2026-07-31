@@ -48,11 +48,21 @@ export function ProductAddons({
               }
               key={addon.id}
             >
-              <div className="product-addon-emoji">{addon.emoji}</div>
+              <div className="product-addon-emoji product-addon-media">
+                {addon.img ? (
+                  <img
+                    src={addon.img}
+                    alt={addon.title}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <Gift className="w-5 h-5" aria-hidden="true" />
+                )}
+              </div>
 
               <div className="product-addon-content">
                 <h4>{addon.title}</h4>
-                {addon.description && <p>{addon.description}</p>}
                 <strong>+ S/ {addon.price.toFixed(2)}</strong>
               </div>
 
@@ -64,7 +74,12 @@ export function ProductAddons({
                     : "product-addon-button"
                 }
                 onClick={() => onToggleAddon(addon)}
-                aria-label={selected ? "Quitar complemento" : "Agregar complemento"}
+                aria-label={
+                  selected
+                    ? `Quitar ${addon.title}`
+                    : `Agregar ${addon.title}`
+                }
+                aria-pressed={selected}
               >
                 {selected ? (
                   <Check className="w-4 h-4" />
