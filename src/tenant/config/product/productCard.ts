@@ -27,7 +27,7 @@ export const PRODUCT_CARD_CONFIG = {
   },
 
   actions: {
-    viewDetail: "Ver detalle",
+    viewDetail: "Personalizar",
     whatsappPreorder: "Consultar",
     whatsappSoldOut: "Consultar disponibilidad",
     addMore: "Agregar más",

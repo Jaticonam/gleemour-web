@@ -16,6 +16,8 @@ import {
   getLiveViewers,
 } from "@/domain/product";
 
+import { buildProductWhatsAppUrl } from "@/integrations/whatsapp/whatsapp";
+
 import { ProductCardImage } from "./ProductCardImage";
 import { ProductCardType } from "./ProductCardType";
 import { ProductCardContent } from "./ProductCardContent";
@@ -67,6 +69,15 @@ export function ProductCard({ product }: ProductCardProps) {
     navigate(getProductUrl(product));
   };
 
+  const handleWhatsApp = () => {
+    const url = buildProductWhatsAppUrl({
+      product,
+      qty: 1,
+    });
+
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   const { StockIcon, stockClass } = getStockPresentation(productState.type);
 
   return (
@@ -101,7 +112,11 @@ export function ProductCard({ product }: ProductCardProps) {
           viewers={viewers}
         />
 
-        <ProductCardActions onViewDetail={handleViewDetail} />
+        <ProductCardActions
+          productTitle={product.title}
+          onViewDetail={handleViewDetail}
+          onWhatsApp={handleWhatsApp}
+        />
       </div>
     </article>
   );
