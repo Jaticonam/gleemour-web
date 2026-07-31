@@ -7,3 +7,4 @@ export * from "./ProductHeader";
 export * from "./ProductMeta";
 export * from "./ProductNotFound";
 export * from "./ProductRelated";
+export * from "./ProductMobileBar";

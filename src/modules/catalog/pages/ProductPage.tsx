@@ -15,6 +15,7 @@ import { ProductBuyBox } from "@/modules/catalog/components/product/ProductBuyBo
 import { ProductBenefits } from "@/modules/catalog/components/product/ProductBenefits";
 import { ProductAddons } from "@/modules/catalog/components/product/ProductAddons";
 import { ProductRelated } from "@/modules/catalog/components/product/ProductRelated";
+import { ProductMobileBar } from "@/modules/catalog/components/product/ProductMobileBar";
 import { ProductNotFound } from "@/modules/catalog/components/product/ProductNotFound";
 
 import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActivity";
@@ -182,12 +183,23 @@ export default function ProductPage() {
         />
       </main>
 
-      <FloatingButtons
+      <div className="product-detail-floating-actions">
+        <FloatingButtons
+          cartCount={totalItems}
+          onCartClick={() => productCart.setCartOpen(true)}
+        />
+      </div>
+
+      <div className="product-detail-recent-activity">
+        <RecentActivity products={products} />
+      </div>
+
+      <ProductMobileBar
+        total={quantity.total}
         cartCount={totalItems}
         onCartClick={() => productCart.setCartOpen(true)}
+        onWhatsApp={productActions.handleWhatsApp}
       />
-
-      <RecentActivity products={products} />
 
       <CartSidebar
         isOpen={productCart.cartOpen}
