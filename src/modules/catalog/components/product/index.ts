@@ -1,4 +1,5 @@
 export * from "./ProductAddons";
+export * from "./ProductMusicLibrary";
 export * from "./ProductBenefits";
 export * from "./ProductBuyBox";
 export * from "./ProductCard";

@@ -8,3 +8,4 @@ export * from "./useProductQuantity";
 export * from "./useProductView";
 
 export * from "./useProductAddonOptions";
+export * from "./useMusicLibrary";

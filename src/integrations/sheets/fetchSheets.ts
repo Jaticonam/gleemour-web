@@ -1,7 +1,9 @@
+import type { MusicTrack } from "@/domain/music";
 import type { Addon, Campaign, Product } from "@/shared/types/product";
 import { SHEETS_CONFIG, type SheetSource } from "./sheetsConfig";
 import { normalizeAddon, normalizeProduct } from "./normalizeProduct";
 import { normalizeCampaign } from "./normalizeCampaign";
+import { normalizeMusicTrack } from "./normalizeMusicTrack";
 import { validateProducts } from "./validateProducts";
 import { isVisibleProductStatus } from "@/tenant/config/product";
 
@@ -47,6 +49,18 @@ const ADDON_REQUIRED_HEADERS = ["id", "title", "price", "status"] as const;
 
 const ADDON_RECOMMENDED_HEADERS = ["img", "category", "priority"] as const;
 
+const MUSIC_LIBRARY_REQUIRED_HEADERS = [
+  "id",
+  "title",
+  "description",
+  "music_type",
+  "moodmusical",
+  "platform",
+  "priority",
+  "status",
+  "url",
+] as const;
+
 const CAMPAIGN_REQUIRED_HEADERS = ["id", "name"] as const;
 
 const CAMPAIGN_RECOMMENDED_HEADERS = [
@@ -59,6 +73,7 @@ const CAMPAIGN_RECOMMENDED_HEADERS = [
 ] as const;
 
 const PUBLIC_ADDON_STATUSES = ["Publicado"] as const;
+const PUBLIC_MUSIC_STATUSES = ["Publicado"] as const;
 
 function parseCSVLine(line: string): string[] {
   const result: string[] = [];
@@ -238,6 +253,17 @@ function validateSheetHeaders(
     return;
   }
 
+  if (sourceName === "musicLibrary") {
+    throwMissingRequiredHeaders(
+      headers,
+      MUSIC_LIBRARY_REQUIRED_HEADERS,
+      sourceName,
+      source,
+    );
+
+    return;
+  }
+
   if (sourceName === "campaigns") {
     throwMissingRequiredHeaders(
       headers,
@@ -301,6 +327,19 @@ export async function loadAllAddons(): Promise<Addon[]> {
     .filter((addon) =>
       PUBLIC_ADDON_STATUSES.includes(
         addon.status.trim() as (typeof PUBLIC_ADDON_STATUSES)[number],
+      ),
+    )
+    .sort((a, b) => b.priority - a.priority);
+}
+
+export async function loadMusicLibrary(): Promise<MusicTrack[]> {
+  const rows = await loadSheetRows("musicLibrary");
+
+  return rows
+    .map(normalizeMusicTrack)
+    .filter((track) =>
+      PUBLIC_MUSIC_STATUSES.includes(
+        track.status.trim() as (typeof PUBLIC_MUSIC_STATUSES)[number],
       ),
     )
     .sort((a, b) => b.priority - a.priority);

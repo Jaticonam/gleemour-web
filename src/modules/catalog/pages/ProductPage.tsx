@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { getCatalogUrl, getCategoryUrl } from "@/app/routes/routes";
@@ -14,6 +14,7 @@ import { ProductMeta } from "@/modules/catalog/components/product/ProductMeta";
 import { ProductBuyBox } from "@/modules/catalog/components/product/ProductBuyBox";
 import { ProductBenefits } from "@/modules/catalog/components/product/ProductBenefits";
 import { ProductAddons } from "@/modules/catalog/components/product/ProductAddons";
+import { ProductMusicLibrary } from "@/modules/catalog/components/product/ProductMusicLibrary";
 import { ProductRelated } from "@/modules/catalog/components/product/ProductRelated";
 import { ProductMobileBar } from "@/modules/catalog/components/product/ProductMobileBar";
 import { ProductNotFound } from "@/modules/catalog/components/product/ProductNotFound";
@@ -22,6 +23,7 @@ import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActi
 
 import {
   useLiveViewers,
+  useMusicLibrary,
   useProductActions,
   useProductAddonOptions,
   useProductAddons,
@@ -89,6 +91,8 @@ export default function ProductPage() {
   const productAddons = useProductAddons(addonOptions);
   const { clearAddons } = productAddons;
 
+  const musicLibrary = useMusicLibrary();
+  const [selectedMusicId, setSelectedMusicId] = useState("");
 
   const productCart = useProductCart({
     product,
@@ -111,6 +115,7 @@ export default function ProductPage() {
 
     resetQty();
     clearAddons();
+    setSelectedMusicId("");
   }, [productId, resetQty, clearAddons]);
 
   if (loading) return <ProductSkeleton />;
@@ -175,6 +180,14 @@ export default function ProductPage() {
             addons={productAddons.addons}
             selectedAddons={productAddons.selectedAddons}
             onToggleAddon={productAddons.toggleAddon}
+          />
+
+          <ProductMusicLibrary
+            tracks={musicLibrary.tracks}
+            selectedMusicId={selectedMusicId}
+            loading={musicLibrary.loading}
+            error={musicLibrary.error}
+            onSelectMusic={setSelectedMusicId}
           />
         </section>
 

@@ -9,6 +9,11 @@ export const SHEETS_CONFIG = {
     gid: "301214862",
   },
 
+  musicLibrary: {
+    docId: "141vkBWAieL-IY5vcxNdmV8qtX64YFda6AYRDTsoACYs",
+    gid: "942450942",
+  },
+
   campaigns: {
     docId: "141vkBWAieL-IY5vcxNdmV8qtX64YFda6AYRDTsoACYs",
     gid: "1364232111",
