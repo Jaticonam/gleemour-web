@@ -142,33 +142,37 @@ export default function ProductPage() {
           </div>
 
           <div className="product-detail-info">
-            <ProductMeta
-              product={product}
-              available={available}
-              viewers={viewers}
-              productState={productState}
-              stockClass={stockClass}
-              StockIcon={StockIcon}
-            />
+            <div className="product-detail-purchase-panel">
+              <ProductMeta
+                product={product}
+                available={available}
+                viewers={viewers}
+                productState={productState}
+                stockClass={stockClass}
+                StockIcon={StockIcon}
+              />
 
-            <ProductBuyBox
-              finalPrice={finalPrice}
-              originalPrice={originalPrice}
-              hasOffer={hasOffer}
-              quantity={quantity}
-              available={available}
-              onAddToCart={productCart.handleAddToCart}
-              onWhatsApp={productActions.handleWhatsApp}
-            />
-
-            <ProductBenefits />
-
-            <ProductAddons
-              addons={productAddons.addons}
-              selectedAddons={productAddons.selectedAddons}
-              onToggleAddon={productAddons.toggleAddon}
-            />
+              <ProductBuyBox
+                finalPrice={finalPrice}
+                originalPrice={originalPrice}
+                hasOffer={hasOffer}
+                quantity={quantity}
+                available={available}
+                onAddToCart={productCart.handleAddToCart}
+                onWhatsApp={productActions.handleWhatsApp}
+              />
+            </div>
           </div>
+        </section>
+
+        <section className="product-detail-support">
+          <ProductBenefits />
+
+          <ProductAddons
+            addons={productAddons.addons}
+            selectedAddons={productAddons.selectedAddons}
+            onToggleAddon={productAddons.toggleAddon}
+          />
         </section>
 
         <ProductRelated

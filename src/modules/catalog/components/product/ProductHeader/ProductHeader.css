@@ -2,15 +2,16 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  border-bottom: 1px solid rgba(239, 227, 234, 0.7);
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(106, 90, 138, 0.08);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 8px 30px rgba(106, 90, 138, 0.04);
+  backdrop-filter: blur(20px);
 }
 
 .product-detail-header-inner {
-  width: min(100%, 1380px);
+  width: min(100%, 1320px);
   margin: 0 auto;
-  padding: 0.9rem 1.25rem;
+  padding: 0.75rem 1.5rem;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
@@ -25,20 +26,22 @@
   margin: 0;
   overflow: hidden;
   color: var(--w-heading);
-  font-size: 0.95rem;
-  font-weight: 800;
+  font-size: 0.9rem;
+  font-weight: 850;
+  line-height: 1.2;
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .product-detail-header-title p {
-  margin: 0.15rem 0 0;
+  margin: 0.12rem 0 0;
   overflow: hidden;
   color: var(--w-muted);
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
   text-align: left;
   text-overflow: ellipsis;
   text-transform: uppercase;
@@ -46,47 +49,50 @@
 }
 
 .product-detail-icon-button {
-  width: 2.9rem;
-  height: 2.9rem;
+  width: 2.7rem;
+  height: 2.7rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(239, 227, 234, 0.7);
-  border-radius: 1.1rem;
-  background: rgba(255, 255, 255, 0.88);
-  box-shadow: 0 8px 24px rgba(106, 90, 138, 0.06);
+  border: 1px solid rgba(106, 90, 138, 0.1);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.94);
   color: var(--w-heading);
   cursor: pointer;
-  transition: var(--w-transition);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .product-detail-icon-button:hover {
   transform: translateY(-2px);
-  border-color: rgba(106, 90, 138, 0.22);
+  border-color: rgba(106, 90, 138, 0.28);
+  box-shadow: 0 10px 24px rgba(106, 90, 138, 0.1);
 }
 
 .product-detail-icon-button:focus-visible {
-  outline: 3px solid rgba(106, 90, 138, 0.2);
+  outline: 3px solid rgba(106, 90, 138, 0.18);
   outline-offset: 2px;
 }
 
 @media (max-width: 640px) {
   .product-detail-header-inner {
-    padding: 0.75rem 1rem;
-    gap: 0.7rem;
+    padding: 0.65rem 1rem;
+    gap: 0.65rem;
   }
 
   .product-detail-header-title h1 {
-    font-size: 0.84rem;
+    font-size: 0.8rem;
   }
 
   .product-detail-header-title p {
-    font-size: 0.62rem;
+    font-size: 0.56rem;
   }
 
   .product-detail-icon-button {
-    width: 2.6rem;
-    height: 2.6rem;
-    border-radius: 0.95rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.9rem;
   }
 }
