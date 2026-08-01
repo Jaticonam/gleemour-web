@@ -136,6 +136,23 @@ export interface Category {
   description?: string;
 }
 
+/**
+ * Subcategoría comercial perteneciente a una categoría principal.
+ * Actualmente se obtiene del maestro subcategories de Google Sheets.
+ *
+ * El id es único dentro de categoryId. La identidad completa se forma
+ * mediante la clave compuesta categoryId + id.
+ */
+export interface CatalogSubcategory {
+  id: string;
+  categoryId: string;
+  name: string;
+  icon: string;
+  description: string;
+  priority: number;
+  status: string;
+}
+
 export interface Campaign {
   id: string;
   name: string;

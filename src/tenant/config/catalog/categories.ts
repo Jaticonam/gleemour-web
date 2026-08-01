@@ -59,7 +59,7 @@ export const CATEGORIES: CatalogCategory[] = [
     description: "Agradece con detalles llenos amor.",
   },
   {
-    id: "para-pedir-perdon",
+    id: "pedir-perdon",
     name: "Pedir perdón",
     sheetLabel: "Pedir perdón",
     icon: "🌷",

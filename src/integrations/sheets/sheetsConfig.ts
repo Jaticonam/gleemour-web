@@ -4,6 +4,11 @@ export const SHEETS_CONFIG = {
     gid: "223977403",
   },
 
+  subcategories: {
+    docId: "141vkBWAieL-IY5vcxNdmV8qtX64YFda6AYRDTsoACYs",
+    gid: "292799741",
+  },
+
   addons: {
     docId: "141vkBWAieL-IY5vcxNdmV8qtX64YFda6AYRDTsoACYs",
     gid: "301214862",

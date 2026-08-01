@@ -1,10 +1,17 @@
 import type { MusicTrack } from "@/domain/music";
-import type { Addon, Campaign, Product } from "@/shared/types/product";
+import type {
+  Addon,
+  Campaign,
+  CatalogSubcategory,
+  Product,
+} from "@/shared/types/product";
 import { SHEETS_CONFIG, type SheetSource } from "./sheetsConfig";
 import { normalizeAddon, normalizeProduct } from "./normalizeProduct";
 import { normalizeCampaign } from "./normalizeCampaign";
 import { normalizeMusicTrack } from "./normalizeMusicTrack";
+import { normalizeSubcategory } from "./normalizeSubcategory";
 import { validateProducts } from "./validateProducts";
+import { validateSubcategories } from "./validateSubcategories";
 import { isVisibleProductStatus } from "@/tenant/config/product";
 
 type CsvRow = Record<string, string>;
@@ -44,6 +51,19 @@ const PRODUCT_PREMIUM_HEADERS = [
   "occasion",
   "message",
   "highlight",
+] as const;
+
+const SUBCATEGORY_REQUIRED_HEADERS = [
+  "subcategory_id",
+  "category_id",
+  "subcategory",
+  "status",
+] as const;
+
+const SUBCATEGORY_RECOMMENDED_HEADERS = [
+  "icon",
+  "description",
+  "priority",
 ] as const;
 
 const ADDON_REQUIRED_HEADERS = ["id", "title", "price", "status"] as const;
@@ -236,6 +256,24 @@ function validateSheetHeaders(
     return;
   }
 
+  if (sourceName === "subcategories") {
+    throwMissingRequiredHeaders(
+      headers,
+      SUBCATEGORY_REQUIRED_HEADERS,
+      sourceName,
+      source,
+    );
+
+    warnMissingOptionalHeaders(
+      headers,
+      SUBCATEGORY_RECOMMENDED_HEADERS,
+      sourceName,
+      "recomendadas",
+    );
+
+    return;
+  }
+
   if (sourceName === "addons") {
     throwMissingRequiredHeaders(
       headers,
@@ -318,6 +356,14 @@ export async function loadAllProducts(): Promise<Product[]> {
   return validateProducts(normalized)
     .filter((product) => isVisibleProductStatus(product.status.trim()))
     .sort((a, b) => b.priority - a.priority);
+}
+
+export async function loadAllSubcategories(): Promise<
+  CatalogSubcategory[]
+> {
+  const rows = await loadSheetRows("subcategories");
+
+  return validateSubcategories(rows.map(normalizeSubcategory));
 }
 
 export async function loadAllAddons(): Promise<Addon[]> {
