@@ -16,9 +16,11 @@ import {
   getCatalogUrl,
   getExperienceUrl,
 } from "@/app/routes/routes";
-import { getProductPrice } from "@/domain/product";
+import { getProductPrice } from "@/domain/product/pricing";
 
 import { ExperienceAppShell } from "../components/ExperienceAppShell";
+import { ExperienceArrangements } from "../components/ExperienceArrangements";
+import { useExperienceArrangements } from "../hooks/useExperienceArrangements";
 import { useExperienceEntry } from "../hooks/useExperienceEntry";
 import type { ExperienceSectionId } from "../types/ExperienceEntry.types";
 
@@ -76,17 +78,32 @@ const SECTION_COPY: Record<
 
 export default function ExperiencePage() {
   const navigate = useNavigate();
-  const { context, product, loading, error } = useExperienceEntry();
+  const {
+    context,
+    product: entryProduct,
+    loading,
+    error,
+  } = useExperienceEntry();
 
   const [activeSection, setActiveSection] =
     useState<ExperienceSectionId>("inicio");
+
+  const arrangements = useExperienceArrangements({
+    active: activeSection === "arreglos",
+    initialProduct: entryProduct,
+  });
+
+  const selectedProduct =
+    arrangements.selectedProduct ?? entryProduct;
 
   useEffect(() => {
     setActiveSection("inicio");
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [context.mode, context.productId, context.source]);
 
-  const productPrice = product ? getProductPrice(product) : 0;
+  const productPrice = selectedProduct
+    ? getProductPrice(selectedProduct)
+    : 0;
 
   const summary = (
     <div className="experience-summary-card">
@@ -95,19 +112,19 @@ export default function ExperiencePage() {
       </span>
 
       <h2>
-        {product ? "Tu detalle seleccionado" : "Comienza a diseñarla"}
+        {selectedProduct ? "Tu detalle seleccionado" : "Comienza a diseñarla"}
       </h2>
 
       <p>
-        {product
+        {selectedProduct
           ? "El producto ya está listo para comenzar su personalización."
           : "Te ayudaremos a elegir antes de personalizar cada detalle."}
       </p>
 
-      {product ? (
+      {selectedProduct ? (
         <div className="experience-summary-card__product">
           <span>Producto principal</span>
-          <strong>{product.title}</strong>
+          <strong>{selectedProduct.title}</strong>
           <small>S/ {productPrice.toFixed(2)}</small>
         </div>
       ) : (
@@ -200,23 +217,23 @@ export default function ExperiencePage() {
         </span>
 
         <h1>
-          {product
+          {selectedProduct
             ? "Ahora transformemos este detalle en una experiencia"
             : "Cuéntanos qué deseas expresar"}
         </h1>
 
         <p>
-          {product
+          {selectedProduct
             ? "Personaliza la presentación, agrega complementos, elige la música y escribe el mensaje que acompañará este momento."
             : "Recorre Gleemour como si estuvieras en nuestra florería. Te ayudaremos a encontrar el arreglo y los detalles ideales."}
         </p>
 
-        {product ? (
+        {selectedProduct ? (
           <div className="experience-product-preview">
             <span>Estás personalizando</span>
-            <strong>{product.title}</strong>
+            <strong>{selectedProduct.title}</strong>
             <small>
-              Código {product.id} · S/ {productPrice.toFixed(2)}
+              Código {selectedProduct.id} · S/ {productPrice.toFixed(2)}
             </small>
           </div>
         ) : (
@@ -243,7 +260,7 @@ export default function ExperiencePage() {
             className="experience-primary-action"
             onClick={() => setActiveSection("arreglos")}
           >
-            {product
+            {selectedProduct
               ? "Continuar personalizando"
               : "Ayúdame a elegir"}
 
@@ -258,6 +275,34 @@ export default function ExperiencePage() {
           </Link>
         </div>
       </section>
+    );
+  } else if (activeSection === "arreglos") {
+    workspace = (
+      <ExperienceArrangements
+        categories={arrangements.categories}
+        visibleSubcategories={
+          arrangements.visibleSubcategories
+        }
+        visibleProducts={arrangements.visibleProducts}
+        selectedCategoryId={
+          arrangements.selectedCategoryId
+        }
+        selectedSubcategoryKey={
+          arrangements.selectedSubcategoryKey
+        }
+        selectedProduct={arrangements.selectedProduct}
+        loading={arrangements.loading}
+        error={arrangements.error}
+        onSelectCategory={arrangements.selectCategory}
+        onSelectSubcategory={
+          arrangements.selectSubcategory
+        }
+        onSelectProduct={arrangements.selectProduct}
+        onRetry={arrangements.retry}
+        onContinue={() =>
+          setActiveSection("presentacion")
+        }
+      />
     );
   } else {
     const section = SECTION_COPY[activeSection];

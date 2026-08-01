@@ -1,5 +1,5 @@
 import { CATEGORIES } from "@/tenant/config/catalog";
-import { isVisibleProductStatus } from "@/tenant/config/product";
+import { isVisibleProductStatus } from "@/tenant/config/product/statuses";
 import type { SheetProduct } from "./normalizeProduct";
 
 const CATEGORY_IDS = new Set(CATEGORIES.map((category) => category.id));

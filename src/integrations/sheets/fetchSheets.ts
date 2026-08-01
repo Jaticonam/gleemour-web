@@ -12,7 +12,7 @@ import { normalizeMusicTrack } from "./normalizeMusicTrack";
 import { normalizeSubcategory } from "./normalizeSubcategory";
 import { validateProducts } from "./validateProducts";
 import { validateSubcategories } from "./validateSubcategories";
-import { isVisibleProductStatus } from "@/tenant/config/product";
+import { isVisibleProductStatus } from "@/tenant/config/product/statuses";
 
 type CsvRow = Record<string, string>;
 
