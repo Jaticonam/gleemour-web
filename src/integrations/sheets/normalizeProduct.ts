@@ -53,6 +53,26 @@ function parsePipeList(value: unknown): string[] {
     .filter(Boolean);
 }
 
+function normalizeListItemKey(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
+function parseUniquePipeList(value: unknown): string[] {
+  const seen = new Set<string>();
+
+  return parsePipeList(value).filter((item) => {
+    const key = normalizeListItemKey(item);
+
+    if (seen.has(key)) return false;
+
+    seen.add(key);
+    return true;
+  });
+}
+
 function parseCategories(value: unknown): string[] {
   return parsePipeList(value).map(getCategoryIdFromSheetLabel).filter(Boolean);
 }
@@ -157,6 +177,7 @@ export function normalizeProduct(row: CsvRow): SheetProduct {
 
     category: primaryCategory,
     categories,
+    subcategories: parseUniquePipeList(row.subcategory),
 
     price: parseRequiredNumber(row.price),
     offer_price: parseNumber(row.offer_price),

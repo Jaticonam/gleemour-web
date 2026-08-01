@@ -22,6 +22,7 @@ const PRODUCT_RECOMMENDED_HEADERS = [
   "description",
   "category",
   "categories",
+  "subcategory",
   "offer_price",
   "addons",
   "stock",

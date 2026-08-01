@@ -26,6 +26,12 @@ export interface Product {
    */
   categories: string[];
 
+  /**
+   * Subcategorías de la categoría principal.
+   * En Sheets provienen de "subcategory" y se separan mediante "|".
+   */
+  subcategories: string[];
+
   campaigns?: string[];
 
   /**

@@ -27,6 +27,7 @@ export function ensureCatalogProduct(
       product.categories && product.categories.length > 0
         ? product.categories
         : [category].filter(Boolean),
+    subcategories: product.subcategories ?? [],
 
     price,
     offer_price: offerPrice,
