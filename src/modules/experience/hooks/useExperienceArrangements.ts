@@ -212,6 +212,7 @@ export function useExperienceArrangements({
 
       setSelectedCategoryId(category.id);
       setSelectedSubcategoryKey("");
+      setSelectedProduct(null);
     },
     [],
   );
@@ -220,6 +221,7 @@ export function useExperienceArrangements({
     (subcategory: CatalogSubcategory | null) => {
       if (!subcategory) {
         setSelectedSubcategoryKey("");
+        setSelectedProduct(null);
         return;
       }
 
@@ -238,6 +240,7 @@ export function useExperienceArrangements({
           subcategory.id,
         ),
       );
+      setSelectedProduct(null);
     },
     [selectedCategoryId],
   );

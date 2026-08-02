@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   ArrowRight,
   Flower2,
   RefreshCw,
@@ -30,8 +31,8 @@ interface ExperienceArrangementsProps {
     subcategory: CatalogSubcategory | null,
   ) => void;
   onSelectProduct: (product: Product) => void;
-  onRetry: () => void;
   onContinue: () => void;
+  onRetry: () => void;
 }
 
 export function ExperienceArrangements({
@@ -46,12 +47,21 @@ export function ExperienceArrangements({
   onSelectCategory,
   onSelectSubcategory,
   onSelectProduct,
-  onRetry,
   onContinue,
+  onRetry,
 }: ExperienceArrangementsProps) {
   const selectedCategory =
     categories.find(
       (category) => category.id === selectedCategoryId,
+    ) ?? null;
+
+  const selectedSubcategory =
+    visibleSubcategories.find(
+      (subcategory) =>
+        getArrangementSubcategoryKey(
+          subcategory.categoryId,
+          subcategory.id,
+        ) === selectedSubcategoryKey,
     ) ?? null;
 
   return (
@@ -70,8 +80,8 @@ export function ExperienceArrangements({
         </h1>
 
         <p>
-          Comienza eligiendo una emoción. Luego podrás precisar la
-          intención y encontrar los arreglos relacionados.
+          Explora una categoría, elige la intención que mejor representa
+          el momento y descubre sus arreglos.
         </p>
       </header>
 
@@ -81,13 +91,14 @@ export function ExperienceArrangements({
       >
         <div className="experience-arrangements__section-heading">
           <div>
-            <span>Paso 1</span>
+            <span>Categorías</span>
+
             <h2 id="experience-categories-title">
-              Selecciona una categoría
+              Elige una emoción
             </h2>
           </div>
 
-          <small>{categories.length} emociones</small>
+          <small>{categories.length} opciones</small>
         </div>
 
         <div
@@ -170,178 +181,184 @@ export function ExperienceArrangements({
           <strong>Elige una emoción para comenzar</strong>
 
           <span>
-            Las subcategorías y los arreglos aparecerán aquí.
+            Sus intenciones aparecerán aquí como fichas.
           </span>
         </div>
-      ) : (
-        <>
-          <section
-            className="experience-arrangements__section"
-            aria-labelledby="experience-subcategories-title"
-          >
-            <div className="experience-arrangements__section-heading">
-              <div>
-                <span>Paso 2</span>
+      ) : !selectedSubcategory ? (
+        <section
+          className="experience-arrangements__section"
+          aria-labelledby="experience-subcategories-title"
+        >
+          <div className="experience-arrangements__section-heading">
+            <div>
+              <span>{selectedCategory.name}</span>
 
-                <h2 id="experience-subcategories-title">
-                  Precisa la intención
-                </h2>
-              </div>
-
-              <small>{selectedCategory.name}</small>
+              <h2 id="experience-subcategories-title">
+                ¿Cómo quieres decirlo?
+              </h2>
             </div>
 
-            {visibleSubcategories.length > 0 ? (
-              <div
-                className="experience-arrangements__subcategory-list"
-                role="group"
-                aria-label={`Subcategorías de ${selectedCategory.name}`}
-              >
-                <button
-                  type="button"
-                  className={[
-                    "experience-arrangements__subcategory",
-                    selectedSubcategoryKey === ""
-                      ? "experience-arrangements__subcategory--selected"
-                      : "",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={() => onSelectSubcategory(null)}
-                  aria-pressed={selectedSubcategoryKey === ""}
-                >
-                  <span aria-hidden="true">✨</span>
-                  <strong>Ver todos</strong>
-                </button>
+            <small>
+              {visibleSubcategories.length}{" "}
+              {visibleSubcategories.length === 1
+                ? "intención"
+                : "intenciones"}
+            </small>
+          </div>
 
-                {visibleSubcategories.map((subcategory) => {
-                  const subcategoryKey =
-                    getArrangementSubcategoryKey(
-                      subcategory.categoryId,
-                      subcategory.id,
-                    );
-
-                  const selected =
-                    subcategoryKey === selectedSubcategoryKey;
-
-                  return (
-                    <button
-                      key={subcategoryKey}
-                      type="button"
-                      className={[
-                        "experience-arrangements__subcategory",
-                        selected
-                          ? "experience-arrangements__subcategory--selected"
-                          : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                      onClick={() =>
-                        onSelectSubcategory(subcategory)
-                      }
-                      aria-pressed={selected}
-                      title={subcategory.description || undefined}
-                    >
-                      <span aria-hidden="true">
-                        {subcategory.icon}
-                      </span>
-
-                      <strong>{subcategory.name}</strong>
-                    </button>
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="experience-arrangements__section-note">
-                Esta categoría no necesita una intención adicional.
-                Puedes elegir directamente uno de sus arreglos.
-              </p>
-            )}
-          </section>
-
-          <section
-            className="experience-arrangements__section"
-            aria-labelledby="experience-products-title"
-          >
-            <div className="experience-arrangements__section-heading">
-              <div>
-                <span>Paso 3</span>
-
-                <h2 id="experience-products-title">
-                  Elige tu arreglo
-                </h2>
-              </div>
-
-              <small>
-                {visibleProducts.length}{" "}
-                {visibleProducts.length === 1
-                  ? "resultado"
-                  : "resultados"}
-              </small>
-            </div>
-
-            {visibleProducts.length > 0 ? (
-              <div
-                className="experience-arrangements__product-grid"
-                aria-live="polite"
-              >
-                {visibleProducts.map((product) => (
-                  <ExperienceProductCard
-                    key={product.id}
-                    product={product}
-                    selected={selectedProduct?.id === product.id}
-                    onSelect={onSelectProduct}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div
-                className="experience-arrangements__empty"
-                aria-live="polite"
-              >
-                <strong>
-                  No encontramos arreglos para esta selección
-                </strong>
-
-                <span>
-                  Prueba otra intención o vuelve a ver toda la
-                  categoría.
-                </span>
-
-                {selectedSubcategoryKey && (
-                  <button
-                    type="button"
-                    onClick={() => onSelectSubcategory(null)}
-                  >
-                    Ver toda la categoría
-                  </button>
-                )}
-              </div>
-            )}
-          </section>
-
-          <footer className="experience-arrangements__footer">
-            <div aria-live="polite">
-              <span>Arreglo seleccionado</span>
-
-              <strong>
-                {selectedProduct
-                  ? selectedProduct.title
-                  : "Todavía no has elegido uno"}
-              </strong>
-            </div>
-
-            <button
-              type="button"
-              className="experience-arrangements__continue"
-              onClick={onContinue}
-              disabled={!selectedProduct}
+          {visibleSubcategories.length > 0 ? (
+            <div
+              className="experience-arrangements__subcategory-grid"
+              aria-label={`Subcategorías de ${selectedCategory.name}`}
             >
-              Continuar a presentación
-              <ArrowRight className="w-4 h-4" aria-hidden="true" />
-            </button>
-          </footer>
-        </>
+              {visibleSubcategories.map((subcategory) => {
+                const subcategoryKey =
+                  getArrangementSubcategoryKey(
+                    subcategory.categoryId,
+                    subcategory.id,
+                  );
+
+                return (
+                  <button
+                    key={subcategoryKey}
+                    type="button"
+                    className="experience-arrangements__subcategory-card"
+                    onClick={() =>
+                      onSelectSubcategory(subcategory)
+                    }
+                  >
+                    <span
+                      className="experience-arrangements__subcategory-card-icon"
+                      aria-hidden="true"
+                    >
+                      {subcategory.icon || "✨"}
+                    </span>
+
+                    <span className="experience-arrangements__subcategory-card-copy">
+                      <strong>{subcategory.name}</strong>
+
+                      <small>
+                        {subcategory.description ||
+                          "Descubre los arreglos relacionados con esta intención."}
+                      </small>
+                    </span>
+
+                    <ArrowRight
+                      className="experience-arrangements__subcategory-card-arrow"
+                      aria-hidden="true"
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div
+              className="experience-arrangements__empty"
+              aria-live="polite"
+            >
+              <strong>
+                Esta categoría todavía no tiene intenciones disponibles
+              </strong>
+
+              <span>
+                Elige otra categoría para continuar explorando.
+              </span>
+            </div>
+          )}
+        </section>
+      ) : (
+        <section
+          className="experience-arrangements__section"
+          aria-labelledby="experience-products-title"
+        >
+          <button
+            type="button"
+            className="experience-arrangements__back"
+            onClick={() => onSelectSubcategory(null)}
+          >
+            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+            Volver a las intenciones
+          </button>
+
+          <div className="experience-arrangements__section-heading">
+            <div>
+              <span>{selectedCategory.name}</span>
+
+              <h2 id="experience-products-title">
+                {selectedSubcategory.name}
+              </h2>
+            </div>
+
+            <small>
+              {visibleProducts.length}{" "}
+              {visibleProducts.length === 1
+                ? "arreglo"
+                : "arreglos"}
+            </small>
+          </div>
+
+          {selectedSubcategory.description && (
+            <p className="experience-arrangements__subcategory-description">
+              {selectedSubcategory.description}
+            </p>
+          )}
+
+          {visibleProducts.length > 0 ? (
+            <div
+              className="experience-arrangements__product-grid"
+              aria-live="polite"
+            >
+              {visibleProducts.map((product) => (
+                <ExperienceProductCard
+                  key={product.id}
+                  product={product}
+                  selected={selectedProduct?.id === product.id}
+                  onSelect={onSelectProduct}
+                />
+              ))}
+            </div>
+          ) : (
+            <div
+              className="experience-arrangements__empty"
+              aria-live="polite"
+            >
+              <strong>
+                No encontramos arreglos para esta intención
+              </strong>
+
+              <span>
+                Regresa a las fichas y prueba otra opción.
+              </span>
+
+              <button
+                type="button"
+                onClick={() => onSelectSubcategory(null)}
+              >
+                Volver a las intenciones
+              </button>
+            </div>
+          )}
+
+          {selectedProduct && (
+            <div className="experience-arrangements__continue">
+              <div>
+                <span>Arreglo elegido</span>
+                <strong>{selectedProduct.title}</strong>
+              </div>
+
+              <button
+                type="button"
+                onClick={onContinue}
+              >
+                Continuar con este arreglo
+                <ArrowRight
+                  className="w-4 h-4"
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
+          )}
+        </section>
       )}
     </section>
   );

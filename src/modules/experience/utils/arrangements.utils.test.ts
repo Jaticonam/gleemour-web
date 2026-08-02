@@ -142,28 +142,38 @@ describe("arrangements.utils", () => {
     ).toHaveLength(1);
   });
 
-  it("filtra productos únicamente por categoría principal", () => {
-    const primaryProduct = createProduct({
-      id: "GLM-001",
-      category: "para-enamorar",
-    });
+  it(
+    "filtra productos por categoría principal y subcategoría seleccionada",
+    () => {
+      const subcategory = createSubcategory({
+        categoryId: "para-enamorar",
+        name: "Primer detalle",
+      });
 
-    const secondaryProduct = createProduct({
-      id: "GLM-002",
-      category: "para-sorprender",
-      categories: ["para-enamorar"],
-    });
+      const primaryProduct = createProduct({
+        id: "GLM-001",
+        category: "para-enamorar",
+        subcategories: ["Primer detalle"],
+      });
 
-    const result = filterExperienceProducts(
-      [primaryProduct, secondaryProduct],
-      "para-enamorar",
-      null,
-    );
+      const secondaryProduct = createProduct({
+        id: "GLM-002",
+        category: "para-sorprender",
+        categories: ["para-enamorar"],
+        subcategories: ["Primer detalle"],
+      });
 
-    expect(result.map((product) => product.id)).toEqual([
-      "GLM-001",
-    ]);
-  });
+      const result = filterExperienceProducts(
+        [primaryProduct, secondaryProduct],
+        "para-enamorar",
+        subcategory,
+      );
+
+      expect(result.map((product) => product.id)).toEqual([
+        "GLM-001",
+      ]);
+    },
+  );
 
   it("relaciona productos y subcategorías sin distinguir acentos", () => {
     const subcategory = createSubcategory({
@@ -186,28 +196,23 @@ describe("arrangements.utils", () => {
     ).toEqual([product]);
   });
 
-  it("devuelve todos los productos de la categoría sin subcategoría", () => {
-    const products = [
-      createProduct({
-        id: "GLM-001",
-        category: "para-celebrar",
-        subcategories: ["Cumpleaños"],
-      }),
-      createProduct({
-        id: "GLM-002",
-        category: "para-celebrar",
-        subcategories: ["Graduación"],
-      }),
-    ];
-
-    expect(
-      filterExperienceProducts(
-        products,
+  it(
+    "oculta productos mientras no exista una subcategoría seleccionada",
+    () => {
+      const result = filterExperienceProducts(
+        [
+          createProduct({
+            category: "para-celebrar",
+            subcategories: ["Cumpleaños"],
+          }),
+        ],
         "para-celebrar",
         null,
-      ),
-    ).toHaveLength(2);
-  });
+      );
+
+      expect(result).toEqual([]);
+    },
+  );
 
   it("devuelve vacío cuando la subcategoría no tiene productos", () => {
     const result = filterExperienceProducts(

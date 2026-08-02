@@ -1,15 +1,12 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
-  Flower2,
-  Gift,
-  Heart,
-  MessageSquareText,
-  Music2,
   Search,
   Sparkles,
-  Truck,
 } from "lucide-react";
 
 import {
@@ -18,66 +15,30 @@ import {
 } from "@/app/routes/routes";
 import { getProductPrice } from "@/domain/product/pricing";
 
+import { ExperienceAddons } from "../components/ExperienceAddons";
 import { ExperienceAppShell } from "../components/ExperienceAppShell";
 import { ExperienceArrangements } from "../components/ExperienceArrangements";
+import { ExperienceMusic } from "../components/ExperienceMusic";
+import { useExperienceAddons } from "../hooks/useExperienceAddons";
 import { useExperienceArrangements } from "../hooks/useExperienceArrangements";
 import { useExperienceEntry } from "../hooks/useExperienceEntry";
-import type { ExperienceSectionId } from "../types/ExperienceEntry.types";
+import { useExperienceMusic } from "../hooks/useExperienceMusic";
+import {
+  canOpenExperienceAddons,
+  getExperienceTotal,
+} from "../utils/addons.utils";
 
-const SECTION_COPY: Record<
-  Exclude<ExperienceSectionId, "inicio">,
-  {
-    title: string;
-    description: string;
-    icon: typeof Flower2;
-  }
-> = {
-  arreglos: {
-    title: "Encuentra el arreglo que mejor expresa lo que sientes",
-    description:
-      "Aquí aparecerán las categorías existentes, las subcategorías como fichas y los arreglos relacionados desde Google Sheets.",
-    icon: Flower2,
-  },
-  presentacion: {
-    title: "Elige cómo quieres presentar tu detalle",
-    description:
-      "Envolturas, acabados, cintas, bases y estilos formarán parte de esta sección.",
-    icon: Sparkles,
-  },
-  complementos: {
-    title: "Agrega detalles que hagan única la experiencia",
-    description:
-      "Chocolates, peluches, globos y otros complementos se organizarán como un catálogo interno.",
-    icon: Gift,
-  },
-  musica: {
-    title: "Elige la canción que acompañará este momento",
-    description:
-      "La biblioteca musical se organizará por emociones, ocasiones y recomendaciones de Gleemour.",
-    icon: Music2,
-  },
-  mensaje: {
-    title: "Convierte tus sentimientos en un mensaje",
-    description:
-      "Podrás elegir sugerencias, editarlas y previsualizar cómo se verá la dedicatoria.",
-    icon: MessageSquareText,
-  },
-  entrega: {
-    title: "Define cómo quieres vivir la sorpresa",
-    description:
-      "Entrega sorpresa, coordinación, fecha preferida y otros datos se prepararán antes de continuar por WhatsApp.",
-    icon: Truck,
-  },
-  resumen: {
-    title: "Revisa tu experiencia Gleemour",
-    description:
-      "Aquí se consolidarán el arreglo, la presentación, los complementos, la música, el mensaje y la entrega.",
-    icon: Heart,
-  },
-};
+type ExperienceView =
+  | "arrangements"
+  | "addons"
+  | "music";
 
 export default function ExperiencePage() {
   const navigate = useNavigate();
+
+  const [view, setView] =
+    useState<ExperienceView>("arrangements");
+
   const {
     context,
     product: entryProduct,
@@ -85,77 +46,178 @@ export default function ExperiencePage() {
     error,
   } = useExperienceEntry();
 
-  const [activeSection, setActiveSection] =
-    useState<ExperienceSectionId>("inicio");
-
   const arrangements = useExperienceArrangements({
-    active: activeSection === "arreglos",
+    active: true,
     initialProduct: entryProduct,
   });
 
-  const selectedProduct =
-    arrangements.selectedProduct ?? entryProduct;
+  const selectedProduct = arrangements.selectedProduct;
+
+  const addons = useExperienceAddons({
+    active: view === "addons",
+    product: selectedProduct,
+  });
+
+  const music = useExperienceMusic({
+    active: view === "music",
+    product: selectedProduct,
+  });
 
   useEffect(() => {
-    setActiveSection("inicio");
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [context.mode, context.productId, context.source]);
+    if (
+      view !== "arrangements" &&
+      !canOpenExperienceAddons(selectedProduct?.id)
+    ) {
+      setView("arrangements");
+    }
+  }, [selectedProduct, view]);
 
   const productPrice = selectedProduct
     ? getProductPrice(selectedProduct)
     : 0;
 
+  const total = getExperienceTotal(
+    productPrice,
+    addons.addonsTotal,
+  );
+
+  const openAddons = () => {
+    if (!canOpenExperienceAddons(selectedProduct?.id)) {
+      return;
+    }
+
+    setView("addons");
+  };
+
+  const openMusic = () => {
+    if (!canOpenExperienceAddons(selectedProduct?.id)) {
+      return;
+    }
+
+    setView("music");
+  };
+
+  const backToArrangements = () => {
+    setView("arrangements");
+  };
+
+  const backToAddons = () => {
+    setView("addons");
+  };
+
+  const handleShellBack = () => {
+    if (view === "music") {
+      backToAddons();
+      return;
+    }
+
+    if (view === "addons") {
+      backToArrangements();
+      return;
+    }
+
+    navigate(context.fallbackUrl);
+  };
+
+  const summaryDescription = selectedProduct
+    ? view === "music"
+      ? "Elige la canción que acompañará este momento."
+      : view === "addons"
+        ? "Personaliza el arreglo con uno o varios complementos."
+        : "Este es el arreglo seleccionado durante tu exploración."
+    : "Selecciona una categoría, una intención y luego el arreglo ideal.";
+
   const summary = (
     <div className="experience-summary-card">
       <span className="experience-summary-card__label">
-        Mi experiencia
+        Tu selección
       </span>
 
       <h2>
-        {selectedProduct ? "Tu detalle seleccionado" : "Comienza a diseñarla"}
+        {selectedProduct
+          ? "Tu detalle"
+          : "Elige tu arreglo"}
       </h2>
 
-      <p>
-        {selectedProduct
-          ? "El producto ya está listo para comenzar su personalización."
-          : "Te ayudaremos a elegir antes de personalizar cada detalle."}
-      </p>
+      <p>{summaryDescription}</p>
 
       {selectedProduct ? (
-        <div className="experience-summary-card__product">
-          <span>Producto principal</span>
-          <strong>{selectedProduct.title}</strong>
-          <small>S/ {productPrice.toFixed(2)}</small>
-        </div>
+        <>
+          <div className="experience-summary-card__product">
+            <span>Producto principal</span>
+            <strong>{selectedProduct.title}</strong>
+            <small>Ref. {selectedProduct.id}</small>
+          </div>
+
+          <div className="experience-summary-card__addons">
+            <span>Complementos</span>
+
+            {addons.selectedAddons.length > 0 ? (
+              <ul>
+                {addons.selectedAddons.map((addon) => (
+                  <li key={addon.id}>
+                    <span>{addon.title}</span>
+                    <strong>
+                      S/ {addon.price.toFixed(2)}
+                    </strong>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <small>
+                Sin complementos seleccionados.
+              </small>
+            )}
+          </div>
+
+          <div className="experience-summary-card__music">
+            <span>Música</span>
+
+            {music.selectedTrack ? (
+              <>
+                <strong>{music.selectedTrack.title}</strong>
+
+                <small>
+                  {[
+                    music.selectedTrack.musicType,
+                    music.selectedTrack.moodMusical,
+                    music.selectedTrack.platform,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </small>
+              </>
+            ) : (
+              <small>Sin canción seleccionada.</small>
+            )}
+          </div>
+
+          <div className="experience-summary-card__breakdown">
+            <div>
+              <span>Arreglo</span>
+              <strong>
+                S/ {productPrice.toFixed(2)}
+              </strong>
+            </div>
+
+            <div>
+              <span>Complementos</span>
+              <strong>
+                S/ {addons.addonsTotal.toFixed(2)}
+              </strong>
+            </div>
+
+            <div className="experience-summary-card__total">
+              <span>Total estimado</span>
+              <strong>S/ {total.toFixed(2)}</strong>
+            </div>
+          </div>
+        </>
       ) : (
         <div className="experience-summary-card__empty">
-          Todavía no has seleccionado un arreglo. Comienza indicando
-          qué deseas expresar.
+          Todavía no has elegido un arreglo.
         </div>
       )}
-
-      <ul className="experience-summary-card__steps">
-        <li>
-          <span>Presentación</span>
-          <strong>Pendiente</strong>
-        </li>
-        <li>
-          <span>Complementos</span>
-          <strong>Pendiente</strong>
-        </li>
-        <li>
-          <span>Música</span>
-          <strong>Pendiente</strong>
-        </li>
-        <li>
-          <span>Mensaje</span>
-          <strong>Pendiente</strong>
-        </li>
-        <li>
-          <span>Entrega</span>
-          <strong>Pendiente</strong>
-        </li>
-      </ul>
     </div>
   );
 
@@ -193,7 +255,7 @@ export default function ExperiencePage() {
             to={getExperienceUrl("home")}
             className="experience-primary-action"
           >
-            Comenzar desde el inicio
+            Explorar otras opciones
             <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </Link>
 
@@ -206,77 +268,36 @@ export default function ExperiencePage() {
         </div>
       </section>
     );
-  } else if (activeSection === "inicio") {
+  } else if (view === "music" && selectedProduct) {
     workspace = (
-      <section className="experience-workspace-card">
-        <span className="experience-workspace-card__eyebrow">
-          <Sparkles className="w-4 h-4" aria-hidden="true" />
-          {context.mode === "guided"
-            ? "Bienvenido a nuestra florería digital"
-            : "Producto seleccionado"}
-        </span>
-
-        <h1>
-          {selectedProduct
-            ? "Ahora transformemos este detalle en una experiencia"
-            : "Cuéntanos qué deseas expresar"}
-        </h1>
-
-        <p>
-          {selectedProduct
-            ? "Personaliza la presentación, agrega complementos, elige la música y escribe el mensaje que acompañará este momento."
-            : "Recorre Gleemour como si estuvieras en nuestra florería. Te ayudaremos a encontrar el arreglo y los detalles ideales."}
-        </p>
-
-        {selectedProduct ? (
-          <div className="experience-product-preview">
-            <span>Estás personalizando</span>
-            <strong>{selectedProduct.title}</strong>
-            <small>
-              Código {selectedProduct.id} · S/ {productPrice.toFixed(2)}
-            </small>
-          </div>
-        ) : (
-          <div className="experience-placeholder-grid">
-            <article className="experience-placeholder-card">
-              <strong>¿Qué deseas expresar?</strong>
-              <span>
-                Amor, agradecimiento, celebración, apoyo o perdón.
-              </span>
-            </article>
-
-            <article className="experience-placeholder-card">
-              <strong>¿Para quién es?</strong>
-              <span>
-                Te guiaremos hacia los arreglos más adecuados.
-              </span>
-            </article>
-          </div>
-        )}
-
-        <div className="experience-workspace-card__actions">
-          <button
-            type="button"
-            className="experience-primary-action"
-            onClick={() => setActiveSection("arreglos")}
-          >
-            {selectedProduct
-              ? "Continuar personalizando"
-              : "Ayúdame a elegir"}
-
-            <ArrowRight className="w-4 h-4" aria-hidden="true" />
-          </button>
-
-          <Link
-            to={getCatalogUrl()}
-            className="experience-secondary-action"
-          >
-            Explorar catálogo
-          </Link>
-        </div>
-      </section>
+      <ExperienceMusic
+        product={selectedProduct}
+        availableTracks={music.availableTracks}
+        selectedMusicId={music.selectedMusicId}
+        hasConfiguredMusic={music.hasConfiguredMusic}
+        loading={music.loading}
+        error={music.error}
+        onSelectMusic={music.selectMusic}
+        onBack={backToAddons}
+        onRetry={music.retry}
+      />
     );
-  } else if (activeSection === "arreglos") {
+  } else if (view === "addons" && selectedProduct) {
+    workspace = (
+      <ExperienceAddons
+        product={selectedProduct}
+        availableAddons={addons.availableAddons}
+        selectedAddons={addons.selectedAddons}
+        hasConfiguredAddons={addons.hasConfiguredAddons}
+        loading={addons.loading}
+        error={addons.error}
+        onToggleAddon={addons.toggleAddon}
+        onBack={backToArrangements}
+        onContinue={openMusic}
+        onRetry={addons.retry}
+      />
+    );
+  } else {
     workspace = (
       <ExperienceArrangements
         categories={arrangements.categories}
@@ -298,63 +319,16 @@ export default function ExperiencePage() {
           arrangements.selectSubcategory
         }
         onSelectProduct={arrangements.selectProduct}
+        onContinue={openAddons}
         onRetry={arrangements.retry}
-        onContinue={() =>
-          setActiveSection("presentacion")
-        }
       />
-    );
-  } else {
-    const section = SECTION_COPY[activeSection];
-    const Icon = section.icon;
-
-    workspace = (
-      <section className="experience-workspace-card">
-        <span className="experience-workspace-card__eyebrow">
-          <Icon className="w-4 h-4" aria-hidden="true" />
-          Experience Studio
-        </span>
-
-        <h2>{section.title}</h2>
-
-        <p>{section.description}</p>
-
-        <div className="experience-placeholder-grid">
-          <article className="experience-placeholder-card">
-            <strong>Próximo incremento</strong>
-            <span>
-              Esta sección recibirá fichas visuales y datos reales
-              progresivamente.
-            </span>
-          </article>
-
-          <article className="experience-placeholder-card">
-            <strong>Tu selección aparecerá aquí</strong>
-            <span>
-              El resumen se actualizará sin utilizar carrito ni checkout.
-            </span>
-          </article>
-        </div>
-
-        <div className="experience-workspace-card__actions">
-          <button
-            type="button"
-            className="experience-primary-action"
-            onClick={() => setActiveSection("inicio")}
-          >
-            Volver al inicio
-          </button>
-        </div>
-      </section>
     );
   }
 
   return (
     <ExperienceAppShell
       mode={context.mode}
-      activeSection={activeSection}
-      onSectionChange={setActiveSection}
-      onBack={() => navigate(context.fallbackUrl)}
+      onBack={handleShellBack}
       summary={summary}
     >
       {workspace}

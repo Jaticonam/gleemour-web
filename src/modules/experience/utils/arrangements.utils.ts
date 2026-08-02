@@ -83,7 +83,7 @@ export function filterExperienceProducts(
   );
 
   if (!subcategory) {
-    return categoryProducts;
+    return [];
   }
 
   if (

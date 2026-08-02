@@ -9,16 +9,6 @@ export type ExperienceMode =
   | "guided"
   | "personalization";
 
-export type ExperienceSectionId =
-  | "inicio"
-  | "arreglos"
-  | "presentacion"
-  | "complementos"
-  | "musica"
-  | "mensaje"
-  | "entrega"
-  | "resumen";
-
 export interface ExperienceEntryContext {
   source: ExperienceSource;
   mode: ExperienceMode;
