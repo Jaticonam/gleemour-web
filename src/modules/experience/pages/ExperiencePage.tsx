@@ -14,12 +14,14 @@ import {
   getExperienceUrl,
 } from "@/app/routes/routes";
 import { getProductPrice } from "@/domain/product/pricing";
+import { buildExperienceWhatsAppUrl } from "@/integrations/whatsapp/experienceWhatsapp";
 
 import { ExperienceAddons } from "../components/ExperienceAddons";
 import { ExperienceAppShell } from "../components/ExperienceAppShell";
 import { ExperienceArrangements } from "../components/ExperienceArrangements";
 import { ExperienceDedication } from "../components/ExperienceDedication";
 import { ExperienceMusic } from "../components/ExperienceMusic";
+import { ExperienceSummary } from "../components/ExperienceSummary";
 import { useExperienceAddons } from "../hooks/useExperienceAddons";
 import { useExperienceArrangements } from "../hooks/useExperienceArrangements";
 import { useExperienceDedication } from "../hooks/useExperienceDedication";
@@ -34,7 +36,8 @@ type ExperienceView =
   | "arrangements"
   | "addons"
   | "music"
-  | "dedication";
+  | "dedication"
+  | "summary";
 
 export default function ExperiencePage() {
   const navigate = useNavigate();
@@ -67,7 +70,9 @@ export default function ExperiencePage() {
   });
 
   const dedication = useExperienceDedication({
-    active: view === "dedication",
+    active:
+      view === "dedication" ||
+      view === "summary",
     product: selectedProduct,
   });
 
@@ -113,6 +118,33 @@ export default function ExperiencePage() {
     setView("dedication");
   };
 
+  const openSummary = () => {
+    if (!selectedProduct) {
+      return;
+    }
+
+    dedication.confirmDedication();
+    setView("summary");
+  };
+
+  const handleExperienceWhatsApp = () => {
+    if (!selectedProduct) {
+      return;
+    }
+
+    const url = buildExperienceWhatsAppUrl({
+      product: selectedProduct,
+      selectedAddons: addons.selectedAddons,
+      selectedMusic: music.selectedTrack,
+      dedication: dedication.value,
+      productPrice,
+      addonsTotal: addons.addonsTotal,
+      total,
+    });
+
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   const backToArrangements = () => {
     setView("arrangements");
   };
@@ -125,7 +157,16 @@ export default function ExperiencePage() {
     setView("music");
   };
 
+  const backToDedication = () => {
+    setView("dedication");
+  };
+
   const handleShellBack = () => {
+    if (view === "summary") {
+      backToDedication();
+      return;
+    }
+
     if (view === "dedication") {
       backToMusic();
       return;
@@ -145,13 +186,15 @@ export default function ExperiencePage() {
   };
 
   const summaryDescription = selectedProduct
-    ? view === "dedication"
-      ? "Escribe el mensaje que incluiremos en la tarjeta."
-      : view === "music"
-        ? "Elige la canción que acompañará este momento."
-        : view === "addons"
-          ? "Personaliza el arreglo con uno o varios complementos."
-          : "Este es el arreglo seleccionado durante tu exploración."
+    ? view === "summary"
+      ? "Revisa toda la experiencia antes de consultar disponibilidad."
+      : view === "dedication"
+        ? "Escribe el mensaje que incluiremos en la tarjeta."
+        : view === "music"
+          ? "Elige la canción que acompañará este momento."
+          : view === "addons"
+            ? "Personaliza el arreglo con uno o varios complementos."
+            : "Este es el arreglo seleccionado durante tu exploración."
     : "Selecciona una categoría, una intención y luego el arreglo ideal.";
 
   const summary = (
@@ -317,6 +360,24 @@ export default function ExperiencePage() {
         </div>
       </section>
     );
+  } else if (view === "summary" && selectedProduct) {
+    workspace = (
+      <ExperienceSummary
+        product={selectedProduct}
+        selectedAddons={addons.selectedAddons}
+        selectedMusic={music.selectedTrack}
+        dedication={dedication.value}
+        productPrice={productPrice}
+        addonsTotal={addons.addonsTotal}
+        total={total}
+        onBack={backToDedication}
+        onEditArrangements={backToArrangements}
+        onEditAddons={backToAddons}
+        onEditMusic={backToMusic}
+        onEditDedication={backToDedication}
+        onWhatsApp={handleExperienceWhatsApp}
+      />
+    );
   } else if (view === "dedication" && selectedProduct) {
     workspace = (
       <ExperienceDedication
@@ -326,7 +387,7 @@ export default function ExperiencePage() {
         maxLength={dedication.maxLength}
         onChange={dedication.changeDedication}
         onBack={backToMusic}
-        onConfirm={dedication.confirmDedication}
+        onConfirm={openSummary}
       />
     );
   } else if (view === "music" && selectedProduct) {
