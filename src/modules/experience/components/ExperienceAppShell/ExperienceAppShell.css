@@ -424,3 +424,43 @@
   font-size: 0.61rem;
   line-height: 1.45;
 }
+
+/* R1B-05G: Experience Dedication summary */
+
+.experience-summary-card__dedication {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.8rem 0;
+  border-top: 1px solid rgba(106, 90, 138, 0.1);
+}
+
+.experience-summary-card__dedication > span {
+  color: var(--w-primary);
+  font-size: 0.52rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.experience-summary-card__dedication > strong {
+  overflow-wrap: anywhere;
+  color: var(--w-heading);
+  font-size: 0.68rem;
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+.experience-summary-card__dedication > small {
+  color: var(--w-muted);
+  font-size: 0.59rem;
+  line-height: 1.4;
+}
+
+.experience-summary-card__dedication-status {
+  width: fit-content;
+  padding: 0.22rem 0.48rem;
+  border-radius: 999px;
+  background: rgba(74, 145, 105, 0.1);
+  color: #326f4e !important;
+  font-weight: 900;
+}

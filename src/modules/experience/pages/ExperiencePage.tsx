@@ -18,9 +18,11 @@ import { getProductPrice } from "@/domain/product/pricing";
 import { ExperienceAddons } from "../components/ExperienceAddons";
 import { ExperienceAppShell } from "../components/ExperienceAppShell";
 import { ExperienceArrangements } from "../components/ExperienceArrangements";
+import { ExperienceDedication } from "../components/ExperienceDedication";
 import { ExperienceMusic } from "../components/ExperienceMusic";
 import { useExperienceAddons } from "../hooks/useExperienceAddons";
 import { useExperienceArrangements } from "../hooks/useExperienceArrangements";
+import { useExperienceDedication } from "../hooks/useExperienceDedication";
 import { useExperienceEntry } from "../hooks/useExperienceEntry";
 import { useExperienceMusic } from "../hooks/useExperienceMusic";
 import {
@@ -31,7 +33,8 @@ import {
 type ExperienceView =
   | "arrangements"
   | "addons"
-  | "music";
+  | "music"
+  | "dedication";
 
 export default function ExperiencePage() {
   const navigate = useNavigate();
@@ -60,6 +63,11 @@ export default function ExperiencePage() {
 
   const music = useExperienceMusic({
     active: view === "music",
+    product: selectedProduct,
+  });
+
+  const dedication = useExperienceDedication({
+    active: view === "dedication",
     product: selectedProduct,
   });
 
@@ -97,6 +105,14 @@ export default function ExperiencePage() {
     setView("music");
   };
 
+  const openDedication = () => {
+    if (!canOpenExperienceAddons(selectedProduct?.id)) {
+      return;
+    }
+
+    setView("dedication");
+  };
+
   const backToArrangements = () => {
     setView("arrangements");
   };
@@ -105,7 +121,16 @@ export default function ExperiencePage() {
     setView("addons");
   };
 
+  const backToMusic = () => {
+    setView("music");
+  };
+
   const handleShellBack = () => {
+    if (view === "dedication") {
+      backToMusic();
+      return;
+    }
+
     if (view === "music") {
       backToAddons();
       return;
@@ -120,11 +145,13 @@ export default function ExperiencePage() {
   };
 
   const summaryDescription = selectedProduct
-    ? view === "music"
-      ? "Elige la canción que acompañará este momento."
-      : view === "addons"
-        ? "Personaliza el arreglo con uno o varios complementos."
-        : "Este es el arreglo seleccionado durante tu exploración."
+    ? view === "dedication"
+      ? "Escribe el mensaje que incluiremos en la tarjeta."
+      : view === "music"
+        ? "Elige la canción que acompañará este momento."
+        : view === "addons"
+          ? "Personaliza el arreglo con uno o varios complementos."
+          : "Este es el arreglo seleccionado durante tu exploración."
     : "Selecciona una categoría, una intención y luego el arreglo ideal.";
 
   const summary = (
@@ -157,6 +184,7 @@ export default function ExperiencePage() {
                 {addons.selectedAddons.map((addon) => (
                   <li key={addon.id}>
                     <span>{addon.title}</span>
+
                     <strong>
                       S/ {addon.price.toFixed(2)}
                     </strong>
@@ -192,9 +220,28 @@ export default function ExperiencePage() {
             )}
           </div>
 
+          {dedication.visited ? (
+            <div className="experience-summary-card__dedication">
+              <span>Dedicatoria</span>
+
+              {dedication.hasDedication ? (
+                <strong>{dedication.preview}</strong>
+              ) : (
+                <small>Sin dedicatoria.</small>
+              )}
+
+              {dedication.confirmed ? (
+                <small className="experience-summary-card__dedication-status">
+                  Confirmada
+                </small>
+              ) : null}
+            </div>
+          ) : null}
+
           <div className="experience-summary-card__breakdown">
             <div>
               <span>Arreglo</span>
+
               <strong>
                 S/ {productPrice.toFixed(2)}
               </strong>
@@ -202,6 +249,7 @@ export default function ExperiencePage() {
 
             <div>
               <span>Complementos</span>
+
               <strong>
                 S/ {addons.addonsTotal.toFixed(2)}
               </strong>
@@ -256,6 +304,7 @@ export default function ExperiencePage() {
             className="experience-primary-action"
           >
             Explorar otras opciones
+
             <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </Link>
 
@@ -268,6 +317,18 @@ export default function ExperiencePage() {
         </div>
       </section>
     );
+  } else if (view === "dedication" && selectedProduct) {
+    workspace = (
+      <ExperienceDedication
+        product={selectedProduct}
+        value={dedication.value}
+        confirmed={dedication.confirmed}
+        maxLength={dedication.maxLength}
+        onChange={dedication.changeDedication}
+        onBack={backToMusic}
+        onConfirm={dedication.confirmDedication}
+      />
+    );
   } else if (view === "music" && selectedProduct) {
     workspace = (
       <ExperienceMusic
@@ -279,6 +340,7 @@ export default function ExperiencePage() {
         error={music.error}
         onSelectMusic={music.selectMusic}
         onBack={backToAddons}
+        onContinue={openDedication}
         onRetry={music.retry}
       />
     );

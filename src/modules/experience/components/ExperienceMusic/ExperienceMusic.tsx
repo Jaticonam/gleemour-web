@@ -1,5 +1,6 @@
 import {
   ArrowLeft,
+  ArrowRight,
   Check,
   ExternalLink,
   Headphones,
@@ -24,6 +25,7 @@ interface ExperienceMusicProps {
   error: string | null;
   onSelectMusic: (musicId: string) => void;
   onBack: () => void;
+  onContinue: () => void;
   onRetry: () => void;
 }
 
@@ -36,6 +38,7 @@ export function ExperienceMusic({
   error,
   onSelectMusic,
   onBack,
+  onContinue,
   onRetry,
 }: ExperienceMusicProps) {
   const normalizedSelectedMusicId =
@@ -135,14 +138,9 @@ export function ExperienceMusic({
           </strong>
 
           <span>
-            Puedes conservar el arreglo sin música o volver a los
-            complementos.
+            Puedes conservar el arreglo sin música y continuar con tu
+            dedicatoria.
           </span>
-
-          <button type="button" onClick={onBack}>
-            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-            Volver a complementos
-          </button>
         </div>
       ) : availableTracks.length === 0 ? (
         <div
@@ -157,7 +155,7 @@ export function ExperienceMusic({
 
           <span>
             Las referencias configuradas no están disponibles
-            actualmente. El arreglo permanece seleccionado.
+            actualmente. Puedes continuar sin música.
           </span>
         </div>
       ) : (
@@ -285,6 +283,7 @@ export function ExperienceMusic({
                       rel="noreferrer"
                     >
                       Escuchar en {track.platform || "la plataforma"}
+
                       <ExternalLink
                         className="w-4 h-4"
                         aria-hidden="true"
@@ -297,6 +296,21 @@ export function ExperienceMusic({
           </div>
         </section>
       )}
+
+      <div className="experience-music__continue">
+        <small>
+          Puedes avanzar con una canción elegida o sin música.
+        </small>
+
+        <button
+          type="button"
+          onClick={onContinue}
+        >
+          Continuar a dedicatoria
+
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
+        </button>
+      </div>
     </section>
   );
 }
