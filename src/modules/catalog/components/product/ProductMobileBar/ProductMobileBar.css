@@ -21,8 +21,6 @@
   }
 
   .product-mobile-bar-inner {
-    width: min(100%, 40rem);
-    margin: 0 auto;
     display: grid;
     grid-template-columns:
       minmax(5.8rem, 0.75fr)
@@ -30,16 +28,18 @@
       3.15rem;
     align-items: center;
     gap: 0.6rem;
+    width: min(100%, 40rem);
+    margin: 0 auto;
   }
 
-  .product-mobile-bar-total {
-    min-width: 0;
+  .product-mobile-bar-price {
     display: flex;
+    min-width: 0;
     flex-direction: column;
     justify-content: center;
   }
 
-  .product-mobile-bar-total span {
+  .product-mobile-bar-price span {
     overflow: hidden;
     color: var(--w-muted);
     font-size: 0.54rem;
@@ -51,7 +51,7 @@
     white-space: nowrap;
   }
 
-  .product-mobile-bar-total strong {
+  .product-mobile-bar-price strong {
     margin-top: 0.12rem;
     overflow: hidden;
     color: var(--w-heading);
@@ -66,10 +66,10 @@
 
   .product-mobile-bar-experience,
   .product-mobile-bar-whatsapp {
-    min-height: 3.15rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    min-height: 3.15rem;
     border-radius: 1rem;
     color: #fff;
     cursor: pointer;
@@ -81,11 +81,12 @@
   .product-mobile-bar-experience {
     gap: 0.45rem;
     border: 1px solid rgba(106, 90, 138, 0.18);
-    background: linear-gradient(
-      135deg,
-      var(--w-primary),
-      var(--w-primary-dark)
-    );
+    background:
+      linear-gradient(
+        135deg,
+        var(--w-primary),
+        var(--w-primary-dark)
+      );
     box-shadow: 0 10px 24px rgba(106, 90, 138, 0.22);
     font-size: 0.69rem;
     font-weight: 900;
@@ -106,5 +107,12 @@
   .product-mobile-bar-whatsapp:focus-visible {
     outline: 3px solid rgba(106, 90, 138, 0.2);
     outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-mobile-bar-experience,
+  .product-mobile-bar-whatsapp {
+    transition: none;
   }
 }

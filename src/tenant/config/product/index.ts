@@ -1,4 +1,3 @@
-export * from "./addons";
 export * from "./benefits";
 export * from "./buybox";
 export * from "./gallery";

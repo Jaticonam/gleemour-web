@@ -1,15 +1,18 @@
-import { MessageCircle, Sparkles } from "lucide-react";
+import {
+  MessageCircle,
+  Sparkles,
+} from "lucide-react";
 
 import "./ProductMobileBar.css";
 
 interface ProductMobileBarProps {
-  total: number;
+  price: number;
   onPersonalize: () => void;
   onWhatsApp: () => void;
 }
 
 export function ProductMobileBar({
-  total,
+  price,
   onPersonalize,
   onWhatsApp,
 }: ProductMobileBarProps) {
@@ -19,9 +22,9 @@ export function ProductMobileBar({
       aria-label="Acciones del producto"
     >
       <div className="product-mobile-bar-inner">
-        <div className="product-mobile-bar-total">
-          <span>Total configurado</span>
-          <strong>S/ {total.toFixed(2)}</strong>
+        <div className="product-mobile-bar-price">
+          <span>Precio</span>
+          <strong>S/ {price.toFixed(2)}</strong>
         </div>
 
         <button
@@ -37,8 +40,8 @@ export function ProductMobileBar({
           type="button"
           className="product-mobile-bar-whatsapp"
           onClick={onWhatsApp}
-          aria-label="Continuar por WhatsApp"
-          title="Continuar por WhatsApp"
+          aria-label="Consultar este detalle por WhatsApp"
+          title="Consultar este detalle por WhatsApp"
         >
           <MessageCircle className="w-5 h-5" aria-hidden="true" />
         </button>
