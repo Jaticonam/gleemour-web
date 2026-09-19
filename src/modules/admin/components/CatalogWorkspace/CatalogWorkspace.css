@@ -1,0 +1,328 @@
+/* =========================================================
+   CATALOG WORKSPACE · BASE Y CONSTRUCTOR
+========================================================= */
+
+.gla-catalog-workspace {
+  width: min(1440px, 100%);
+  padding: 34px 34px 68px;
+}
+.gla-catalog-workspace-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.gla-catalog-workspace-kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.gla-catalog-workspace-kicker span {
+  color: var(--w-secondary-strong);
+  font-size: 0.65rem;
+  font-weight: 850;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.gla-catalog-workspace-kicker strong {
+  padding: 4px 7px;
+  border: 1px solid var(--w-border);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--w-muted);
+  font-size: 0.56rem;
+}
+
+.gla-catalog-workspace-header h1 {
+  margin: 9px 0 0;
+  color: var(--w-heading);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1;
+}
+
+.gla-catalog-workspace-header p {
+  max-width: 720px;
+  margin: 14px 0 0;
+  color: var(--w-muted);
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+.gla-workspace-back,
+.gla-workspace-state button,
+.gla-preview-button {
+  min-height: 39px;
+  padding: 0 13px;
+  border: 1px solid var(--w-border);
+  border-radius: 11px;
+  background: #ffffff;
+  color: var(--w-primary-dark);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.gla-workspace-state {
+  min-height: 340px;
+  margin-top: 28px;
+  border: 1px dashed var(--w-border);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--w-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  text-align: center;
+}
+
+.gla-workspace-state strong {
+  color: var(--w-heading);
+  font-size: 0.84rem;
+}
+
+.gla-workspace-state span {
+  color: var(--w-muted);
+  font-size: 0.68rem;
+}
+
+.gla-workspace-state-error {
+  color: #a75447;
+}
+
+.gla-composition-metrics {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.gla-composition-metrics article {
+  min-height: 72px;
+  padding: 13px 15px;
+  border: 1px solid var(--w-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  display: grid;
+  align-content: center;
+  gap: 4px;
+}
+
+.gla-composition-metrics span {
+  color: var(--w-muted);
+  font-size: 0.59rem;
+  font-weight: 750;
+}
+
+.gla-composition-metrics strong {
+  color: var(--w-heading);
+  font-size: 1.16rem;
+}
+
+.gla-composition-layout {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: minmax(290px, 0.72fr) minmax(520px, 1.45fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.gla-composition-builder,
+.gla-composition-panel {
+  border: 1px solid var(--w-border);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 10px 30px rgba(106, 90, 138, 0.05);
+}
+
+.gla-composition-builder {
+  position: sticky;
+  top: 74px;
+  padding: 17px;
+}
+
+.gla-builder-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gla-builder-heading > span {
+  width: 31px;
+  height: 31px;
+  border-radius: 10px;
+  background: var(--w-primary-soft);
+  color: var(--w-primary);
+  display: grid;
+  place-items: center;
+  font-size: 0.64rem;
+  font-weight: 900;
+}
+
+.gla-builder-heading > div {
+  display: grid;
+  gap: 2px;
+}
+
+.gla-builder-heading strong {
+  color: var(--w-heading);
+  font-size: 0.78rem;
+}
+
+.gla-builder-heading small {
+  color: var(--w-muted);
+  font-size: 0.58rem;
+}
+
+.gla-mode-grid {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.gla-mode-grid button {
+  min-height: 65px;
+  padding: 10px;
+  border: 1px solid var(--w-border);
+  border-radius: 11px;
+  background: var(--w-surface-soft);
+  color: var(--w-muted);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.gla-mode-grid button:last-child {
+  grid-column: 1 / -1;
+}
+
+.gla-mode-grid button > span {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.gla-mode-grid strong {
+  color: var(--w-heading);
+  font-size: 0.65rem;
+}
+
+.gla-mode-grid small {
+  color: var(--w-muted);
+  font-size: 0.52rem;
+  line-height: 1.35;
+}
+
+.gla-mode-grid .gla-mode-active {
+  border-color: rgba(154, 139, 186, 0.58);
+  background: linear-gradient(135deg, var(--w-primary-soft), var(--w-secondary-soft));
+  color: var(--w-primary);
+  box-shadow: inset 3px 0 0 var(--w-secondary);
+}
+
+.gla-builder-control {
+  margin-top: 13px;
+  display: grid;
+  gap: 6px;
+}
+
+.gla-builder-control > span {
+  color: var(--w-muted);
+  font-size: 0.58rem;
+  font-weight: 800;
+}
+
+.gla-builder-control input,
+.gla-builder-control select {
+  width: 100%;
+  min-height: 41px;
+  padding: 0 10px;
+  border: 1px solid var(--w-border);
+  border-radius: 10px;
+  background: var(--w-surface-soft);
+  color: var(--w-heading);
+  font: inherit;
+  font-size: 0.7rem;
+  outline: 0;
+}
+
+.gla-builder-control input:focus,
+.gla-builder-control select:focus {
+  border-color: var(--w-secondary);
+  box-shadow: 0 0 0 3px rgba(236, 164, 194, 0.14);
+}
+
+.gla-builder-control select:disabled {
+  opacity: 0.55;
+}
+
+.gla-custom-summary {
+  margin-top: 13px;
+  padding: 12px;
+  border: 1px solid var(--w-border);
+  border-radius: 12px;
+  background: var(--w-primary-soft);
+  color: var(--w-primary);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 9px;
+}
+
+.gla-custom-summary > div {
+  display: grid;
+  gap: 3px;
+}
+
+.gla-custom-summary strong {
+  color: var(--w-heading);
+  font-size: 0.65rem;
+}
+
+.gla-custom-summary span {
+  color: var(--w-muted);
+  font-size: 0.54rem;
+  line-height: 1.4;
+}
+
+.gla-custom-summary button {
+  grid-column: 2;
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--w-primary-dark);
+  font: inherit;
+  font-size: 0.56rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.gla-exclusion-note {
+  margin-top: 13px;
+  padding-top: 12px;
+  border-top: 1px solid var(--w-border);
+  color: var(--w-muted);
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 0.55rem;
+  line-height: 1.45;
+}
+
+.gla-exclusion-note svg {
+  flex: 0 0 auto;
+  color: #9a7518;
+}

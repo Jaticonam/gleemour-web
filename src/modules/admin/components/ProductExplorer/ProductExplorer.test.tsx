@@ -91,4 +91,36 @@ describe("ProductExplorer", () => {
 
     expect(await screen.findByRole("heading", { name: "Ramo Corazón" })).toBeInTheDocument();
   });
+
+  it("selecciona productos y habilita el salto a Catalog Workspace", async () => {
+    const loadProducts = vi.fn().mockResolvedValue(PRODUCTS);
+    const changeSelection = vi.fn();
+    const prepareCatalog = vi.fn();
+    const view = render(
+      <ProductExplorer
+        loadProducts={loadProducts}
+        selectedProductIds={[]}
+        onSelectedProductIdsChange={changeSelection}
+        onPrepareCatalog={prepareCatalog}
+      />,
+    );
+
+    await screen.findByRole("heading", { name: "Ramo Corazón" });
+    expect(screen.getByRole("button", { name: "Preparar catálogo" })).toBeDisabled();
+
+    fireEvent.click(screen.getByRole("checkbox", { name: "Seleccionar Ramo Corazón" }));
+    expect(changeSelection).toHaveBeenCalledWith(["GLE-001"]);
+
+    view.rerender(
+      <ProductExplorer
+        loadProducts={loadProducts}
+        selectedProductIds={["GLE-001"]}
+        onSelectedProductIdsChange={changeSelection}
+        onPrepareCatalog={prepareCatalog}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Preparar catálogo" }));
+    expect(prepareCatalog).toHaveBeenCalledTimes(1);
+  });
 });

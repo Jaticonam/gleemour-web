@@ -1,0 +1,81 @@
+/* =========================================================
+   CATALOG WORKSPACE · RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+  .gla-composition-layout {
+    grid-template-columns: minmax(260px, 0.8fr) minmax(430px, 1.2fr);
+  }
+
+  .gla-preview-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .gla-catalog-workspace {
+    padding: 30px 18px 50px;
+  }
+
+  .gla-composition-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .gla-composition-builder {
+    position: static;
+  }
+}
+
+@media (max-width: 620px) {
+  .gla-catalog-workspace-header {
+    display: grid;
+  }
+
+  .gla-workspace-back {
+    width: 100%;
+  }
+
+  .gla-composition-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gla-mode-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gla-mode-grid button:last-child {
+    grid-column: auto;
+  }
+
+  .gla-composition-panel > header {
+    display: grid;
+  }
+
+  .gla-preview-button {
+    width: 100%;
+  }
+
+  .gla-composition-row {
+    grid-template-columns: 22px 42px minmax(0, 1fr);
+  }
+
+  .gla-composition-actions {
+    grid-column: 3;
+    justify-content: flex-start;
+  }
+
+  .gla-preview-layer {
+    padding: 0;
+  }
+
+  .gla-preview-dialog {
+    width: 100%;
+    max-height: 100vh;
+    min-height: 100vh;
+    border-radius: 0;
+  }
+
+  .gla-preview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

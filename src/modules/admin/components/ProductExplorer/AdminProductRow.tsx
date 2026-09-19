@@ -13,6 +13,8 @@ const PEN_FORMATTER = new Intl.NumberFormat("es-PE", {
 
 interface AdminProductRowProps {
   product: Product;
+  selected?: boolean;
+  onToggle?: (productId: string) => void;
 }
 
 function getStockLabel(stock: number | null): string {
@@ -21,7 +23,11 @@ function getStockLabel(stock: number | null): string {
   return `${stock} unidades`;
 }
 
-export function AdminProductRow({ product }: AdminProductRowProps) {
+export function AdminProductRow({
+  product,
+  selected = false,
+  onToggle,
+}: AdminProductRowProps) {
   const statusClass = getAdminStatusClassName(product.status);
   const activePrice =
     product.offer_price && product.offer_price > 0
@@ -30,7 +36,17 @@ export function AdminProductRow({ product }: AdminProductRowProps) {
   const productUrl = `/catalogo/producto.html?id=${encodeURIComponent(product.id)}`;
 
   return (
-    <article className="gla-product-row">
+    <article className={`gla-product-row${selected ? " gla-product-row-selected" : ""}`}>
+      <label className="gla-product-selector">
+        <input
+          type="checkbox"
+          checked={selected}
+          onChange={() => onToggle?.(product.id)}
+          aria-label={`Seleccionar ${product.title}`}
+        />
+        <span aria-hidden="true" />
+      </label>
+
       <div className="gla-product-media">
         <ImageOff size={20} aria-hidden="true" />
         {product.img ? <img src={product.img} alt="" loading="lazy" /> : null}

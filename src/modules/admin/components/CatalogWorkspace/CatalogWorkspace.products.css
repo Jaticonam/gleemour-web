@@ -1,0 +1,327 @@
+/* =========================================================
+   CATALOG WORKSPACE · COMPOSICIÓN Y PREVIEW
+========================================================= */
+
+.gla-composition-panel {
+  min-width: 0;
+  padding: 17px;
+}
+.gla-composition-panel > header {
+  min-height: 55px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.gla-composition-panel > header span {
+  color: var(--w-secondary-strong);
+  font-size: 0.56rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gla-composition-panel > header h2 {
+  margin: 5px 0 0;
+  color: var(--w-heading);
+  font-size: 1rem;
+}
+
+.gla-composition-panel > header p {
+  margin: 4px 0 0;
+  color: var(--w-muted);
+  font-size: 0.59rem;
+}
+
+.gla-preview-button {
+  background: linear-gradient(135deg, var(--w-primary), var(--w-primary-dark));
+  color: #ffffff;
+}
+
+.gla-preview-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.gla-composition-list {
+  margin-top: 10px;
+  display: grid;
+  gap: 7px;
+}
+
+.gla-composition-row {
+  min-width: 0;
+  min-height: 68px;
+  padding: 8px 9px;
+  border: 1px solid var(--w-border);
+  border-radius: 12px;
+  background: var(--w-surface-soft);
+  display: grid;
+  grid-template-columns: 25px 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+}
+
+.gla-composition-position {
+  color: var(--w-muted);
+  font-size: 0.58rem;
+  font-weight: 850;
+  text-align: center;
+}
+
+.gla-composition-media {
+  position: relative;
+  width: 41px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 8px;
+  background: linear-gradient(145deg, var(--w-primary-soft), var(--w-secondary-soft));
+  color: var(--w-muted);
+  display: grid;
+  place-items: center;
+}
+
+.gla-composition-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gla-composition-product {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.gla-composition-product span {
+  color: var(--w-muted);
+  font-size: 0.51rem;
+  font-weight: 800;
+}
+
+.gla-composition-product strong {
+  overflow: hidden;
+  color: var(--w-heading);
+  font-size: 0.68rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gla-composition-product small {
+  color: var(--w-primary-dark);
+  font-size: 0.56rem;
+  font-weight: 800;
+}
+
+.gla-composition-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gla-composition-actions button,
+.gla-preview-dialog > header button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--w-border);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--w-primary-dark);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.gla-composition-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.32;
+}
+
+.gla-composition-actions .gla-composition-remove {
+  color: #a75447;
+}
+
+.gla-composition-empty {
+  min-height: 270px;
+  margin-top: 10px;
+  border: 1px dashed var(--w-border);
+  border-radius: 14px;
+  color: var(--w-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  text-align: center;
+}
+
+.gla-composition-empty strong {
+  color: var(--w-heading);
+  font-size: 0.74rem;
+}
+
+.gla-composition-empty span {
+  max-width: 380px;
+  color: var(--w-muted);
+  font-size: 0.6rem;
+  line-height: 1.5;
+}
+
+.gla-excluded-products {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid #f0dfba;
+  border-radius: 11px;
+  background: #fffaf0;
+}
+
+.gla-excluded-products summary {
+  color: #7f6219;
+  font-size: 0.61rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.gla-excluded-products ul {
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 5px;
+  list-style: none;
+}
+
+.gla-excluded-products li {
+  color: var(--w-heading);
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 8px;
+  font-size: 0.58rem;
+}
+
+.gla-excluded-products li span,
+.gla-excluded-products li strong {
+  color: var(--w-muted);
+  font-size: 0.53rem;
+}
+
+.gla-preview-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  padding: 28px;
+  background: rgba(40, 31, 51, 0.62);
+  backdrop-filter: blur(7px);
+  display: grid;
+  place-items: center;
+}
+
+.gla-preview-dialog {
+  width: min(1060px, 100%);
+  max-height: min(840px, calc(100vh - 56px));
+  overflow: auto;
+  padding: 23px;
+  border-radius: 20px;
+  background: var(--w-bg);
+  box-shadow: 0 30px 80px rgba(37, 26, 48, 0.25);
+}
+
+.gla-preview-dialog > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.gla-preview-dialog > header span {
+  color: var(--w-secondary-strong);
+  font-size: 0.58rem;
+  font-weight: 850;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.gla-preview-dialog h2 {
+  margin: 6px 0 0;
+  color: var(--w-heading);
+  font-size: clamp(1.45rem, 4vw, 2.3rem);
+}
+
+.gla-preview-dialog header p {
+  margin: 7px 0 0;
+  color: var(--w-muted);
+  font-size: 0.66rem;
+}
+
+.gla-preview-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.gla-preview-grid article {
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid var(--w-border);
+  border-radius: 13px;
+  background: #ffffff;
+}
+
+.gla-preview-grid article > div {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 9px;
+  background: linear-gradient(145deg, var(--w-primary-soft), var(--w-secondary-soft));
+  color: var(--w-muted);
+  display: grid;
+  place-items: center;
+}
+
+.gla-preview-grid img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gla-preview-grid article > span {
+  display: block;
+  margin-top: 9px;
+  color: var(--w-muted);
+  font-size: 0.5rem;
+  font-weight: 800;
+}
+
+.gla-preview-grid h3 {
+  overflow: hidden;
+  margin: 4px 0 0;
+  color: var(--w-heading);
+  font-size: 0.68rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gla-preview-grid article > strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--w-primary-dark);
+  font-size: 0.65rem;
+}
+
+.gla-preview-empty {
+  min-height: 300px;
+  margin-top: 20px;
+  border: 1px dashed var(--w-border);
+  border-radius: 14px;
+  color: var(--w-muted);
+  display: grid;
+  place-items: center;
+  font-size: 0.7rem;
+  text-align: center;
+}

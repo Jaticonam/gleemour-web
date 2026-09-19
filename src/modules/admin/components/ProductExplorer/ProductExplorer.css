@@ -255,6 +255,67 @@
   background: transparent;
 }
 
+.gla-selection-bar {
+  min-height: 58px;
+  margin-bottom: 9px;
+  padding: 9px 11px 9px 14px;
+  border: 1px solid rgba(154, 139, 186, 0.32);
+  border-radius: 13px;
+  background: linear-gradient(135deg, var(--w-primary-soft), var(--w-secondary-soft));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.gla-selection-bar > div:first-child {
+  display: grid;
+  gap: 2px;
+}
+
+.gla-selection-bar strong {
+  color: var(--w-heading);
+  font-size: 0.66rem;
+}
+
+.gla-selection-bar span {
+  color: var(--w-muted);
+  font-size: 0.55rem;
+}
+
+.gla-selection-bar > div:last-child {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gla-selection-bar button {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--w-border);
+  border-radius: 9px;
+  background: #ffffff;
+  color: var(--w-primary-dark);
+  font: inherit;
+  font-size: 0.58rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.gla-selection-bar .gla-prepare-catalog {
+  background: var(--w-primary);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.gla-selection-bar button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
 /* =========================================================
    ESTADOS DE CARGA Y ERROR
 ========================================================= */

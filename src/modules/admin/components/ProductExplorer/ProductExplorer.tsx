@@ -10,6 +10,7 @@ import {
   Loader2,
   PackageCheck,
   PackageX,
+  FileText,
   RefreshCw,
   Search,
 } from "lucide-react";
@@ -35,6 +36,9 @@ const STATUS_ORDER = [
 
 interface ProductExplorerProps {
   loadProducts?: () => Promise<Product[]>;
+  selectedProductIds?: readonly string[];
+  onSelectedProductIdsChange?: (productIds: string[]) => void;
+  onPrepareCatalog?: () => void;
 }
 
 function getStatusOptions(products: readonly Product[]): string[] {
@@ -52,6 +56,9 @@ function getStatusOptions(products: readonly Product[]): string[] {
 
 export function ProductExplorer({
   loadProducts = loadAllProductsForAdmin,
+  selectedProductIds = [],
+  onSelectedProductIdsChange,
+  onPrepareCatalog,
 }: ProductExplorerProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [query, setQuery] = useState("");
@@ -110,6 +117,31 @@ export function ProductExplorer({
     Boolean(query.trim()) ||
     status !== ALL_ADMIN_FILTERS ||
     category !== ALL_ADMIN_FILTERS;
+  const selectedProductIdSet = useMemo(
+    () => new Set(selectedProductIds),
+    [selectedProductIds],
+  );
+
+  const toggleProduct = (productId: string) => {
+    if (!onSelectedProductIdsChange) return;
+
+    const nextIds = selectedProductIdSet.has(productId)
+      ? selectedProductIds.filter((id) => id !== productId)
+      : [...selectedProductIds, productId];
+
+    onSelectedProductIdsChange(nextIds);
+  };
+
+  const selectVisibleProducts = () => {
+    if (!onSelectedProductIdsChange) return;
+
+    onSelectedProductIdsChange([
+      ...new Set([
+        ...selectedProductIds,
+        ...filteredProducts.map((product) => product.id),
+      ]),
+    ]);
+  };
 
   const clearFilters = () => {
     setQuery("");
@@ -243,6 +275,38 @@ export function ProductExplorer({
         ) : null}
       </div>
 
+      {!loading && !error && products.length > 0 ? (
+        <div className="gla-selection-bar" aria-label="Selección para catálogo">
+          <div>
+            <strong>{selectedProductIds.length} seleccionados</strong>
+            <span>La selección viaja contigo a Catalog Workspace.</span>
+          </div>
+
+          <div>
+            <button type="button" onClick={selectVisibleProducts}>
+              Seleccionar visibles
+            </button>
+            {selectedProductIds.length > 0 ? (
+              <button
+                type="button"
+                onClick={() => onSelectedProductIdsChange?.([])}
+              >
+                Limpiar selección
+              </button>
+            ) : null}
+            <button
+              type="button"
+              className="gla-prepare-catalog"
+              onClick={onPrepareCatalog}
+              disabled={selectedProductIds.length === 0}
+            >
+              <FileText size={15} aria-hidden="true" />
+              Preparar catálogo
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       {loading ? (
         <div className="gla-explorer-state" role="status">
           <Loader2 size={24} className="gla-spin" aria-hidden="true" />
@@ -278,7 +342,12 @@ export function ProductExplorer({
       {!loading && !error && filteredProducts.length > 0 ? (
         <div className="gla-product-list">
           {filteredProducts.map((product) => (
-            <AdminProductRow key={product.id} product={product} />
+            <AdminProductRow
+              key={product.id}
+              product={product}
+              selected={selectedProductIdSet.has(product.id)}
+              onToggle={toggleProduct}
+            />
           ))}
         </div>
       ) : null}

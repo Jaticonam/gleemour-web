@@ -6,8 +6,18 @@ import AdminPage from "./AdminPage";
 describe("AdminPage", () => {
   it("navega entre los tres módulos del workspace", () => {
     const loadProducts = vi.fn().mockResolvedValue([]);
+    const loadCatalogData = vi.fn().mockResolvedValue({
+      products: [],
+      subcategories: [],
+      campaigns: [],
+    });
 
-    render(<AdminPage loadAdminProducts={loadProducts} />);
+    render(
+      <AdminPage
+        loadAdminProducts={loadProducts}
+        loadCatalogWorkspaceData={loadCatalogData}
+      />,
+    );
 
     expect(screen.getByRole("heading", { name: "Catálogo" })).toBeInTheDocument();
 
