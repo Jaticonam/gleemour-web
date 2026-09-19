@@ -10,6 +10,7 @@ import { normalizeAddon, normalizeProduct } from "./normalizeProduct";
 import { normalizeCampaign } from "./normalizeCampaign";
 import { normalizeMusicTrack } from "./normalizeMusicTrack";
 import { normalizeSubcategory } from "./normalizeSubcategory";
+import { validateAdminProducts } from "./validateAdminProducts";
 import { validateProducts } from "./validateProducts";
 import { validateSubcategories } from "./validateSubcategories";
 import { isVisibleProductStatus } from "@/tenant/config/product/statuses";
@@ -360,6 +361,20 @@ export async function loadAllProducts(): Promise<Product[]> {
   return validateProducts(withCoreMedia)
     .filter((product) => isVisibleProductStatus(product.status.trim()))
     .sort((a, b) => b.priority - a.priority);
+}
+
+/**
+ * Fuente administrativa de solo lectura.
+ * A diferencia del catálogo público, conserva productos ocultos y borradores.
+ */
+export async function loadAllProductsForAdmin(): Promise<Product[]> {
+  const rows = await loadSheetRows("products");
+  const normalized = rows.map(normalizeProduct);
+  const withCoreMedia = await overrideProductsWithCoreMedia(normalized);
+
+  return validateAdminProducts(withCoreMedia).sort(
+    (left, right) => right.priority - left.priority,
+  );
 }
 
 export async function loadAllSubcategories(): Promise<

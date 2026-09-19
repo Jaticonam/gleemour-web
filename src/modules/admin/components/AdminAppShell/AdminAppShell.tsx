@@ -101,7 +101,7 @@ export function AdminAppShell({
             <span>{SECTION_LABELS[activeSection]}</span>
           </div>
 
-          <div className="gla-version">1.0 · M1</div>
+          <div className="gla-version">1.0 · M2A</div>
         </header>
 
         <main className="gla-main">{children}</main>

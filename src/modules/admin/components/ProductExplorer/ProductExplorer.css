@@ -1,0 +1,305 @@
+/* =========================================================
+   PRODUCT EXPLORER · BASE
+========================================================= */
+
+.gla-explorer {
+  width: min(1320px, 100%);
+  padding: 34px 34px 64px;
+}
+
+.gla-explorer-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.gla-explorer-kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.gla-explorer-kicker span {
+  color: var(--w-secondary-strong);
+  font-size: 0.65rem;
+  font-weight: 850;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.gla-explorer-kicker strong {
+  padding: 4px 7px;
+  border: 1px solid var(--w-border);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--w-muted);
+  font-size: 0.56rem;
+}
+
+.gla-explorer-header h1 {
+  margin: 9px 0 0;
+  color: var(--w-heading);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1;
+}
+
+.gla-explorer-header p {
+  max-width: 720px;
+  margin: 14px 0 0;
+  color: var(--w-muted);
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+.gla-refresh-button,
+.gla-results-heading button,
+.gla-explorer-state button {
+  min-height: 39px;
+  padding: 0 13px;
+  border: 1px solid var(--w-border);
+  border-radius: 11px;
+  background: #ffffff;
+  color: var(--w-primary-dark);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform var(--motion-fast),
+    box-shadow var(--motion-fast);
+}
+
+.gla-refresh-button:hover,
+.gla-results-heading button:hover,
+.gla-explorer-state button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(106, 90, 138, 0.1);
+}
+
+.gla-refresh-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+/* =========================================================
+   MÉTRICAS
+========================================================= */
+
+.gla-metrics {
+  margin-top: 29px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.gla-metrics article {
+  min-height: 78px;
+  padding: 14px;
+  border: 1px solid var(--w-border);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 24px rgba(106, 90, 138, 0.05);
+}
+
+.gla-metric-icon {
+  width: 39px;
+  height: 39px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+}
+
+.gla-metric-icon-total {
+  background: var(--w-primary-soft);
+  color: var(--w-primary);
+}
+
+.gla-metric-icon-published {
+  background: #e7f7ef;
+  color: #287052;
+}
+
+.gla-metric-icon-preparation {
+  background: var(--w-highlight-soft);
+  color: #8c6810;
+}
+
+.gla-metric-icon-stock {
+  background: #fff0ed;
+  color: #a75447;
+}
+
+.gla-metrics article > div:last-child {
+  display: grid;
+  gap: 2px;
+}
+
+.gla-metrics span {
+  color: var(--w-muted);
+  font-size: 0.61rem;
+  font-weight: 700;
+}
+
+.gla-metrics strong {
+  color: var(--w-heading);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* =========================================================
+   BÚSQUEDA Y FILTROS
+========================================================= */
+
+.gla-explorer-toolbar {
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid var(--w-border);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.92);
+  display: grid;
+  grid-template-columns: minmax(260px, 1.6fr) minmax(160px, 0.7fr) minmax(180px, 0.8fr);
+  gap: 10px;
+}
+
+.gla-search-control,
+.gla-select-control {
+  display: grid;
+  gap: 6px;
+}
+
+.gla-search-control > span,
+.gla-select-control > span {
+  color: var(--w-muted);
+  font-size: 0.58rem;
+  font-weight: 800;
+}
+
+.gla-search-control > div {
+  min-height: 40px;
+  padding: 0 11px;
+  border: 1px solid var(--w-border);
+  border-radius: 10px;
+  background: var(--w-surface-soft);
+  color: var(--w-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gla-search-control input,
+.gla-select-control select {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  border: 1px solid var(--w-border);
+  border-radius: 10px;
+  background: var(--w-surface-soft);
+  color: var(--w-heading);
+  font: inherit;
+  font-size: 0.71rem;
+  outline: none;
+}
+
+.gla-search-control input {
+  min-height: 36px;
+  border: 0;
+  background: transparent;
+}
+
+.gla-select-control select {
+  padding: 0 10px;
+}
+
+.gla-search-control > div:focus-within,
+.gla-select-control select:focus {
+  border-color: var(--w-secondary);
+  box-shadow: 0 0 0 3px rgba(236, 164, 194, 0.14);
+}
+
+.gla-results-heading {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gla-results-heading > div {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.gla-results-heading strong {
+  color: var(--w-heading);
+  font-size: 0.78rem;
+}
+
+.gla-results-heading span {
+  color: var(--w-muted);
+  font-size: 0.64rem;
+}
+
+.gla-results-heading button {
+  min-height: 32px;
+  padding: 0 10px;
+  background: transparent;
+}
+
+/* =========================================================
+   ESTADOS DE CARGA Y ERROR
+========================================================= */
+
+.gla-explorer-state {
+  min-height: 220px;
+  padding: 30px;
+  border: 1px dashed var(--w-border);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.68);
+  color: var(--w-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.gla-explorer-state strong {
+  color: var(--w-heading);
+  font-size: 0.82rem;
+}
+
+.gla-explorer-state span {
+  max-width: 520px;
+  color: var(--w-muted);
+  font-size: 0.68rem;
+  line-height: 1.55;
+}
+
+.gla-explorer-state button {
+  margin-top: 7px;
+}
+
+.gla-explorer-state-error {
+  color: #a75447;
+}
+
+.gla-spin {
+  animation: gla-spin 0.8s linear infinite;
+}
+
+@keyframes gla-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

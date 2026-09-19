@@ -1,0 +1,191 @@
+/* =========================================================
+   PRODUCTOS
+========================================================= */
+
+.gla-product-list {
+  display: grid;
+  gap: 8px;
+}
+
+.gla-product-row {
+  min-width: 0;
+  padding: 10px 12px 10px 10px;
+  border: 1px solid var(--w-border);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.94);
+  display: grid;
+  grid-template-columns: 60px minmax(190px, 1.4fr) minmax(300px, 1fr) minmax(120px, 0.55fr);
+  align-items: center;
+  gap: 13px;
+  transition:
+    border-color var(--motion-fast),
+    box-shadow var(--motion-fast),
+    transform var(--motion-fast);
+}
+
+.gla-product-row:hover {
+  border-color: rgba(154, 139, 186, 0.38);
+  box-shadow: 0 10px 26px rgba(106, 90, 138, 0.08);
+  transform: translateY(-1px);
+}
+
+.gla-product-media {
+  position: relative;
+  width: 58px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 10px;
+  background: linear-gradient(145deg, var(--w-primary-soft), var(--w-secondary-soft));
+  color: var(--w-muted);
+  display: grid;
+  place-items: center;
+}
+
+.gla-product-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gla-product-identity {
+  min-width: 0;
+}
+
+.gla-product-code-line {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.gla-product-code-line > span:first-child {
+  color: var(--w-muted);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.gla-status {
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: var(--w-surface-soft);
+  color: var(--w-muted);
+  font-size: 0.53rem;
+  font-weight: 850;
+}
+
+.gla-status-publicado {
+  background: #e7f7ef;
+  color: #287052;
+}
+
+.gla-status-preventa {
+  background: #eef0fa;
+  color: #605787;
+}
+
+.gla-status-agotado {
+  background: #fff0ed;
+  color: #a75447;
+}
+
+.gla-status-oculto,
+.gla-status-borrador {
+  background: var(--w-highlight-soft);
+  color: #8c6810;
+}
+
+.gla-product-identity h2 {
+  overflow: hidden;
+  margin: 6px 0 2px;
+  color: var(--w-heading);
+  font-size: 0.82rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gla-product-identity > p {
+  margin: 0;
+  color: var(--w-muted);
+  font-size: 0.62rem;
+}
+
+.gla-product-badges {
+  margin-top: 7px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.gla-product-badges span {
+  padding: 3px 6px;
+  border-radius: 6px;
+  background: var(--w-secondary-soft);
+  color: var(--w-primary-dark);
+  font-size: 0.51rem;
+  font-weight: 750;
+}
+
+.gla-product-data {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.gla-product-data div {
+  min-width: 0;
+}
+
+.gla-product-data dt {
+  color: var(--w-muted);
+  font-size: 0.54rem;
+  font-weight: 750;
+}
+
+.gla-product-data dd {
+  margin: 4px 0 0;
+  color: var(--w-heading);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.gla-product-data small {
+  margin-left: 5px;
+  color: var(--w-muted);
+  font-size: 0.54rem;
+  font-weight: 600;
+  text-decoration: line-through;
+}
+
+.gla-product-action {
+  min-width: 0;
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
+.gla-product-action > span {
+  overflow: hidden;
+  max-width: 100%;
+  color: var(--w-muted);
+  font-size: 0.52rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gla-product-action a {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--w-border);
+  border-radius: 9px;
+  background: var(--w-primary-soft);
+  color: var(--w-primary-dark);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.61rem;
+  font-weight: 800;
+}
