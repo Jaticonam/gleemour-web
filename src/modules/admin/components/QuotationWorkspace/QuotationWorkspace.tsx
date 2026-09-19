@@ -16,10 +16,17 @@ import {
   type QuotationLineSnapshot,
 } from "@/application/admin/QuotationComposition";
 import {
+  publishQuotationPdf,
+  type QuotationDocumentPort,
+  type QuotationDocumentResult,
+} from "@/application/admin/QuotationPublishing";
+import {
   createQuotationDraftStore,
   type QuotationDraftStore,
 } from "@/infrastructure/admin/QuotationDraftStore";
 import { loadAllProductsForAdmin } from "@/integrations/sheets/fetchSheets";
+import { createJungCoreQuotationDocumentPort } from "@/integrations/jungCore/QuotationDocumentClient";
+import { buildQuotationWhatsAppUrl } from "@/integrations/whatsapp/quotationWhatsapp";
 import type { Product } from "@/shared/types/product";
 
 import { QuotationDetailsForm } from "./QuotationDetailsForm";
@@ -33,7 +40,14 @@ interface QuotationWorkspaceProps {
   loadProducts?: () => Promise<Product[]>;
   draftStore?: QuotationDraftStore;
   now?: () => Date;
+  documentPort?: QuotationDocumentPort;
+  openExternal?: (url: string) => void;
 }
+
+export type QuotationOutputState =
+  | { status: "idle" }
+  | { status: "publishing" }
+  | QuotationDocumentResult;
 
 export function QuotationWorkspace({
   selectedProductIds,
@@ -42,10 +56,16 @@ export function QuotationWorkspace({
   loadProducts = loadAllProductsForAdmin,
   draftStore,
   now = () => new Date(),
+  documentPort,
+  openExternal = (url) => window.open(url, "_blank", "noopener,noreferrer"),
 }: QuotationWorkspaceProps) {
   const store = useMemo(
     () => draftStore ?? createQuotationDraftStore(window.localStorage),
     [draftStore],
+  );
+  const publisher = useMemo(
+    () => documentPort ?? createJungCoreQuotationDocumentPort(),
+    [documentPort],
   );
   const selectedProductIdsRef = useRef(selectedProductIds);
   const nowRef = useRef(now);
@@ -58,6 +78,9 @@ export function QuotationWorkspace({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState("");
+  const [outputState, setOutputState] = useState<QuotationOutputState>({
+    status: "idle",
+  });
 
   useEffect(() => {
     let active = true;
@@ -102,6 +125,7 @@ export function QuotationWorkspace({
     productId: string,
     patch: Partial<Pick<QuotationLineSnapshot, "quantity" | "unitPrice">>,
   ) => {
+    setOutputState({ status: "idle" });
     setDraft((current) =>
       current
         ? {
@@ -117,6 +141,7 @@ export function QuotationWorkspace({
   };
 
   const removeLine = (productId: string) => {
+    setOutputState({ status: "idle" });
     setDraft((current) =>
       current
         ? {
@@ -131,12 +156,14 @@ export function QuotationWorkspace({
   };
 
   const changeClient = (patch: Partial<QuotationClient>) => {
+    setOutputState({ status: "idle" });
     setDraft((current) =>
       current ? { ...current, client: { ...current.client, ...patch } } : current,
     );
   };
 
   const changeConditions = (patch: Partial<QuotationConditions>) => {
+    setOutputState({ status: "idle" });
     setDraft((current) =>
       current
         ? { ...current, conditions: { ...current.conditions, ...patch } }
@@ -155,6 +182,35 @@ export function QuotationWorkspace({
   const startNewDraft = () => {
     setDraft(createQuotationDraft(products, selectedProductIds, now()));
     setStatusMessage("");
+    setOutputState({ status: "idle" });
+  };
+
+  const generatePdf = async () => {
+    if (!draft || !isQuotationReady(draft)) return;
+    const publishingDraft = { ...draft, updatedAt: now().toISOString() };
+    setDraft(publishingDraft);
+    setOutputState({ status: "publishing" });
+    try {
+      const result = await publishQuotationPdf(
+        { draft: publishingDraft, requestedAt: now() },
+        publisher,
+      );
+      setOutputState(result);
+    } catch {
+      setOutputState({
+        status: "failed",
+        code: "QUOTATION_PUBLICATION_FAILED",
+        message: "No se pudo completar la publicación de la cotización.",
+        retryable: true,
+      });
+    }
+  };
+
+  const sendWhatsapp = () => {
+    if (!draft || !isQuotationReady(draft)) return;
+    const publicUrl =
+      outputState.status === "ready" ? outputState.publicUrl : undefined;
+    openExternal(buildQuotationWhatsAppUrl(draft, publicUrl));
   };
 
   return (
@@ -163,7 +219,7 @@ export function QuotationWorkspace({
         <div>
           <div className="gla-quotation-kicker">
             <span>Quotation Workspace</span>
-            <strong>Composición · M4</strong>
+            <strong>Entrega comercial · M5</strong>
           </div>
           <h1 id="gla-quotation-title">Cotizaciones</h1>
           <p>Congela productos y precios, completa al cliente y guarda un borrador comercial trazable.</p>
@@ -227,10 +283,14 @@ export function QuotationWorkspace({
             ready={isQuotationReady(draft)}
             savedDrafts={savedDrafts}
             statusMessage={statusMessage}
+            outputState={outputState}
             onSave={saveDraft}
+            onGeneratePdf={generatePdf}
+            onWhatsapp={sendWhatsapp}
             onLoad={(saved) => {
               setDraft(saved);
               setStatusMessage("Borrador restaurado.");
+              setOutputState({ status: "idle" });
             }}
           />
         </div>

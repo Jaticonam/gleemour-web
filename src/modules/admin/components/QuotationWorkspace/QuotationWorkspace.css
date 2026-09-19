@@ -242,19 +242,19 @@
 
 .gla-save-status { margin: 7px 0 0; color: #287052; font-size: 0.56rem; text-align: center; }
 
-.gla-future-outputs {
+.gla-quotation-outputs {
   margin-top: 12px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 7px;
 }
 
-.gla-future-outputs button {
+.gla-quotation-outputs button {
   min-height: 38px;
   border: 1px solid var(--w-border);
   border-radius: 10px;
   background: var(--w-surface-soft);
-  color: var(--w-muted);
+  color: var(--w-heading);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -262,11 +262,15 @@
   font: inherit;
   font-size: 0.54rem;
   font-weight: 800;
-  cursor: not-allowed;
-  opacity: 0.62;
+  cursor: pointer;
 }
 
-.gla-future-outputs small { grid-column: 1 / -1; color: var(--w-muted); font-size: 0.51rem; line-height: 1.45; }
+.gla-quotation-outputs button:disabled { cursor: not-allowed; opacity: 0.5; }
+.gla-quotation-outputs small,
+.gla-quotation-outputs > a { grid-column: 1 / -1; font-size: 0.51rem; line-height: 1.45; }
+.gla-quotation-outputs small { color: var(--w-muted); }
+.gla-quotation-outputs > a { color: var(--w-primary-dark); display: flex; align-items: center; justify-content: center; gap: 5px; font-weight: 850; }
+.gla-quotation-outputs [role="alert"] { color: #a33a4b; }
 
 .gla-saved-drafts { margin-top: 17px; padding-top: 14px; border-top: 1px solid var(--w-border); }
 .gla-saved-drafts > div { display: flex; justify-content: space-between; }

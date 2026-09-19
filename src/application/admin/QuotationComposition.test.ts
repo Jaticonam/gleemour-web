@@ -85,5 +85,8 @@ describe("QuotationComposition", () => {
 
     draft.client = { name: "Ana", whatsapp: "51900111222", document: "" };
     expect(isQuotationReady(draft)).toBe(true);
+
+    draft.client.whatsapp = "123";
+    expect(isQuotationReady(draft)).toBe(false);
   });
 });

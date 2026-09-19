@@ -1,9 +1,10 @@
-import { FileDown, MessageCircle, Save } from "lucide-react";
+import { ExternalLink, FileDown, Loader2, MessageCircle, Save } from "lucide-react";
 
 import type {
   QuotationDraft,
   QuotationTotals,
 } from "@/application/admin/QuotationComposition";
+import type { QuotationOutputState } from "./QuotationWorkspace";
 
 interface QuotationSummaryProps {
   draft: QuotationDraft;
@@ -11,7 +12,10 @@ interface QuotationSummaryProps {
   ready: boolean;
   savedDrafts: readonly QuotationDraft[];
   statusMessage: string;
+  outputState: QuotationOutputState;
   onSave: () => void;
+  onGeneratePdf: () => void;
+  onWhatsapp: () => void;
   onLoad: (draft: QuotationDraft) => void;
 }
 
@@ -31,7 +35,10 @@ export function QuotationSummary({
   ready,
   savedDrafts,
   statusMessage,
+  outputState,
   onSave,
+  onGeneratePdf,
+  onWhatsapp,
   onLoad,
 }: QuotationSummaryProps) {
   return (
@@ -56,16 +63,37 @@ export function QuotationSummary({
       </button>
       {statusMessage ? <p className="gla-save-status" role="status">{statusMessage}</p> : null}
 
-      <div className="gla-future-outputs">
-        <button type="button" disabled>
+      <div className="gla-quotation-outputs">
+        <button type="button" disabled={!ready} onClick={onWhatsapp}>
           <MessageCircle size={16} aria-hidden="true" />
           Enviar por WhatsApp
         </button>
-        <button type="button" disabled>
-          <FileDown size={16} aria-hidden="true" />
-          Generar PDF
+        <button
+          type="button"
+          disabled={!ready || outputState.status === "publishing"}
+          onClick={onGeneratePdf}
+        >
+          {outputState.status === "publishing" ? (
+            <Loader2 size={16} className="gla-spin" aria-hidden="true" />
+          ) : (
+            <FileDown size={16} aria-hidden="true" />
+          )}
+          {outputState.status === "publishing" ? "Publicando…" : "Generar PDF"}
         </button>
-        <small>Salidas bloqueadas hasta integrar JUNG CORE Commercial Publishing.</small>
+        {outputState.status === "ready" ? (
+          <a href={outputState.pdf.url} target="_blank" rel="noreferrer">
+            <ExternalLink size={14} aria-hidden="true" /> Abrir PDF publicado
+          </a>
+        ) : null}
+        {outputState.status === "pending" ? (
+          <small role="status">{outputState.message}</small>
+        ) : null}
+        {outputState.status === "unavailable" || outputState.status === "failed" ? (
+          <small role="alert">{outputState.message}</small>
+        ) : null}
+        {outputState.status === "idle" ? (
+          <small>PDF vía JUNG CORE; WhatsApp funciona con o sin documento publicado.</small>
+        ) : null}
       </div>
 
       <div className="gla-saved-drafts">

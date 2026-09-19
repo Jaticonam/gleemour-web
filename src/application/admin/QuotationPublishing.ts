@@ -1,0 +1,94 @@
+import {
+  getQuotationTotals,
+  type QuotationDraft,
+} from "./QuotationComposition";
+
+export const QUOTATION_DOCUMENT_SCHEMA_VERSION =
+  "jung-core.quotation-document.v1" as const;
+
+export interface PublicAssetReference {
+  assetId: string;
+  kind: "pdf";
+  status: "ready";
+  url: string;
+  mimeType: "application/pdf";
+  version: string;
+}
+
+export interface QuotationDocumentRequest {
+  schemaVersion: typeof QUOTATION_DOCUMENT_SCHEMA_VERSION;
+  requestId: string;
+  appId: "gleemour";
+  documentKind: "quotation";
+  locale: "es-PE";
+  currency: "PEN";
+  requestedAt: string;
+  quotation: QuotationDraft & {
+    totals: ReturnType<typeof getQuotationTotals>;
+  };
+}
+
+export type QuotationDocumentResult =
+  | {
+      status: "ready";
+      publicationId: string;
+      publicUrl: string;
+      pdf: PublicAssetReference;
+      publishedAt: string;
+    }
+  | {
+      status: "pending";
+      publicationId: string;
+      message: string;
+    }
+  | {
+      status: "unavailable";
+      code: "JUNG_CORE_NOT_CONFIGURED" | "PROVIDER_UNAVAILABLE";
+      message: string;
+    }
+  | {
+      status: "failed";
+      code: string;
+      message: string;
+      retryable: boolean;
+    };
+
+export interface QuotationDocumentPort {
+  publish(request: QuotationDocumentRequest): Promise<QuotationDocumentResult>;
+}
+
+export interface QuotationPdfOutputRequest {
+  draft: QuotationDraft;
+  requestedAt?: Date;
+}
+
+export async function publishQuotationPdf(
+  output: QuotationPdfOutputRequest,
+  port: QuotationDocumentPort,
+): Promise<QuotationDocumentResult> {
+  return port.publish(
+    createQuotationDocumentRequest(output.draft, output.requestedAt),
+  );
+}
+
+export function createQuotationDocumentRequest(
+  draft: QuotationDraft,
+  requestedAt = new Date(),
+): QuotationDocumentRequest {
+  return {
+    schemaVersion: QUOTATION_DOCUMENT_SCHEMA_VERSION,
+    requestId: `${draft.id}:pdf:${draft.updatedAt}`,
+    appId: "gleemour",
+    documentKind: "quotation",
+    locale: "es-PE",
+    currency: "PEN",
+    requestedAt: requestedAt.toISOString(),
+    quotation: {
+      ...draft,
+      client: { ...draft.client },
+      conditions: { ...draft.conditions },
+      lines: draft.lines.map((line) => ({ ...line })),
+      totals: getQuotationTotals(draft.lines),
+    },
+  };
+}

@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import type { QuotationDraft } from "@/application/admin/QuotationComposition";
+import type { QuotationDocumentPort } from "@/application/admin/QuotationPublishing";
 import type { QuotationDraftStore } from "@/infrastructure/admin/QuotationDraftStore";
 import type { Product } from "@/shared/types/product";
 
@@ -76,7 +77,66 @@ describe("QuotationWorkspace", () => {
     expect(screen.getByText("Ana Torres")).toBeInTheDocument();
   });
 
-  it("mantiene PDF y WhatsApp bloqueados", async () => {
+  it("publica el PDF por el port de JUNG CORE y lo adjunta a WhatsApp", async () => {
+    const publish = vi.fn<QuotationDocumentPort["publish"]>().mockResolvedValue({
+      status: "ready",
+      publicationId: "publication-1",
+      publicUrl: "https://media.jungnegocios.com/quotations/GLQ-1",
+      pdf: {
+        assetId: "pdf-1",
+        kind: "pdf",
+        status: "ready",
+        url: "https://media.jungnegocios.com/quotations/GLQ-1.pdf",
+        mimeType: "application/pdf",
+        version: "1",
+      },
+      publishedAt: "2026-09-19T15:00:00.000Z",
+    });
+    const openExternal = vi.fn();
+
+    render(
+      <QuotationWorkspace
+        selectedProductIds={["GLE-001"]}
+        onSelectedProductIdsChange={() => undefined}
+        onBackToProducts={() => undefined}
+        loadProducts={() => Promise.resolve([product()])}
+        draftStore={draftStore()}
+        now={NOW}
+        documentPort={{ publish }}
+        openExternal={openExternal}
+      />,
+    );
+
+    await screen.findByText("Ramo Aurora");
+    fireEvent.change(screen.getByLabelText("Nombre del cliente *"), {
+      target: { value: "Ana Torres" },
+    });
+    fireEvent.change(screen.getByLabelText("WhatsApp *"), {
+      target: { value: "+51 900 111 222" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Generar PDF" }));
+    await waitFor(() => expect(publish).toHaveBeenCalledTimes(1));
+    expect(await screen.findByRole("link", { name: /Abrir PDF/ })).toHaveAttribute(
+      "href",
+      "https://media.jungnegocios.com/quotations/GLQ-1.pdf",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Enviar por WhatsApp" }));
+    expect(openExternal).toHaveBeenCalledWith(
+      expect.stringContaining("https://wa.me/51900111222?text="),
+    );
+    expect(decodeURIComponent(openExternal.mock.calls[0][0])).toContain(
+      "https://media.jungnegocios.com/quotations/GLQ-1",
+    );
+
+    fireEvent.change(screen.getByLabelText("Notas comerciales"), {
+      target: { value: "Nueva condición" },
+    });
+    expect(screen.queryByRole("link", { name: /Abrir PDF/ })).not.toBeInTheDocument();
+  });
+
+  it("mantiene las salidas bloqueadas hasta completar la cotización", async () => {
     render(
       <QuotationWorkspace
         selectedProductIds={["GLE-001"]}
@@ -91,7 +151,41 @@ describe("QuotationWorkspace", () => {
     await screen.findByText("Ramo Aurora");
     expect(screen.getByRole("button", { name: "Enviar por WhatsApp" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Generar PDF" })).toBeDisabled();
-    expect(screen.getByText(/JUNG CORE Commercial Publishing/)).toBeInTheDocument();
+    expect(screen.getByText(/PDF vía JUNG CORE/)).toBeInTheDocument();
+  });
+
+  it("expone unavailable sin fabricar un enlace PDF", async () => {
+    const publish = vi.fn<QuotationDocumentPort["publish"]>().mockResolvedValue({
+      status: "unavailable",
+      code: "JUNG_CORE_NOT_CONFIGURED",
+      message: "JUNG CORE aún no está configurado.",
+    });
+
+    render(
+      <QuotationWorkspace
+        selectedProductIds={["GLE-001"]}
+        onSelectedProductIdsChange={() => undefined}
+        onBackToProducts={() => undefined}
+        loadProducts={() => Promise.resolve([product()])}
+        draftStore={draftStore()}
+        now={NOW}
+        documentPort={{ publish }}
+      />,
+    );
+
+    await screen.findByText("Ramo Aurora");
+    fireEvent.change(screen.getByLabelText("Nombre del cliente *"), {
+      target: { value: "Ana Torres" },
+    });
+    fireEvent.change(screen.getByLabelText("WhatsApp *"), {
+      target: { value: "51900111222" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Generar PDF" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "JUNG CORE aún no está configurado",
+    );
+    expect(screen.queryByRole("link", { name: /Abrir PDF/ })).not.toBeInTheDocument();
   });
 
   it("informa errores y reintenta la fuente administrativa", async () => {

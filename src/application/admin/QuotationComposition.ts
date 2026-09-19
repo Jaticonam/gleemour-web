@@ -147,9 +147,11 @@ export function getQuotationTotals(
 }
 
 export function isQuotationReady(draft: QuotationDraft): boolean {
+  const whatsappDigits = draft.client.whatsapp.replace(/\D/g, "");
   return Boolean(
     draft.lines.length > 0 &&
       draft.client.name.trim() &&
-      draft.client.whatsapp.trim(),
+      whatsappDigits.length >= 8 &&
+      whatsappDigits.length <= 15,
   );
 }

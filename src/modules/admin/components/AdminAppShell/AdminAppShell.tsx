@@ -38,7 +38,7 @@ export function AdminAppShell({
 
           <div>
             <strong>Gleemour</strong>
-            <span>Admin 1.0</span>
+            <span>Admin 1.0 · M5</span>
           </div>
         </div>
 
