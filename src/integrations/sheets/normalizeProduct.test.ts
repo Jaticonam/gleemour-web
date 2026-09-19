@@ -51,3 +51,41 @@ describe("normalizeProduct subcategories", () => {
     expect(product.subcategories).toEqual([]);
   });
 });
+describe("normalizeProduct media", () => {
+  it("usa gallery como contrato actual de Sheets", () => {
+    const product = normalizeProduct({
+      gallery:
+        "https://media.test/02.jpg|https://media.test/03.jpg",
+    });
+
+    expect(product.images).toEqual([
+      "https://media.test/02.jpg",
+      "https://media.test/03.jpg",
+    ]);
+  });
+
+  it("mantiene compatibilidad con images", () => {
+    const product = normalizeProduct({
+      images:
+        "https://legacy.test/02.jpg|https://legacy.test/03.jpg",
+    });
+
+    expect(product.images).toEqual([
+      "https://legacy.test/02.jpg",
+      "https://legacy.test/03.jpg",
+    ]);
+  });
+
+  it("gallery tiene prioridad sobre images", () => {
+    const product = normalizeProduct({
+      gallery:
+        "https://media.test/current.jpg",
+      images:
+        "https://legacy.test/old.jpg",
+    });
+
+    expect(product.images).toEqual([
+      "https://media.test/current.jpg",
+    ]);
+  });
+});

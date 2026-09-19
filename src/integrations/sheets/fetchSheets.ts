@@ -13,6 +13,7 @@ import { normalizeSubcategory } from "./normalizeSubcategory";
 import { validateProducts } from "./validateProducts";
 import { validateSubcategories } from "./validateSubcategories";
 import { isVisibleProductStatus } from "@/tenant/config/product/statuses";
+import { overrideProductsWithCoreMedia } from "@/modules/catalog/integrations/jungCoreMedia/JungCoreMediaOverride";
 
 type CsvRow = Record<string, string>;
 
@@ -34,7 +35,7 @@ const PRODUCT_RECOMMENDED_HEADERS = [
   "addons",
   "stock",
   "img",
-  "images",
+  "gallery",
   "badge",
   "badges",
   "priority",
@@ -353,7 +354,10 @@ export async function loadAllProducts(): Promise<Product[]> {
 
   const normalized = rows.map(normalizeProduct);
 
-  return validateProducts(normalized)
+  const withCoreMedia =
+    await overrideProductsWithCoreMedia(normalized);
+
+  return validateProducts(withCoreMedia)
     .filter((product) => isVisibleProductStatus(product.status.trim()))
     .sort((a, b) => b.priority - a.priority);
 }

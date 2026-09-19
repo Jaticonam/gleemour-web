@@ -188,7 +188,7 @@ export function normalizeProduct(row: CsvRow): SheetProduct {
 
     stock: parseNumber(row.stock),
     img: cleanText(row.img),
-    images: parsePipeList(row.images),
+    images: parsePipeList(getRowValue(row, "gallery", "images")),
 
     status: normalizeSheetStatus(row.status),
 
