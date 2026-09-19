@@ -93,7 +93,8 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  .gla-selection-bar .gla-prepare-catalog {
+  .gla-selection-bar .gla-prepare-catalog,
+  .gla-selection-bar .gla-prepare-quotation {
     grid-column: 1 / -1;
   }
 }

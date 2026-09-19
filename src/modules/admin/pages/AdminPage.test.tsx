@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import AdminPage from "./AdminPage";
 
 describe("AdminPage", () => {
-  it("navega entre los tres módulos del workspace", () => {
+  it("navega entre los tres módulos del workspace", async () => {
     const loadProducts = vi.fn().mockResolvedValue([]);
     const loadCatalogData = vi.fn().mockResolvedValue({
       products: [],
@@ -16,6 +16,7 @@ describe("AdminPage", () => {
       <AdminPage
         loadAdminProducts={loadProducts}
         loadCatalogWorkspaceData={loadCatalogData}
+        loadQuotationProducts={loadProducts}
       />,
     );
 
@@ -26,5 +27,6 @@ describe("AdminPage", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Cotizaciones" }));
     expect(screen.getByRole("heading", { name: "Cotizaciones" })).toBeInTheDocument();
+    expect(await screen.findByText("No hay productos en la cotización")).toBeInTheDocument();
   });
 });

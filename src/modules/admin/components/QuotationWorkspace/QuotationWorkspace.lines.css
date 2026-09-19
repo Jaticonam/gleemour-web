@@ -1,0 +1,83 @@
+/* =========================================================
+   QUOTATION WORKSPACE · LÍNEAS
+========================================================= */
+.gla-quotation-lines {
+  margin-top: 14px;
+  display: grid;
+  gap: 7px;
+}
+
+.gla-quotation-line {
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid var(--w-border);
+  border-radius: 12px;
+  background: var(--w-surface-soft);
+  display: grid;
+  grid-template-columns: 45px minmax(150px, 1.3fr) 80px 105px 95px 31px;
+  align-items: center;
+  gap: 9px;
+}
+
+.gla-quotation-line-media {
+  position: relative;
+  width: 43px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 8px;
+  background: linear-gradient(145deg, var(--w-primary-soft), var(--w-secondary-soft));
+  color: var(--w-muted);
+  display: grid;
+  place-items: center;
+}
+
+.gla-quotation-line-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gla-quotation-line-product { min-width: 0; display: grid; gap: 2px; }
+.gla-quotation-line-product > span { color: var(--w-muted); font-size: 0.49rem; font-weight: 800; }
+.gla-quotation-line-product > strong { overflow: hidden; color: var(--w-heading); font-size: 0.66rem; text-overflow: ellipsis; white-space: nowrap; }
+.gla-quotation-line-product > small { color: var(--w-muted); font-size: 0.51rem; }
+.gla-quotation-line-product .gla-stock-warning { color: #a75447; font-weight: 750; }
+
+.gla-quotation-line label,
+.gla-quotation-line-subtotal { display: grid; gap: 4px; }
+.gla-quotation-line label > span,
+.gla-quotation-line-subtotal span { color: var(--w-muted); font-size: 0.5rem; font-weight: 750; }
+.gla-quotation-line input { width: 100%; min-height: 34px; padding: 0 7px; border: 1px solid var(--w-border); border-radius: 8px; background: #fff; color: var(--w-heading); font: inherit; font-size: 0.62rem; }
+.gla-quotation-line label > small { color: var(--w-muted); font-size: 0.46rem; }
+.gla-quotation-line-subtotal strong { color: var(--w-primary-dark); font-size: 0.66rem; }
+
+.gla-quotation-line > button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--w-border);
+  border-radius: 8px;
+  background: #fff;
+  color: #a75447;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.gla-quotation-empty {
+  min-height: 180px;
+  margin-top: 14px;
+  border: 1px dashed var(--w-border);
+  border-radius: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.gla-quotation-empty strong { color: var(--w-heading); font-size: 0.72rem; }
+.gla-quotation-empty span { color: var(--w-muted); font-size: 0.59rem; }

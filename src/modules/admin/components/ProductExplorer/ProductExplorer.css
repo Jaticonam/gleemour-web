@@ -302,13 +302,18 @@
   cursor: pointer;
 }
 
-.gla-selection-bar .gla-prepare-catalog {
+.gla-selection-bar .gla-prepare-catalog,
+.gla-selection-bar .gla-prepare-quotation {
   background: var(--w-primary);
   color: #ffffff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
+}
+
+.gla-selection-bar .gla-prepare-quotation {
+  background: var(--w-secondary-strong);
 }
 
 .gla-selection-bar button:disabled {

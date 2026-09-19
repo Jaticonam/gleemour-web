@@ -1,0 +1,27 @@
+/* =========================================================
+   QUOTATION WORKSPACE · RESPONSIVE
+========================================================= */
+@media (max-width: 1160px) {
+  .gla-quotation-layout { grid-template-columns: minmax(520px, 1fr) 280px; }
+  .gla-quotation-line { grid-template-columns: 45px minmax(140px, 1fr) 74px 96px 31px; }
+  .gla-quotation-line-subtotal { grid-column: 2; }
+  .gla-quotation-line > button { grid-column: 5; grid-row: 1; }
+}
+
+@media (max-width: 900px) {
+  .gla-quotation-workspace { padding: 30px 18px 50px; }
+  .gla-quotation-layout { grid-template-columns: 1fr; }
+  .gla-quotation-summary { position: static; }
+}
+
+@media (max-width: 620px) {
+  .gla-quotation-header { display: grid; }
+  .gla-quotation-header > div:last-child { display: grid; grid-template-columns: 1fr 1fr; }
+  .gla-client-grid { grid-template-columns: 1fr; }
+  .gla-notes-control { grid-column: auto; }
+  .gla-quotation-line { grid-template-columns: 43px minmax(0, 1fr) 31px; }
+  .gla-quotation-line-product { grid-column: 2; }
+  .gla-quotation-line label,
+  .gla-quotation-line-subtotal { grid-column: 2; }
+  .gla-quotation-line > button { grid-column: 3; grid-row: 1; }
+}

@@ -11,6 +11,7 @@ import {
   PackageCheck,
   PackageX,
   FileText,
+  ReceiptText,
   RefreshCw,
   Search,
 } from "lucide-react";
@@ -39,6 +40,7 @@ interface ProductExplorerProps {
   selectedProductIds?: readonly string[];
   onSelectedProductIdsChange?: (productIds: string[]) => void;
   onPrepareCatalog?: () => void;
+  onPrepareQuotation?: () => void;
 }
 
 function getStatusOptions(products: readonly Product[]): string[] {
@@ -59,6 +61,7 @@ export function ProductExplorer({
   selectedProductIds = [],
   onSelectedProductIdsChange,
   onPrepareCatalog,
+  onPrepareQuotation,
 }: ProductExplorerProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [query, setQuery] = useState("");
@@ -276,10 +279,10 @@ export function ProductExplorer({
       </div>
 
       {!loading && !error && products.length > 0 ? (
-        <div className="gla-selection-bar" aria-label="Selección para catálogo">
+        <div className="gla-selection-bar" aria-label="Selección comercial">
           <div>
             <strong>{selectedProductIds.length} seleccionados</strong>
-            <span>La selección viaja contigo a Catalog Workspace.</span>
+            <span>La selección alimenta Catálogos o Cotizaciones.</span>
           </div>
 
           <div>
@@ -302,6 +305,15 @@ export function ProductExplorer({
             >
               <FileText size={15} aria-hidden="true" />
               Preparar catálogo
+            </button>
+            <button
+              type="button"
+              className="gla-prepare-quotation"
+              onClick={onPrepareQuotation}
+              disabled={selectedProductIds.length === 0}
+            >
+              <ReceiptText size={15} aria-hidden="true" />
+              Cotizar selección
             </button>
           </div>
         </div>

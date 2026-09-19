@@ -96,17 +96,20 @@ describe("ProductExplorer", () => {
     const loadProducts = vi.fn().mockResolvedValue(PRODUCTS);
     const changeSelection = vi.fn();
     const prepareCatalog = vi.fn();
+    const prepareQuotation = vi.fn();
     const view = render(
       <ProductExplorer
         loadProducts={loadProducts}
         selectedProductIds={[]}
         onSelectedProductIdsChange={changeSelection}
         onPrepareCatalog={prepareCatalog}
+        onPrepareQuotation={prepareQuotation}
       />,
     );
 
     await screen.findByRole("heading", { name: "Ramo Corazón" });
     expect(screen.getByRole("button", { name: "Preparar catálogo" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Cotizar selección" })).toBeDisabled();
 
     fireEvent.click(screen.getByRole("checkbox", { name: "Seleccionar Ramo Corazón" }));
     expect(changeSelection).toHaveBeenCalledWith(["GLE-001"]);
@@ -117,10 +120,13 @@ describe("ProductExplorer", () => {
         selectedProductIds={["GLE-001"]}
         onSelectedProductIdsChange={changeSelection}
         onPrepareCatalog={prepareCatalog}
+        onPrepareQuotation={prepareQuotation}
       />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Preparar catálogo" }));
     expect(prepareCatalog).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole("button", { name: "Cotizar selección" }));
+    expect(prepareQuotation).toHaveBeenCalledTimes(1);
   });
 });
