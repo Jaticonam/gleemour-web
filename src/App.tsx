@@ -13,6 +13,7 @@ import CategoryPage from "@/modules/catalog/pages/CategoryPage";
 import ProductPage from "@/modules/catalog/pages/ProductPage";
 
 import { ExperiencePage } from "@/modules/experience";
+import AdminPage from "@/modules/admin/pages/AdminPage";
 
 import NotFound from "@/app/routes/NotFound";
 
@@ -93,6 +94,11 @@ export default function App() {
         <Route
           path="/experiencia"
           element={<ExperiencePage />}
+        />
+
+        <Route
+          path="/admin"
+          element={<AdminPage />}
         />
 
         <Route
