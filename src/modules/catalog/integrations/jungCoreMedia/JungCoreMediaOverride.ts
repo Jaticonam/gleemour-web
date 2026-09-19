@@ -7,8 +7,9 @@ interface CoreMediaAsset {
   readonly isPrimary?: unknown;
 }
 
-const DEFAULT_CORE_URL =
-  "http://localhost:3000/assets/manifest";
+const DEFAULT_CORE_URL = import.meta.env.DEV
+  ? "http://localhost:3000/assets/manifest?brand=gleemour"
+  : "https://core.jungnegocios.com/assets/manifest?brand=gleemour";
 
 const REQUEST_TIMEOUT_MS = 2_000;
 
