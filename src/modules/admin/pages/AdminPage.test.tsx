@@ -20,7 +20,7 @@ describe("AdminPage", () => {
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "Catálogo" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Productos" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Catálogos" }));
     expect(screen.getByRole("heading", { name: "Catálogos" })).toBeInTheDocument();

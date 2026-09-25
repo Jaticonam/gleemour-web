@@ -28,7 +28,7 @@ interface ModuleContent {
 const MODULE_CONTENT: Record<AdminSection, ModuleContent> = {
   catalog: {
     eyebrow: "Product Explorer",
-    title: "Catálogo",
+    title: "Productos",
     description:
       "El punto de control para buscar, filtrar y seleccionar todos los productos de Gleemour.",
     icon: Boxes,
@@ -82,7 +82,7 @@ export function AdminModuleOverview({
           <span>{content.status}</span>
         </div>
 
-        <h2>Gleemour Admin 1.0 está en construcción incremental</h2>
+        <h2>Gleemour Admin está en construcción incremental</h2>
         <p>{content.nextStep}</p>
 
         {section === "catalog" ? (
@@ -103,7 +103,7 @@ export function AdminModuleOverview({
             className="gla-back-button"
             onClick={() => onSectionChange("catalog")}
           >
-            Volver al Catálogo
+            Volver a Productos
             <ArrowRight size={16} aria-hidden="true" />
           </button>
         )}

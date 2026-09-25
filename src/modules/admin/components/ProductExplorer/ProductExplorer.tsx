@@ -5,11 +5,7 @@ import "./ProductExplorer.responsive.css";
 import { useEffect, useMemo, useState } from "react";
 import {
   AlertCircle,
-  Archive,
-  Boxes,
   Loader2,
-  PackageCheck,
-  PackageX,
   FileText,
   ReceiptText,
   RefreshCw,
@@ -21,10 +17,14 @@ import type { Product } from "@/shared/types/product";
 import { CATEGORIES } from "@/tenant/config/catalog";
 
 import { AdminProductRow } from "./AdminProductRow";
+import { ActiveProductFilters } from "./ActiveProductFilters";
+import { ProductDetailsDrawer } from "./ProductDetailsDrawer";
+import { ProductExplorerMetrics } from "./ProductExplorerMetrics";
 import {
   ALL_ADMIN_FILTERS,
   filterAdminProducts,
   getProductExplorerStats,
+  type ProductQuickFilter,
 } from "./ProductExplorer.utils";
 
 const STATUS_ORDER = [
@@ -67,6 +67,10 @@ export function ProductExplorer({
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState(ALL_ADMIN_FILTERS);
   const [category, setCategory] = useState(ALL_ADMIN_FILTERS);
+  const [quickFilter, setQuickFilter] = useState<ProductQuickFilter>(
+    ALL_ADMIN_FILTERS,
+  );
+  const [inspectedProduct, setInspectedProduct] = useState<Product | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -106,8 +110,9 @@ export function ProductExplorer({
         query,
         status,
         category,
+        quickFilter,
       }),
-    [products, query, status, category],
+    [products, query, status, category, quickFilter],
   );
 
   const stats = useMemo(() => getProductExplorerStats(products), [products]);
@@ -119,7 +124,8 @@ export function ProductExplorer({
   const hasFilters =
     Boolean(query.trim()) ||
     status !== ALL_ADMIN_FILTERS ||
-    category !== ALL_ADMIN_FILTERS;
+    category !== ALL_ADMIN_FILTERS ||
+    quickFilter !== ALL_ADMIN_FILTERS;
   const selectedProductIdSet = useMemo(
     () => new Set(selectedProductIds),
     [selectedProductIds],
@@ -150,6 +156,7 @@ export function ProductExplorer({
     setQuery("");
     setStatus(ALL_ADMIN_FILTERS);
     setCategory(ALL_ADMIN_FILTERS);
+    setQuickFilter(ALL_ADMIN_FILTERS);
   };
 
   return (
@@ -158,13 +165,13 @@ export function ProductExplorer({
         <div>
           <div className="gla-explorer-kicker">
             <span>Product Explorer</span>
-            <strong>Solo lectura · M2A</strong>
+            <strong>Solo lectura</strong>
           </div>
 
-          <h1 id="gla-explorer-title">Catálogo</h1>
+          <h1 id="gla-explorer-title">Productos</h1>
           <p>
-            Controla el inventario comercial completo, incluidos productos
-            ocultos y borradores que no aparecen en la tienda.
+            Explora y selecciona productos para preparar catálogos o
+            cotizaciones.
           </p>
         </div>
 
@@ -179,47 +186,23 @@ export function ProductExplorer({
         </button>
       </header>
 
-      <div className="gla-metrics" aria-label="Resumen del catálogo">
-        <article>
-          <div className="gla-metric-icon gla-metric-icon-total">
-            <Boxes size={18} aria-hidden="true" />
-          </div>
-          <div>
-            <span>Total</span>
-            <strong>{stats.total}</strong>
-          </div>
-        </article>
-
-        <article>
-          <div className="gla-metric-icon gla-metric-icon-published">
-            <PackageCheck size={18} aria-hidden="true" />
-          </div>
-          <div>
-            <span>Publicados</span>
-            <strong>{stats.published}</strong>
-          </div>
-        </article>
-
-        <article>
-          <div className="gla-metric-icon gla-metric-icon-preparation">
-            <Archive size={18} aria-hidden="true" />
-          </div>
-          <div>
-            <span>En preparación</span>
-            <strong>{stats.preparation}</strong>
-          </div>
-        </article>
-
-        <article>
-          <div className="gla-metric-icon gla-metric-icon-stock">
-            <PackageX size={18} aria-hidden="true" />
-          </div>
-          <div>
-            <span>Sin stock</span>
-            <strong>{stats.withoutStock}</strong>
-          </div>
-        </article>
-      </div>
+      <ProductExplorerMetrics
+        stats={stats}
+        status={status}
+        quickFilter={quickFilter}
+        onShowAll={() => {
+          setStatus(ALL_ADMIN_FILTERS);
+          setQuickFilter(ALL_ADMIN_FILTERS);
+        }}
+        onShowPublished={() => {
+          setStatus("Publicado");
+          setQuickFilter(ALL_ADMIN_FILTERS);
+        }}
+        onQuickFilterChange={(filter) => {
+          setStatus(ALL_ADMIN_FILTERS);
+          setQuickFilter(filter);
+        }}
+      />
 
       <div className="gla-explorer-toolbar">
         <label className="gla-search-control">
@@ -237,7 +220,13 @@ export function ProductExplorer({
 
         <label className="gla-select-control">
           <span>Estado</span>
-          <select value={status} onChange={(event) => setStatus(event.target.value)}>
+          <select
+            value={status}
+            onChange={(event) => {
+              setStatus(event.target.value);
+              setQuickFilter(ALL_ADMIN_FILTERS);
+            }}
+          >
             <option value={ALL_ADMIN_FILTERS}>Todos los estados</option>
             {statusOptions.map((option) => (
               <option key={option} value={option}>
@@ -263,6 +252,18 @@ export function ProductExplorer({
         </label>
       </div>
 
+      <ActiveProductFilters
+        query={query}
+        status={status}
+        category={category}
+        quickFilter={quickFilter}
+        onQueryClear={() => setQuery("")}
+        onStatusClear={() => setStatus(ALL_ADMIN_FILTERS)}
+        onCategoryClear={() => setCategory(ALL_ADMIN_FILTERS)}
+        onQuickFilterClear={() => setQuickFilter(ALL_ADMIN_FILTERS)}
+        onClearAll={clearFilters}
+      />
+
       <div className="gla-results-heading">
         <div>
           <strong>Productos</strong>
@@ -270,12 +271,6 @@ export function ProductExplorer({
             {filteredProducts.length} de {products.length}
           </span>
         </div>
-
-        {hasFilters ? (
-          <button type="button" onClick={clearFilters}>
-            Limpiar filtros
-          </button>
-        ) : null}
       </div>
 
       {!loading && !error && products.length > 0 ? (
@@ -359,10 +354,16 @@ export function ProductExplorer({
               product={product}
               selected={selectedProductIdSet.has(product.id)}
               onToggle={toggleProduct}
+              onInspect={setInspectedProduct}
             />
           ))}
         </div>
       ) : null}
+
+      <ProductDetailsDrawer
+        product={inspectedProduct}
+        onClose={() => setInspectedProduct(null)}
+      />
     </section>
   );
 }

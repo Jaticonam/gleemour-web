@@ -219,7 +219,7 @@ export function QuotationWorkspace({
         <div>
           <div className="gla-quotation-kicker">
             <span>Quotation Workspace</span>
-            <strong>Entrega comercial · M5</strong>
+            <strong>Entrega comercial</strong>
           </div>
           <h1 id="gla-quotation-title">Cotizaciones</h1>
           <p>Congela productos y precios, completa al cliente y guarda un borrador comercial trazable.</p>

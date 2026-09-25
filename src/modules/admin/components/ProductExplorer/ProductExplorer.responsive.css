@@ -48,6 +48,11 @@
     flex-wrap: wrap;
     justify-content: flex-end;
   }
+
+  .gla-active-filters {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
 }
 
 @media (max-width: 560px) {
@@ -86,6 +91,15 @@
 
   .gla-selection-bar {
     display: grid;
+  }
+
+  .gla-active-filters > span,
+  .gla-active-filters .gla-clear-all-filters {
+    width: 100%;
+  }
+
+  .gla-active-filters .gla-clear-all-filters {
+    justify-content: flex-start;
   }
 
   .gla-selection-bar > div:last-child {

@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import type { Product } from "@/shared/types/product";
@@ -39,7 +40,27 @@ const PRODUCTS = [
     status: "Borrador",
     stock: null,
   }),
+  product({
+    id: "GLE-003",
+    title: "Ramo Sin Stock",
+    stock: 0,
+    status: "Agotado",
+  }),
 ];
+
+const loadControlledProducts = () => Promise.resolve(PRODUCTS);
+
+function ControlledProductExplorer() {
+  const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
+
+  return (
+    <ProductExplorer
+      loadProducts={loadControlledProducts}
+      selectedProductIds={selectedProductIds}
+      onSelectedProductIdsChange={setSelectedProductIds}
+    />
+  );
+}
 
 describe("ProductExplorer", () => {
   it("carga la fuente administrativa y muestra estados no públicos", async () => {
@@ -50,7 +71,7 @@ describe("ProductExplorer", () => {
     expect(await screen.findByRole("heading", { name: "Ramo Corazón" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Box Sorpresa" })).toBeInTheDocument();
     expect(screen.getAllByText("Borrador")).toHaveLength(2);
-    expect(screen.getByText("2 de 2")).toBeInTheDocument();
+    expect(screen.getByText("3 de 3")).toBeInTheDocument();
     expect(loadProducts).toHaveBeenCalledTimes(1);
   });
 
@@ -65,12 +86,12 @@ describe("ProductExplorer", () => {
 
     expect(screen.queryByRole("heading", { name: "Ramo Corazón" })).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Box Sorpresa" })).toBeInTheDocument();
-    expect(screen.getByText("1 de 2")).toBeInTheDocument();
+    expect(screen.getByText("1 de 3")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Limpiar filtros" }));
 
     expect(screen.getByRole("heading", { name: "Ramo Corazón" })).toBeInTheDocument();
-    expect(screen.getByText("2 de 2")).toBeInTheDocument();
+    expect(screen.getByText("3 de 3")).toBeInTheDocument();
   });
 
   it("informa errores y reintenta la carga", async () => {
@@ -128,5 +149,65 @@ describe("ProductExplorer", () => {
     expect(prepareCatalog).toHaveBeenCalledTimes(1);
     fireEvent.click(screen.getByRole("button", { name: "Cotizar selección" }));
     expect(prepareQuotation).toHaveBeenCalledTimes(1);
+  });
+
+  it("convierte las métricas en filtros rápidos removibles", async () => {
+    render(<ProductExplorer loadProducts={() => Promise.resolve(PRODUCTS)} />);
+
+    await screen.findByRole("heading", { name: "Ramo Corazón" });
+    fireEvent.click(screen.getByRole("button", { name: /En preparación 1/ }));
+
+    expect(screen.getByRole("heading", { name: "Box Sorpresa" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Ramo Corazón" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Quitar filtro En preparación" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Quitar filtro En preparación" }));
+    fireEvent.click(screen.getByRole("button", { name: /Sin stock 1/ }));
+
+    expect(screen.getByRole("heading", { name: "Ramo Sin Stock" })).toBeInTheDocument();
+    expect(screen.getByText("1 de 3")).toBeInTheDocument();
+  });
+
+  it("mantiene la selección al filtrar, suma visibles y la limpia sin borrar filtros", async () => {
+    render(<ControlledProductExplorer />);
+
+    await screen.findByRole("heading", { name: "Ramo Corazón" });
+    fireEvent.click(screen.getByRole("checkbox", { name: "Seleccionar Ramo Corazón" }));
+    expect(screen.getByText("1 seleccionados")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Estado"), {
+      target: { value: "Borrador" },
+    });
+    expect(screen.getByText("1 seleccionados")).toBeInTheDocument();
+    expect(screen.getByText("1 de 3")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Seleccionar visibles" }));
+    expect(screen.getByText("2 seleccionados")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Buscar productos"), {
+      target: { value: "Box" },
+    });
+    expect(screen.getByText("2 seleccionados")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Limpiar selección" }));
+    expect(screen.getByText("0 seleccionados")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Box")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Borrador")).toBeInTheDocument();
+  });
+
+  it("abre una ficha lateral de solo lectura con datos reales", async () => {
+    render(<ProductExplorer loadProducts={() => Promise.resolve(PRODUCTS)} />);
+
+    await screen.findByRole("heading", { name: "Ramo Corazón" });
+    fireEvent.click(screen.getAllByRole("button", { name: "Ver ficha" })[0]);
+
+    const dialog = screen.getByRole("dialog", { name: "Ramo Corazón" });
+    expect(dialog).toHaveTextContent("Solo lectura");
+    expect(dialog).toHaveTextContent(/S\/\s120\.00/);
+    expect(dialog).toHaveTextContent("3 unidades");
+    expect(dialog).toHaveTextContent("Premium");
+
+    fireEvent.click(screen.getByRole("button", { name: "Cerrar ficha de producto" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 });

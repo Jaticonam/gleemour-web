@@ -81,6 +81,26 @@ describe("ProductExplorer utils", () => {
     });
   });
 
+  it("aplica los filtros rápidos de preparación y falta de stock", () => {
+    expect(
+      filterAdminProducts(products, {
+        query: "",
+        status: ALL_ADMIN_FILTERS,
+        category: ALL_ADMIN_FILTERS,
+        quickFilter: "preparation",
+      }).map((item) => item.id),
+    ).toEqual(["GLE-002"]);
+
+    expect(
+      filterAdminProducts(products, {
+        query: "",
+        status: ALL_ADMIN_FILTERS,
+        category: ALL_ADMIN_FILTERS,
+        quickFilter: "without-stock",
+      }).map((item) => item.id),
+    ).toEqual(["GLE-003"]);
+  });
+
   it("convierte estados en modificadores CSS seguros", () => {
     expect(getAdminStatusClassName("Sin estado")).toBe("sin-estado");
   });

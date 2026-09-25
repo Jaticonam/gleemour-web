@@ -2,10 +2,16 @@ import type { Product } from "@/shared/types/product";
 
 export const ALL_ADMIN_FILTERS = "all";
 
+export type ProductQuickFilter =
+  | typeof ALL_ADMIN_FILTERS
+  | "preparation"
+  | "without-stock";
+
 export interface ProductExplorerFilters {
   query: string;
   status: string;
   category: string;
+  quickFilter?: ProductQuickFilter;
 }
 
 export interface ProductExplorerStats {
@@ -56,6 +62,23 @@ function matchesCategory(product: Product, category: string): boolean {
   return [product.category, ...(product.categories ?? [])].includes(category);
 }
 
+function matchesQuickFilter(
+  product: Product,
+  quickFilter: ProductQuickFilter = ALL_ADMIN_FILTERS,
+): boolean {
+  const status = normalizeSearchValue(product.status);
+
+  if (quickFilter === "preparation") {
+    return status === "borrador" || status === "oculto";
+  }
+
+  if (quickFilter === "without-stock") {
+    return status === "agotado" || product.stock === 0;
+  }
+
+  return true;
+}
+
 export function filterAdminProducts(
   products: readonly Product[],
   filters: ProductExplorerFilters,
@@ -64,7 +87,8 @@ export function filterAdminProducts(
     (product) =>
       matchesQuery(product, filters.query) &&
       matchesStatus(product, filters.status) &&
-      matchesCategory(product, filters.category),
+      matchesCategory(product, filters.category) &&
+      matchesQuickFilter(product, filters.quickFilter),
   );
 }
 

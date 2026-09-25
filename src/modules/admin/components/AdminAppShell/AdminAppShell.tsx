@@ -18,7 +18,7 @@ interface AdminAppShellProps {
 }
 
 const SECTION_LABELS: Record<AdminSection, string> = {
-  catalog: "Catálogo",
+  catalog: "Productos",
   catalogs: "Catálogos",
   quotations: "Cotizaciones",
 };
@@ -38,7 +38,7 @@ export function AdminAppShell({
 
           <div>
             <strong>Gleemour</strong>
-            <span>Admin 1.0 · M5</span>
+            <span>v1.2 · M5</span>
           </div>
         </div>
 
@@ -53,7 +53,7 @@ export function AdminAppShell({
             onClick={() => onSectionChange("catalog")}
           >
             <LayoutGrid size={18} aria-hidden="true" />
-            <span>Catálogo</span>
+            <span>Productos</span>
           </button>
 
           <button
@@ -101,7 +101,6 @@ export function AdminAppShell({
             <span>{SECTION_LABELS[activeSection]}</span>
           </div>
 
-          <div className="gla-version">1.0 · M4</div>
         </header>
 
         <main className="gla-main">{children}</main>

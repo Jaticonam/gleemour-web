@@ -15,6 +15,7 @@ interface AdminProductRowProps {
   product: Product;
   selected?: boolean;
   onToggle?: (productId: string) => void;
+  onInspect?: (product: Product) => void;
 }
 
 function getStockLabel(stock: number | null): string {
@@ -27,14 +28,13 @@ export function AdminProductRow({
   product,
   selected = false,
   onToggle,
+  onInspect,
 }: AdminProductRowProps) {
   const statusClass = getAdminStatusClassName(product.status);
   const activePrice =
     product.offer_price && product.offer_price > 0
       ? product.offer_price
       : product.price;
-  const productUrl = `/catalogo/producto.html?id=${encodeURIComponent(product.id)}`;
-
   return (
     <article className={`gla-product-row${selected ? " gla-product-row-selected" : ""}`}>
       <label className="gla-product-selector">
@@ -96,10 +96,10 @@ export function AdminProductRow({
 
       <div className="gla-product-action">
         <span>{product.updated_at || "Sin fecha de actualización"}</span>
-        <a href={productUrl} target="_blank" rel="noreferrer">
+        <button type="button" onClick={() => onInspect?.(product)}>
           <Eye size={15} aria-hidden="true" />
           Ver ficha
-        </a>
+        </button>
       </div>
     </article>
   );

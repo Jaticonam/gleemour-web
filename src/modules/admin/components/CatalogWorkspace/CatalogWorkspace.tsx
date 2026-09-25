@@ -160,7 +160,7 @@ export function CatalogWorkspace({
         <div>
           <div className="gla-catalog-workspace-kicker">
             <span>Catalog Workspace</span>
-            <strong>Composición · M3</strong>
+            <strong>Composición comercial</strong>
           </div>
           <h1 id="gla-catalog-workspace-title">Catálogos</h1>
           <p>
