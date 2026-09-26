@@ -1,0 +1,9 @@
+{
+  "name": "Gleemour",
+  "short_name": "Gleemour",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff7fb",
+  "theme_color": "#6A5A8A",
+  "icons": []
+}
