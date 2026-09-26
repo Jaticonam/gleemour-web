@@ -14,8 +14,11 @@ import ProductPage from "@/modules/catalog/pages/ProductPage";
 
 import { ExperiencePage } from "@/modules/experience";
 import AdminPage from "@/modules/admin/pages/AdminPage";
+import { createJungCoreQuotationDocumentPort } from "@/integrations/jungCore/QuotationDocumentClient";
 
 import NotFound from "@/app/routes/NotFound";
+
+const quotationDocumentPort = createJungCoreQuotationDocumentPort();
 
 /* =========================================================
    GLOBAL SHORTCUTS
@@ -98,7 +101,7 @@ export default function App() {
 
         <Route
           path="/admin"
-          element={<AdminPage />}
+          element={<AdminPage quotationDocumentPort={quotationDocumentPort} />}
         />
 
         <Route

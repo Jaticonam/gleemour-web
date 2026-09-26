@@ -21,13 +21,13 @@ real de JUNG CORE no está accesible/verificable desde el entorno de M8C.
 
 | Entidad | Owner actual | Owner futuro | Mutabilidad | Snapshot | ID primario |
 |---|---|---|---|---|---|
-| Product | Sheets/Gleemour Catalog | JUNG CORE — objetivo arquitectónico | live, solo lectura en Admin | No | `Product.id` |
+| Product | Sheets/Gleemour Catalog | Sheets/Gleemour Catalog en esta fase | live, solo lectura en Admin | No | `Product.id` |
 | ProductSelection | Gleemour Admin | Gleemour Admin | transitoria | No | lista de `productId` |
 | Catalog draft | Gleemour Admin | Por definir tras M9A | editable | No | `catalogId` opcional |
-| Catalog version | No persistida | JUNG CORE — objetivo arquitectónico | inmutable al quedar ready | Sí | `catalogVersionId` |
-| Quotation draft | Gleemour Admin | JUNG CORE — objetivo arquitectónico | editable | No | `quotationId` |
-| Quotation snapshot | Gleemour Admin | JUNG CORE — objetivo arquitectónico | histórico | Sí | `quotationVersionId` |
-| Quotation document | Adaptador consumidor Gleemour | JUNG CORE — objetivo arquitectónico | salida | Sí | `publicationId` externo |
+| Catalog version | No persistida | Gleemour Admin; persistencia por definir | inmutable al quedar ready | Sí | `catalogVersionId` |
+| Quotation draft | Gleemour Admin | Gleemour Admin | editable | No | `quotationId` |
+| Quotation snapshot | Gleemour Admin | Gleemour Admin | histórico | Sí | `quotationVersionId` |
+| Salida comercial | Motor detrás de un puerto neutral | JUNG CORE — renderer futuro | salida | Sí | `publicationId` externo |
 
 ## 2. Identidades
 
@@ -76,9 +76,11 @@ No se implementa un `CatalogRepository` ficticio: hoy no existe persistencia de
 catálogos. El límite persistible es `CatalogDraftContract`; el repositorio se
 añadirá cuando exista un consumidor real de CORE.
 
-La publicación PDF usa `QuotationDocumentPort`. URLs, almacenamiento, renderer
-y transporte pertenecen al adaptador/proveedor de publicación, no al dominio
-Admin. La implementación real de JUNG CORE continúa UNKNOWN para M8C.
+La publicación PDF vigente usa `QuotationDocumentPort`. M9A añade el límite
+transversal `CommercialOutputEngine` para PDF, CSV, print e image sin retirar
+el flujo actual. URLs, almacenamiento, renderer y transporte pertenecen al
+adaptador/proveedor de salida, no al dominio Admin. La implementación real de
+JUNG CORE continúa pendiente de un contrato técnico aprobado.
 
 ## 5. Handoffs
 
@@ -103,11 +105,13 @@ operativas si su capacidad es falsa.
 ## 7. Compatibilidad y migración a CORE
 
 1. Mantener estables los IDs locales hasta auditar los IDs reales de CORE.
-2. Auditar CORE mediante M9A antes de diseñar cualquier adaptador nuevo.
+2. Mantener JUNG CORE limitado al motor de salidas comerciales.
 3. Migrar borradores locales preservando `version: 1`, IDs, timestamps y líneas.
 4. Resolver la separación `productId/productCode` según evidencia de M9A, no en UI.
 5. Añadir persistencia de catálogo solo junto con su caso real de guardado.
-6. Cambiar factories en la raíz de composición; no cambiar workspaces.
+6. Implementar `JungCoreCommercialOutputEngine` únicamente al aprobar el
+   contrato técnico real de JUNG CORE.
+7. Cambiar factories en la raíz de composición; no cambiar workspaces.
 
 ## 8. Invariantes verificables
 

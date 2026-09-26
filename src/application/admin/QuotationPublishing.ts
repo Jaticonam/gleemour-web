@@ -56,6 +56,17 @@ export interface QuotationDocumentPort {
   publish(request: QuotationDocumentRequest): Promise<QuotationDocumentResult>;
 }
 
+/** Safe provider-neutral fallback for tests and composition roots without an adapter. */
+export const unavailableQuotationDocumentPort: QuotationDocumentPort = {
+  async publish() {
+    return {
+      status: "unavailable",
+      code: "JUNG_CORE_NOT_CONFIGURED",
+      message: "No hay un motor de documentos configurado.",
+    };
+  },
+};
+
 export interface QuotationPdfOutputRequest {
   draft: QuotationDraft;
   requestedAt?: Date;

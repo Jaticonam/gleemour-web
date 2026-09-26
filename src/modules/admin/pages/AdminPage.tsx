@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { createProductSelection } from "@/application/admin/AdminCoreContracts";
+import type { QuotationDocumentPort } from "@/application/admin/QuotationPublishing";
 import type { Product } from "@/shared/types/product";
 
 import {
@@ -19,12 +20,14 @@ interface AdminPageProps {
   loadAdminProducts?: () => Promise<Product[]>;
   loadCatalogWorkspaceData?: () => Promise<CatalogWorkspaceData>;
   loadQuotationProducts?: () => Promise<Product[]>;
+  quotationDocumentPort?: QuotationDocumentPort;
 }
 
 export default function AdminPage({
   loadAdminProducts,
   loadCatalogWorkspaceData,
   loadQuotationProducts,
+  quotationDocumentPort,
 }: AdminPageProps) {
   const [section, setSection] = useState<AdminSection>("catalog");
   const [productSelection, setProductSelection] = useState(() =>
@@ -57,6 +60,7 @@ export default function AdminPage({
           onSelectedProductIdsChange={setSelectedProductIds}
           onBackToProducts={() => setSection("catalog")}
           loadProducts={loadQuotationProducts}
+          documentPort={quotationDocumentPort}
         />
       ) : (
         <AdminModuleOverview section={section} onSectionChange={setSection} />

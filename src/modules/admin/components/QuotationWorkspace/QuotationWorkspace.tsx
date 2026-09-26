@@ -18,6 +18,7 @@ import {
 } from "@/application/admin/QuotationComposition";
 import {
   publishQuotationPdf,
+  unavailableQuotationDocumentPort,
   type QuotationDocumentPort,
   type QuotationDocumentResult,
 } from "@/application/admin/QuotationPublishing";
@@ -26,7 +27,6 @@ import {
   type QuotationDraftStore,
 } from "@/infrastructure/admin/QuotationDraftStore";
 import { sheetsAdminDataRepository } from "@/infrastructure/admin/SheetsAdminDataRepository";
-import { createJungCoreQuotationDocumentPort } from "@/integrations/jungCore/QuotationDocumentClient";
 import { buildQuotationWhatsAppUrl } from "@/integrations/whatsapp/quotationWhatsapp";
 import type { Product } from "@/shared/types/product";
 
@@ -63,10 +63,7 @@ export function QuotationWorkspace({
     () => draftStore ?? createQuotationDraftStore(window.localStorage),
     [draftStore],
   );
-  const publisher = useMemo(
-    () => documentPort ?? createJungCoreQuotationDocumentPort(),
-    [documentPort],
-  );
+  const publisher = documentPort ?? unavailableQuotationDocumentPort;
   const selectedProductIdsRef = useRef(selectedProductIds);
   const nowRef = useRef(now);
   selectedProductIdsRef.current = selectedProductIds;
