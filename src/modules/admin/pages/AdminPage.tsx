@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { createProductSelection } from "@/application/admin/AdminCoreContracts";
 import type { Product } from "@/shared/types/product";
 
 import {
@@ -26,7 +27,12 @@ export default function AdminPage({
   loadQuotationProducts,
 }: AdminPageProps) {
   const [section, setSection] = useState<AdminSection>("catalog");
-  const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
+  const [productSelection, setProductSelection] = useState(() =>
+    createProductSelection(),
+  );
+  const setSelectedProductIds = (productIds: string[]) =>
+    setProductSelection(createProductSelection(productIds));
+  const selectedProductIds = productSelection.productIds;
 
   return (
     <AdminAppShell activeSection={section} onSectionChange={setSection}>

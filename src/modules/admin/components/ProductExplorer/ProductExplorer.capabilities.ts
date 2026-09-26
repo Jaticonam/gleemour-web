@@ -1,17 +1,8 @@
-export interface ProductCapabilities {
-  canRead: boolean;
-  canEdit: boolean;
-  canUpdatePrice: boolean;
-  canUpdateStock: boolean;
-  canPublish: boolean;
-  canArchive: boolean;
-}
+export {
+  ADMIN_CAPABILITIES,
+  type ProductCapabilities,
+} from "@/application/admin/AdminCoreContracts";
 
-export const READ_ONLY_PRODUCT_CAPABILITIES: ProductCapabilities = {
-  canRead: true,
-  canEdit: false,
-  canUpdatePrice: false,
-  canUpdateStock: false,
-  canPublish: false,
-  canArchive: false,
-};
+import { ADMIN_CAPABILITIES } from "@/application/admin/AdminCoreContracts";
+
+export const READ_ONLY_PRODUCT_CAPABILITIES = ADMIN_CAPABILITIES.products;

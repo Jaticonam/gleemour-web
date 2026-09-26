@@ -17,11 +17,7 @@ import {
   type CatalogCompositionDraft,
   type CatalogSortMode,
 } from "@/application/admin/CatalogComposition";
-import {
-  loadAllCampaigns,
-  loadAllProductsForAdmin,
-  loadAllSubcategories,
-} from "@/integrations/sheets/fetchSheets";
+import { sheetsAdminDataRepository } from "@/infrastructure/admin/SheetsAdminDataRepository";
 import type {
   Campaign,
   CatalogSubcategory,
@@ -47,9 +43,9 @@ interface CatalogWorkspaceProps {
 
 async function loadCatalogWorkspaceData(): Promise<CatalogWorkspaceData> {
   const [products, subcategories, campaigns] = await Promise.all([
-    loadAllProductsForAdmin(),
-    loadAllSubcategories(),
-    loadAllCampaigns(),
+    sheetsAdminDataRepository.listProducts(),
+    sheetsAdminDataRepository.listSubcategories(),
+    sheetsAdminDataRepository.listCampaigns(),
   ]);
 
   return { products, subcategories, campaigns };

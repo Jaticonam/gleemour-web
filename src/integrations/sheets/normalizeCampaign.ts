@@ -31,7 +31,7 @@ function parseSheetDate(value: string) {
 
   if (!clean) return null;
 
-  const humanDate = clean.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
+  const humanDate = clean.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/);
 
   if (humanDate) {
     const [, day, month, year] = humanDate;

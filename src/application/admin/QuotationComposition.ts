@@ -60,6 +60,7 @@ export type QuotationLifecycleStatus =
   | "expired" | "cancelled" | "converted";
 
 export interface QuotationSnapshot extends Omit<QuotationDraft, "status"> {
+  quotationVersionId: string;
   status: "ready";
   snapshotAt: string;
   totals: QuotationTotals;
@@ -205,6 +206,7 @@ export function createQuotationSnapshot(
 ): QuotationSnapshot {
   return {
     ...draft,
+    quotationVersionId: `${draft.quotationId}:revision:${draft.revision}`,
     status: "ready",
     client: { ...draft.client, whatsapp: normalizeQuotationWhatsapp(draft.client.whatsapp) },
     conditions: { ...draft.conditions },

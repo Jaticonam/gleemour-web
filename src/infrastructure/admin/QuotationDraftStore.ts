@@ -9,8 +9,17 @@ const MAX_DRAFTS = 20;
 interface DraftStorage {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
+  removeItem?(key: string): void;
 }
-export interface QuotationDraftStore {
+export interface QuotationDraftRepository {
+  listDrafts(): QuotationDraft[];
+  getDraft(quotationId: string): QuotationDraft | null;
+  saveDraft(draft: QuotationDraft): QuotationDraft[];
+  deleteDraft(quotationId: string): QuotationDraft[];
+}
+
+/** @deprecated Use QuotationDraftRepository methods. */
+export interface QuotationDraftStore extends QuotationDraftRepository {
   list(): QuotationDraft[];
   save(draft: QuotationDraft): QuotationDraft[];
 }
@@ -52,10 +61,10 @@ function normalizeDraft(draft: QuotationDraft): QuotationDraft {
   };
 }
 
-export function createQuotationDraftStore(
+export function createLocalQuotationDraftRepository(
   storage: DraftStorage,
 ): QuotationDraftStore {
-  const list = (): QuotationDraft[] => {
+  const listDrafts = (): QuotationDraft[] => {
     try {
       const raw = storage.getItem(STORAGE_KEY);
       if (!raw) return [];
@@ -72,13 +81,36 @@ export function createQuotationDraftStore(
     }
   };
 
-  const save = (draft: QuotationDraft): QuotationDraft[] => {
-    const nextDrafts = [draft, ...list().filter((item) => item.id !== draft.id)]
+  const saveDraft = (draft: QuotationDraft): QuotationDraft[] => {
+    const nextDrafts = [draft, ...listDrafts().filter((item) => item.id !== draft.id)]
       .slice(0, MAX_DRAFTS);
 
     storage.setItem(STORAGE_KEY, JSON.stringify(nextDrafts));
     return nextDrafts;
   };
 
-  return { list, save };
+  const getDraft = (quotationId: string) =>
+    listDrafts().find(
+      (draft) => draft.quotationId === quotationId || draft.id === quotationId,
+    ) ?? null;
+
+  const deleteDraft = (quotationId: string): QuotationDraft[] => {
+    const nextDrafts = listDrafts().filter(
+      (draft) => draft.quotationId !== quotationId && draft.id !== quotationId,
+    );
+    storage.setItem(STORAGE_KEY, JSON.stringify(nextDrafts));
+    return nextDrafts;
+  };
+
+  return {
+    listDrafts,
+    getDraft,
+    saveDraft,
+    deleteDraft,
+    list: listDrafts,
+    save: saveDraft,
+  };
 }
+
+/** Compatibility factory for existing consumers. */
+export const createQuotationDraftStore = createLocalQuotationDraftRepository;

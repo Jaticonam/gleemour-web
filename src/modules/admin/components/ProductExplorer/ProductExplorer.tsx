@@ -13,7 +13,7 @@ import {
   Search,
 } from "lucide-react";
 
-import { loadAllProductsForAdmin } from "@/integrations/sheets/fetchSheets";
+import { sheetsAdminDataRepository } from "@/infrastructure/admin/SheetsAdminDataRepository";
 import type { Product } from "@/shared/types/product";
 import { CATEGORIES } from "@/tenant/config/catalog";
 
@@ -76,7 +76,7 @@ function getStatusOptions(products: readonly Product[]): string[] {
 }
 
 export function ProductExplorer({
-  loadProducts = loadAllProductsForAdmin,
+  loadProducts = sheetsAdminDataRepository.listProducts,
   selectedProductIds = [],
   onSelectedProductIdsChange,
   onPrepareCatalog,

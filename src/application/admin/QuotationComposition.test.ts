@@ -82,8 +82,15 @@ describe("QuotationComposition", () => {
 
     const snapshot = createQuotationSnapshot(draft, new Date("2026-09-25T13:00:00Z"));
     expect(snapshot.status).toBe("ready");
+    expect(snapshot.quotationVersionId).toBe(`${draft.quotationId}:revision:1`);
     expect(snapshot.client.whatsapp).toBe("00000000");
     expect(snapshot.totals.total).toBe(99.9);
+
+    const source = product();
+    source.title = "Producto renombrado";
+    source.price = 999;
+    expect(snapshot.lines[0].productName).toBe("Ramo Aurora");
+    expect(snapshot.lines[0].quotedUnitPrice).toBe(99.9);
   });
 
   it("calcula totales y valida datos mínimos del cliente", () => {

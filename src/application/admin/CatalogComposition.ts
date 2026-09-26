@@ -38,13 +38,26 @@ export interface CatalogCompositionSnapshot {
 
 /** Provider-neutral boundary for future CatalogVersion persistence in JUNG CORE. */
 export interface CatalogDraftContract {
+  schemaVersion: "gleemour.admin.catalog-draft.v1";
   catalogId?: string;
-  version?: number;
+  catalogVersionId?: string;
+  versionNumber?: number;
   status: "draft";
   compositionStrategy: CatalogCompositionStrategy;
   source: CatalogSource;
   composition: CatalogCompositionSnapshot;
   settings: CatalogSettings;
+}
+
+export interface CatalogVersionSnapshot extends Omit<
+  CatalogDraftContract,
+  "status" | "catalogId" | "catalogVersionId" | "versionNumber"
+> {
+  catalogId: string;
+  catalogVersionId: string;
+  versionNumber: number;
+  status: "ready";
+  snapshotAt: string;
 }
 
 export interface CatalogCompositionDraft {
@@ -81,6 +94,33 @@ export function createCatalogCompositionDraft(
     orderedProductIds: [],
     manuallyExcludedProductIds: [],
     sortMode: "manual",
+  };
+}
+
+export function createCatalogVersionSnapshot(
+  contract: CatalogDraftContract,
+  identity: {
+    catalogId: string;
+    catalogVersionId: string;
+    versionNumber: number;
+  },
+  snapshotAt = new Date(),
+): CatalogVersionSnapshot {
+  return {
+    ...contract,
+    ...identity,
+    status: "ready",
+    source:
+      contract.source.type === "manual"
+        ? { ...contract.source, productIds: [...contract.source.productIds] }
+        : { ...contract.source },
+    composition: {
+      productIds: [...contract.composition.productIds],
+      excludedProductIds: [...contract.composition.excludedProductIds],
+      order: [...contract.composition.order],
+    },
+    settings: { ...contract.settings },
+    snapshotAt: snapshotAt.toISOString(),
   };
 }
 
@@ -217,6 +257,7 @@ export function toCatalogDraftContract(
   const productIds = result.included.map((product) => product.id);
 
   return {
+    schemaVersion: "gleemour.admin.catalog-draft.v1",
     status: "draft",
     compositionStrategy: "dynamic",
     source: getCatalogSource(draft),

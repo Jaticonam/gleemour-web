@@ -25,7 +25,7 @@ import {
   createQuotationDraftStore,
   type QuotationDraftStore,
 } from "@/infrastructure/admin/QuotationDraftStore";
-import { loadAllProductsForAdmin } from "@/integrations/sheets/fetchSheets";
+import { sheetsAdminDataRepository } from "@/infrastructure/admin/SheetsAdminDataRepository";
 import { createJungCoreQuotationDocumentPort } from "@/integrations/jungCore/QuotationDocumentClient";
 import { buildQuotationWhatsAppUrl } from "@/integrations/whatsapp/quotationWhatsapp";
 import type { Product } from "@/shared/types/product";
@@ -53,7 +53,7 @@ export type QuotationOutputState =
 export function QuotationWorkspace({
   selectedProductIds,
   onBackToProducts,
-  loadProducts = loadAllProductsForAdmin,
+  loadProducts = sheetsAdminDataRepository.listProducts,
   draftStore,
   now = () => new Date(),
   documentPort,
@@ -73,7 +73,9 @@ export function QuotationWorkspace({
   nowRef.current = now;
   const [products, setProducts] = useState<Product[]>([]);
   const [draft, setDraft] = useState<QuotationDraft | null>(null);
-  const [savedDrafts, setSavedDrafts] = useState<QuotationDraft[]>(() => store.list());
+  const [savedDrafts, setSavedDrafts] = useState<QuotationDraft[]>(() =>
+    typeof store.listDrafts === "function" ? store.listDrafts() : store.list(),
+  );
   const [reloadToken, setReloadToken] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -177,7 +179,11 @@ export function QuotationWorkspace({
     if (!draft) return;
     const updated = { ...draft, updatedAt: now().toISOString() };
     setDraft(updated);
-    setSavedDrafts(store.save(updated));
+    setSavedDrafts(
+      typeof store.saveDraft === "function"
+        ? store.saveDraft(updated)
+        : store.save(updated),
+    );
     setDirty(false);
     setStatusMessage("Borrador guardado en este navegador.");
   };

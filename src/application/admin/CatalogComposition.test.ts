@@ -4,6 +4,7 @@ import type { Product } from "@/shared/types/product";
 
 import {
   createCatalogCompositionDraft,
+  createCatalogVersionSnapshot,
   moveProduct,
   resolveCatalogComposition,
   toCatalogDraftContract,
@@ -151,6 +152,7 @@ describe("CatalogComposition", () => {
     );
 
     expect(contract).toMatchObject({
+      schemaVersion: "gleemour.admin.catalog-draft.v1",
       status: "draft",
       compositionStrategy: "dynamic",
       source: { type: "manual", productIds: ["GLE-001", "GLE-002"] },
@@ -161,5 +163,23 @@ describe("CatalogComposition", () => {
       },
       settings: { title: "Selección comercial" },
     });
+  });
+
+  it("separa catalogId de catalogVersionId y congela la composición", () => {
+    const draft = createCatalogCompositionDraft(["GLE-001"]);
+    const contract = toCatalogDraftContract(
+      draft,
+      resolveCatalogComposition(PRODUCTS, draft),
+    );
+    const snapshot = createCatalogVersionSnapshot(
+      contract,
+      { catalogId: "CAT-01", catalogVersionId: "CAT-01:V3", versionNumber: 3 },
+      new Date("2026-09-26T06:00:00Z"),
+    );
+
+    contract.composition.productIds.push("MUTATED");
+    expect(snapshot.catalogId).toBe("CAT-01");
+    expect(snapshot.catalogVersionId).toBe("CAT-01:V3");
+    expect(snapshot.composition.productIds).toEqual(["GLE-001"]);
   });
 });

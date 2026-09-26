@@ -22,13 +22,19 @@ describe("QuotationDraftStore", () => {
     store.save(second);
     store.save({ ...first, updatedAt: "2026-09-19T12:00:00.000Z" });
 
-    expect(store.list().map(({ id }) => id)).toEqual([first.id, second.id]);
+    expect(store.listDrafts().map(({ id }) => id)).toEqual([first.id, second.id]);
+    expect(store.getDraft(first.quotationId)?.updatedAt).toBe(
+      "2026-09-19T12:00:00.000Z",
+    );
+    expect(store.deleteDraft(first.quotationId).map(({ id }) => id)).toEqual([
+      second.id,
+    ]);
   });
 
   it("falla cerrado ante contenido inválido", () => {
     const storage = memoryStorage();
     storage.setItem("gleemour.admin.quotation-drafts.v1", "{inválido");
 
-    expect(createQuotationDraftStore(storage).list()).toEqual([]);
+    expect(createQuotationDraftStore(storage).listDrafts()).toEqual([]);
   });
 });
