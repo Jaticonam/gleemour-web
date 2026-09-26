@@ -31,7 +31,7 @@ interface ModeOption {
 }
 
 const MODE_OPTIONS: ModeOption[] = [
-  { id: "full", label: "Completo", description: "Todo lo publicable", icon: Boxes },
+  { id: "full", label: "Todos", description: "Todos los productos publicables", icon: Boxes },
   { id: "category", label: "Categoría", description: "Una emoción principal", icon: Layers3 },
   { id: "subcategory", label: "Subcategoría", description: "Una intención específica", icon: ListFilter },
   { id: "campaign", label: "Campaña", description: "Productos de campaña", icon: Megaphone },
@@ -83,15 +83,6 @@ export function CatalogBuilder({
           );
         })}
       </div>
-
-      <label className="gla-builder-control">
-        <span>Título del catálogo</span>
-        <input
-          value={draft.title}
-          onChange={(event) => onDraftChange({ title: event.target.value })}
-          placeholder="Ej. Detalles para enamorar"
-        />
-      </label>
 
       {draft.mode === "category" || draft.mode === "subcategory" ? (
         <label className="gla-builder-control">
@@ -152,7 +143,7 @@ export function CatalogBuilder({
         <div className="gla-custom-summary">
           <MousePointer2 size={18} aria-hidden="true" />
           <div>
-            <strong>{selectedProductCount} productos seleccionados</strong>
+            <strong>{selectedProductCount} productos desde Product Explorer</strong>
             <span>La selección se conserva mientras navegas por Admin.</span>
           </div>
           <button type="button" onClick={onBackToProducts}>Editar selección</button>

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useState } from "react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { Product } from "@/shared/types/product";
 
@@ -63,6 +63,8 @@ function ControlledProductExplorer() {
 }
 
 describe("ProductExplorer", () => {
+  beforeEach(() => window.localStorage.clear());
+
   it("carga la fuente administrativa y muestra estados no públicos", async () => {
     const loadProducts = vi.fn().mockResolvedValue(PRODUCTS);
 
@@ -209,5 +211,58 @@ describe("ProductExplorer", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Cerrar ficha de producto" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("comparte dataset y selección entre Vista Filas y Vista Tabla", async () => {
+    render(<ControlledProductExplorer />);
+
+    await screen.findByRole("heading", { name: "Ramo Corazón" });
+    fireEvent.click(screen.getByRole("checkbox", { name: "Seleccionar Ramo Corazón" }));
+    fireEvent.click(screen.getByRole("button", { name: "Tabla" }));
+
+    expect(screen.getByRole("table")).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: "Seleccionar Ramo Corazón" })).toBeChecked();
+    expect(screen.getByText("1 seleccionados")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("checkbox", { name: "Seleccionar Box Sorpresa" }));
+    expect(screen.getByText("2 seleccionados")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Filas" }));
+
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+    expect(screen.getByText("2 seleccionados")).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: "Seleccionar Box Sorpresa" })).toBeChecked();
+  });
+
+  it("persiste columnas y densidad y permite restablecer columnas", async () => {
+    const view = render(<ProductExplorer loadProducts={loadControlledProducts} />);
+    await screen.findByRole("heading", { name: "Ramo Corazón" });
+    fireEvent.click(screen.getByRole("button", { name: "Tabla" }));
+    fireEvent.change(screen.getByLabelText("Densidad"), { target: { value: "compact" } });
+    fireEvent.click(screen.getByText("Columnas"));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Prioridad" }));
+    expect(screen.queryByRole("columnheader", { name: /Prioridad/ })).not.toBeInTheDocument();
+
+    view.unmount();
+    render(<ProductExplorer loadProducts={loadControlledProducts} />);
+    await screen.findByRole("table");
+    expect(screen.getByDisplayValue("Compacta")).toBeInTheDocument();
+    expect(screen.queryByRole("columnheader", { name: /Prioridad/ })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("Columnas"));
+    fireEvent.click(screen.getByRole("button", { name: "Restablecer columnas" }));
+    expect(screen.getByRole("columnheader", { name: /Prioridad/ })).toBeInTheDocument();
+  });
+
+  it("mantiene el ordenamiento al alternar entre ambas vistas", async () => {
+    render(<ProductExplorer loadProducts={loadControlledProducts} />);
+    await screen.findByRole("heading", { name: "Ramo Corazón" });
+    fireEvent.click(screen.getByRole("button", { name: "Tabla" }));
+    fireEvent.click(screen.getByRole("button", { name: "Ordenar por Producto" }));
+
+    const tableRows = screen.getAllByRole("row").slice(1);
+    expect(tableRows[0]).toHaveTextContent("Box Sorpresa");
+    fireEvent.click(screen.getByRole("button", { name: "Filas" }));
+    const rowTitles = screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent);
+    expect(rowTitles[0]).toBe("Box Sorpresa");
   });
 });

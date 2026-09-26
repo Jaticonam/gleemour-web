@@ -2,8 +2,9 @@
    QUOTATION WORKSPACE · BASE
 ========================================================= */
 .gla-quotation-workspace {
-  width: min(1440px, 100%);
-  padding: 34px 34px 68px;
+  width: min(var(--gla-content-max-width), 100%);
+  margin-inline: auto;
+  padding: clamp(28px, 2vw, 40px) var(--gla-content-padding) 72px;
 }
 
 .gla-quotation-header {
@@ -21,7 +22,7 @@
 
 .gla-quotation-kicker span {
   color: var(--w-secondary-strong);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 850;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -33,13 +34,13 @@
   border-radius: 999px;
   background: #fff;
   color: var(--w-muted);
-  font-size: 0.56rem;
+  font-size: 0.68rem;
 }
 
 .gla-quotation-header h1 {
   margin: 9px 0 0;
   color: var(--w-heading);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2.5rem, 3vw, 3rem);
   line-height: 1;
 }
 
@@ -47,7 +48,7 @@
   max-width: 720px;
   margin: 14px 0 0;
   color: var(--w-muted);
-  font-size: 0.86rem;
+  font-size: 0.94rem;
   line-height: 1.65;
 }
 
@@ -58,7 +59,7 @@
 
 .gla-quotation-header button,
 .gla-quotation-state button {
-  min-height: 39px;
+  min-height: var(--gla-control-height);
   padding: 0 13px;
   border: 1px solid var(--w-border);
   border-radius: 11px;
@@ -69,7 +70,7 @@
   justify-content: center;
   gap: 7px;
   font: inherit;
-  font-size: 0.66rem;
+  font-size: 0.78rem;
   font-weight: 800;
   cursor: pointer;
 }
@@ -100,8 +101,8 @@
 .gla-quotation-layout {
   margin-top: 27px;
   display: grid;
-  grid-template-columns: minmax(560px, 1.5fr) minmax(290px, 0.62fr);
-  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) clamp(320px, 24vw, 390px);
+  gap: var(--gla-workspace-gap);
   align-items: start;
 }
 
@@ -114,6 +115,7 @@
 .gla-quotation-products,
 .gla-quotation-details,
 .gla-quotation-summary {
+  min-width: 0;
   padding: 17px;
   border: 1px solid var(--w-border);
   border-radius: 17px;
@@ -148,13 +150,13 @@
 .gla-quotation-section-heading h2 {
   margin: 0;
   color: var(--w-heading);
-  font-size: 0.82rem;
+  font-size: 0.94rem;
 }
 
 .gla-quotation-section-heading p {
   margin: 3px 0 0;
   color: var(--w-muted);
-  font-size: 0.58rem;
+  font-size: 0.7rem;
 }
 
 /* =========================================================
@@ -174,25 +176,27 @@
 
 .gla-client-grid label > span {
   color: var(--w-muted);
-  font-size: 0.57rem;
+  font-size: 0.69rem;
   font-weight: 800;
 }
 
 .gla-client-grid input,
+.gla-client-grid select,
 .gla-client-grid textarea {
   width: 100%;
-  min-height: 41px;
+  min-height: var(--gla-control-height);
   padding: 9px 10px;
   border: 1px solid var(--w-border);
   border-radius: 10px;
   background: var(--w-surface-soft);
   color: var(--w-heading);
   font: inherit;
-  font-size: 0.7rem;
+  font-size: 0.82rem;
   outline: none;
 }
 
 .gla-client-grid input:focus,
+.gla-client-grid select:focus,
 .gla-client-grid textarea:focus {
   border-color: var(--w-secondary);
   box-shadow: 0 0 0 3px rgba(236, 164, 194, 0.14);
@@ -217,10 +221,10 @@
   gap: 12px;
 }
 
-.gla-quotation-totals dt { color: var(--w-muted); font-size: 0.62rem; }
-.gla-quotation-totals dd { margin: 0; color: var(--w-heading); font-size: 0.7rem; font-weight: 850; }
+.gla-quotation-totals dt { color: var(--w-muted); font-size: 0.73rem; }
+.gla-quotation-totals dd { margin: 0; color: var(--w-heading); font-size: 0.82rem; font-weight: 850; }
 .gla-quotation-totals .gla-quotation-total { margin-top: 5px; padding-top: 12px; border-top: 1px solid var(--w-border); }
-.gla-quotation-total dd { color: var(--w-primary-dark); font-size: 1.15rem; }
+.gla-quotation-total dd { color: var(--w-primary-dark); font-size: 1.35rem; }
 
 .gla-save-draft {
   width: 100%;

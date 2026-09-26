@@ -1,6 +1,7 @@
 import "./ProductExplorer.css";
 import "./ProductExplorer.products.css";
 import "./ProductExplorer.responsive.css";
+import "./ProductTable.css";
 
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -20,6 +21,22 @@ import { AdminProductRow } from "./AdminProductRow";
 import { ActiveProductFilters } from "./ActiveProductFilters";
 import { ProductDetailsDrawer } from "./ProductDetailsDrawer";
 import { ProductExplorerMetrics } from "./ProductExplorerMetrics";
+import { ProductExplorerViewControls } from "./ProductExplorerViewControls";
+import { ProductTable } from "./ProductTable";
+import {
+  DEFAULT_PRODUCT_COLUMNS,
+  sortProducts,
+  type ProductFieldKey,
+} from "./ProductExplorer.fields";
+import {
+  readProductExplorerPreferences,
+  writeProductExplorerPreferences,
+  type ProductExplorerPreferences,
+} from "./ProductExplorer.preferences";
+import {
+  READ_ONLY_PRODUCT_CAPABILITIES,
+  type ProductCapabilities,
+} from "./ProductExplorer.capabilities";
 import {
   ALL_ADMIN_FILTERS,
   filterAdminProducts,
@@ -41,6 +58,8 @@ interface ProductExplorerProps {
   onSelectedProductIdsChange?: (productIds: string[]) => void;
   onPrepareCatalog?: () => void;
   onPrepareQuotation?: () => void;
+  preferencesStorage?: Pick<Storage, "getItem" | "setItem">;
+  capabilities?: ProductCapabilities;
 }
 
 function getStatusOptions(products: readonly Product[]): string[] {
@@ -62,6 +81,8 @@ export function ProductExplorer({
   onSelectedProductIdsChange,
   onPrepareCatalog,
   onPrepareQuotation,
+  preferencesStorage = typeof window === "undefined" ? undefined : window.localStorage,
+  capabilities = READ_ONLY_PRODUCT_CAPABILITIES,
 }: ProductExplorerProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [query, setQuery] = useState("");
@@ -74,6 +95,13 @@ export function ProductExplorer({
   const [reloadToken, setReloadToken] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [preferences, setPreferences] = useState<ProductExplorerPreferences>(() =>
+    readProductExplorerPreferences(preferencesStorage),
+  );
+
+  useEffect(() => {
+    writeProductExplorerPreferences(preferences, preferencesStorage);
+  }, [preferences, preferencesStorage]);
 
   useEffect(() => {
     let active = true;
@@ -114,6 +142,10 @@ export function ProductExplorer({
       }),
     [products, query, status, category, quickFilter],
   );
+  const displayedProducts = useMemo(
+    () => sortProducts(filteredProducts, preferences.sort),
+    [filteredProducts, preferences.sort],
+  );
 
   const stats = useMemo(() => getProductExplorerStats(products), [products]);
   const statusOptions = useMemo(() => getStatusOptions(products), [products]);
@@ -147,9 +179,21 @@ export function ProductExplorer({
     onSelectedProductIdsChange([
       ...new Set([
         ...selectedProductIds,
-        ...filteredProducts.map((product) => product.id),
+        ...displayedProducts.map((product) => product.id),
       ]),
     ]);
+  };
+
+  const updatePreferences = (patch: Partial<ProductExplorerPreferences>) => {
+    setPreferences((current) => ({ ...current, ...patch }));
+  };
+
+  const toggleColumn = (field: ProductFieldKey) => {
+    updatePreferences({
+      visibleColumns: preferences.visibleColumns.includes(field)
+        ? preferences.visibleColumns.filter((key) => key !== field)
+        : [...preferences.visibleColumns, field],
+    });
   };
 
   const clearFilters = () => {
@@ -165,7 +209,7 @@ export function ProductExplorer({
         <div>
           <div className="gla-explorer-kicker">
             <span>Product Explorer</span>
-            <strong>Solo lectura</strong>
+            <strong>{capabilities.canEdit ? "Edición habilitada" : "Solo lectura"}</strong>
           </div>
 
           <h1 id="gla-explorer-title">Productos</h1>
@@ -264,6 +308,16 @@ export function ProductExplorer({
         onClearAll={clearFilters}
       />
 
+      <ProductExplorerViewControls
+        viewMode={preferences.viewMode}
+        density={preferences.density}
+        visibleColumns={preferences.visibleColumns}
+        onViewModeChange={(viewMode) => updatePreferences({ viewMode })}
+        onDensityChange={(density) => updatePreferences({ density })}
+        onColumnToggle={toggleColumn}
+        onColumnsReset={() => updatePreferences({ visibleColumns: [...DEFAULT_PRODUCT_COLUMNS] })}
+      />
+
       <div className="gla-results-heading">
         <div>
           <strong>Productos</strong>
@@ -346,18 +400,31 @@ export function ProductExplorer({
         </div>
       ) : null}
 
-      {!loading && !error && filteredProducts.length > 0 ? (
-        <div className="gla-product-list">
-          {filteredProducts.map((product) => (
-            <AdminProductRow
-              key={product.id}
-              product={product}
-              selected={selectedProductIdSet.has(product.id)}
-              onToggle={toggleProduct}
-              onInspect={setInspectedProduct}
-            />
-          ))}
-        </div>
+      {!loading && !error && displayedProducts.length > 0 ? (
+        preferences.viewMode === "rows" ? (
+          <div className={`gla-product-list gla-product-list-${preferences.density}`}>
+            {displayedProducts.map((product) => (
+              <AdminProductRow
+                key={product.id}
+                product={product}
+                selected={selectedProductIdSet.has(product.id)}
+                onToggle={toggleProduct}
+                onInspect={setInspectedProduct}
+              />
+            ))}
+          </div>
+        ) : (
+          <ProductTable
+            products={displayedProducts}
+            selectedProductIds={selectedProductIdSet}
+            visibleColumns={preferences.visibleColumns}
+            density={preferences.density}
+            sort={preferences.sort}
+            onSortChange={(sort) => updatePreferences({ sort })}
+            onToggle={toggleProduct}
+            onInspect={setInspectedProduct}
+          />
+        )
       ) : null}
 
       <ProductDetailsDrawer

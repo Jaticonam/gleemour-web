@@ -2,9 +2,9 @@
    CATALOG WORKSPACE · RESPONSIVE
 ========================================================= */
 
-@media (max-width: 1100px) {
+@media (max-width: 1199px) {
   .gla-composition-layout {
-    grid-template-columns: minmax(260px, 0.8fr) minmax(430px, 1.2fr);
+    grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
   }
 
   .gla-preview-grid {
@@ -21,7 +21,7 @@
     grid-template-columns: 1fr;
   }
 
-  .gla-composition-builder {
+  .gla-builder-stack {
     position: static;
   }
 }

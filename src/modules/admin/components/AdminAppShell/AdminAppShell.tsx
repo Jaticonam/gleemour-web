@@ -38,7 +38,7 @@ export function AdminAppShell({
 
           <div>
             <strong>Gleemour</strong>
-            <span>v1.2 · M5</span>
+            <span>v1.4 · Responsive</span>
           </div>
         </div>
 

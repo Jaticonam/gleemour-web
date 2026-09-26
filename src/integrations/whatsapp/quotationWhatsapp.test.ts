@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createQuotationDraft } from "@/application/admin/QuotationComposition";
+import { createQuotationDraft, createQuotationSnapshot } from "@/application/admin/QuotationComposition";
 
 import {
   buildQuotationWhatsAppMessage,
@@ -10,15 +10,16 @@ import {
 describe("quotationWhatsapp", () => {
   it("construye un mensaje comercial desde el snapshot", () => {
     const draft = createQuotationDraft([], [], new Date("2026-09-19T15:00:00Z"));
-    draft.client = { name: "Ana", whatsapp: "+51 900 111 222", document: "" };
+    draft.client = { name: "Cliente Demo", whatsapp: "00000000", document: "" };
     draft.conditions.notes = "Delivery incluido";
+    const snapshot = createQuotationSnapshot(draft);
 
     expect(
-      buildQuotationWhatsAppMessage(draft, "https://media.jungnegocios.com/q/1"),
+      buildQuotationWhatsAppMessage(snapshot, "https://media.jungnegocios.com/q/1"),
     ).toContain("Cotización Gleemour");
-    expect(buildQuotationWhatsAppMessage(draft)).toContain("Delivery incluido");
-    expect(buildQuotationWhatsAppUrl(draft)).toMatch(
-      /^https:\/\/wa\.me\/51900111222\?text=/,
+    expect(buildQuotationWhatsAppMessage(snapshot)).toContain("Delivery incluido");
+    expect(buildQuotationWhatsAppUrl(snapshot)).toMatch(
+      /^https:\/\/wa\.me\/00000000\?text=/,
     );
   });
 });

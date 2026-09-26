@@ -1,35 +1,38 @@
-import { Eye, Layers3 } from "lucide-react";
+import { Eye, Layers3, RotateCcw } from "lucide-react";
 
 import type {
-  CatalogCompositionMode,
   CatalogCompositionResult,
+  CatalogSortMode,
 } from "@/application/admin/CatalogComposition";
 
 import { CatalogCompositionRow } from "./CatalogCompositionRow";
 
 interface CatalogCompositionPanelProps {
   composition: CatalogCompositionResult;
-  mode: CatalogCompositionMode;
+  sortMode: CatalogSortMode;
   onMove: (productId: string, direction: "up" | "down") => void;
-  onRemove: (productId: string) => void;
+  onSortModeChange: (mode: CatalogSortMode) => void;
+  onExclude: (productId: string) => void;
+  onRestore: (productId: string) => void;
   onPreview: () => void;
 }
 export function CatalogCompositionPanel({
   composition,
-  mode,
+  sortMode,
   onMove,
-  onRemove,
+  onSortModeChange,
+  onExclude,
+  onRestore,
   onPreview,
 }: CatalogCompositionPanelProps) {
   return (
     <section className="gla-composition-panel" aria-labelledby="gla-composition-products">
       <header>
         <div>
-          <span>02 · Orden y revisión</span>
+          <span>02 · Composición</span>
           <h2 id="gla-composition-products">Productos incluidos</h2>
           <p>
-            {composition.included.length} listos · {composition.excluded.length}{" "}
-            {composition.excluded.length === 1 ? "excluido" : "excluidos"}
+            {composition.included.length} listos · {composition.automaticExcluded.length} automáticos · {composition.manuallyExcluded.length} manuales
           </p>
         </div>
         <button
@@ -43,6 +46,22 @@ export function CatalogCompositionPanel({
         </button>
       </header>
 
+      <label className="gla-sort-control">
+        <span>Orden global</span>
+        <select
+          aria-label="Orden global"
+          value={sortMode}
+          onChange={(event) => onSortModeChange(event.target.value as CatalogSortMode)}
+        >
+          <option value="manual">Manual</option>
+          <option value="priority">Prioridad comercial</option>
+          <option value="name-asc">Nombre A–Z</option>
+          <option value="name-desc">Nombre Z–A</option>
+          <option value="price-asc">Precio menor a mayor</option>
+          <option value="price-desc">Precio mayor a menor</option>
+        </select>
+      </label>
+
       {composition.included.length > 0 ? (
         <div className="gla-composition-list">
           {composition.included.map((product, index) => (
@@ -51,9 +70,8 @@ export function CatalogCompositionPanel({
               product={product}
               index={index}
               total={composition.included.length}
-              removable={mode === "custom"}
               onMove={onMove}
-              onRemove={onRemove}
+              onExclude={onExclude}
             />
           ))}
         </div>
@@ -65,15 +83,14 @@ export function CatalogCompositionPanel({
         </div>
       )}
 
-      {composition.excluded.length > 0 ? (
+      {composition.automaticExcluded.length > 0 ? (
         <details className="gla-excluded-products">
           <summary>
-            {composition.excluded.length}{" "}
-            {composition.excluded.length === 1 ? "producto excluido" : "productos excluidos"}{" "}
-            por estado
+            {composition.automaticExcluded.length}{" "}
+            {composition.automaticExcluded.length === 1 ? "producto excluido automáticamente" : "productos excluidos automáticamente"}
           </summary>
           <ul>
-            {composition.excluded.map((product) => (
+            {composition.automaticExcluded.map((product) => (
               <li key={product.id}>
                 <span>{product.id}</span>
                 {product.title}
@@ -83,6 +100,32 @@ export function CatalogCompositionPanel({
           </ul>
         </details>
       ) : null}
+
+      {composition.manuallyExcluded.length > 0 ? (
+        <details className="gla-excluded-products" open>
+          <summary>
+            {composition.manuallyExcluded.length}{" "}
+            {composition.manuallyExcluded.length === 1 ? "producto excluido manualmente" : "productos excluidos manualmente"}
+          </summary>
+          <ul>
+            {composition.manuallyExcluded.map((product) => (
+              <li key={product.id}>
+                <span>{product.id}</span>
+                {product.title}
+                <button type="button" onClick={() => onRestore(product.id)}>
+                  <RotateCcw size={13} aria-hidden="true" />
+                  Restaurar
+                </button>
+              </li>
+            ))}
+          </ul>
+        </details>
+      ) : null}
+
+      <footer className="gla-output-readiness">
+        <span>05 · Salida</span>
+        <strong>Contrato preparado para JUNG Commercial Publishing</strong>
+      </footer>
     </section>
   );
 }

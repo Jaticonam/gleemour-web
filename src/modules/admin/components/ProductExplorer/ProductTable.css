@@ -1,0 +1,35 @@
+.gla-view-controls { min-height: 45px; margin-top: 10px; display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+.gla-view-switch { display: flex; align-items: center; gap: 5px; }
+.gla-view-switch > span, .gla-density-control > span { color: var(--w-muted); font-size: .69rem; font-weight: 800; }
+.gla-view-controls button, .gla-column-picker summary, .gla-density-control select { min-height: 38px; padding: 0 12px; border: 1px solid var(--w-border); border-radius: 9px; background: #fff; color: var(--w-primary-dark); font: inherit; font-size: .71rem; font-weight: 800; cursor: pointer; }
+.gla-view-switch button, .gla-column-picker summary { display: inline-flex; align-items: center; gap: 5px; }
+.gla-view-switch button[aria-pressed="true"] { border-color: var(--w-secondary); background: var(--w-secondary-soft); }
+.gla-density-control { display: flex; align-items: center; gap: 6px; }
+.gla-column-picker { position: relative; }
+.gla-column-picker summary { list-style: none; }
+.gla-column-picker > div { position: absolute; top: calc(100% + 7px); right: 0; z-index: 20; width: 280px; max-height: 420px; padding: 14px; overflow: auto; border: 1px solid var(--w-border); border-radius: 13px; background: #fff; box-shadow: 0 16px 40px rgba(43,35,57,.16); }
+.gla-column-picker fieldset { margin: 0 0 12px; padding: 0; border: 0; display: grid; gap: 7px; }
+.gla-column-picker legend { margin-bottom: 7px; color: var(--w-heading); font-size: .58rem; font-weight: 900; text-transform: uppercase; }
+.gla-column-picker label { color: var(--w-muted); display: flex; align-items: center; gap: 7px; font-size: .62rem; }
+.gla-column-picker > div > button { width: 100%; }
+.gla-product-table-wrap { max-height: 620px; overflow: auto; border: 1px solid var(--w-border); border-radius: 14px; background: #fff; }
+.gla-product-table { width: max-content; min-width: 100%; border-collapse: separate; border-spacing: 0; color: var(--w-heading); font-size: .74rem; }
+.gla-product-table th { position: sticky; top: 0; z-index: 5; height: 46px; padding: 0 12px; border-bottom: 1px solid var(--w-border); background: var(--w-surface-soft); text-align: left; white-space: nowrap; }
+.gla-product-table th button { padding: 0; border: 0; background: transparent; color: inherit; display: inline-flex; align-items: center; gap: 5px; font: inherit; font-weight: 850; cursor: pointer; }
+.gla-product-table td { height: 60px; max-width: 300px; padding: 7px 12px; border-bottom: 1px solid var(--w-border); background: #fff; white-space: nowrap; }
+.gla-product-table td > span:not(.gla-status):not(.gla-table-image) { display: block; overflow: hidden; text-overflow: ellipsis; }
+.gla-product-table tr:last-child td { border-bottom: 0; }
+.gla-product-table .gla-table-select { position: sticky; left: 0; z-index: 4; width: 46px; min-width: 46px; text-align: center; }
+.gla-product-table th.gla-table-select { z-index: 8; }
+.gla-product-table .gla-table-field-id { position: sticky; left: 46px; z-index: 3; background: #fff; font-weight: 850; }
+.gla-product-table th.gla-table-field-id { z-index: 7; background: var(--w-surface-soft); }
+.gla-product-table .gla-table-field-title { position: sticky; left: 166px; z-index: 3; background: #fff; font-weight: 850; }
+.gla-product-table th.gla-table-field-title { z-index: 7; background: var(--w-surface-soft); }
+.gla-table-row-selected td, .gla-table-row-selected .gla-table-field-id, .gla-table-row-selected .gla-table-field-title { background: var(--w-primary-soft); }
+.gla-table-image { position: relative; width: 34px; height: 42px; overflow: hidden; border-radius: 7px; background: var(--w-primary-soft); color: var(--w-muted); display: grid; place-items: center; }
+.gla-table-image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.gla-table-action { width: 60px; text-align: center !important; }
+.gla-table-action button { width: 31px; height: 31px; border: 1px solid var(--w-border); border-radius: 8px; background: var(--w-primary-soft); color: var(--w-primary-dark); display: inline-grid; place-items: center; cursor: pointer; }
+.gla-density-compact .gla-product-table td { height: 40px; padding-top: 4px; padding-bottom: 4px; }
+.gla-density-compact .gla-table-image { width: 25px; height: 31px; }
+@media (max-width: 700px) { .gla-view-controls { align-items: stretch; flex-wrap: wrap; } .gla-view-switch { margin-right: auto; } .gla-column-picker > div { right: -4px; width: min(280px, calc(100vw - 36px)); } }

@@ -15,6 +15,7 @@ import {
   moveProduct,
   resolveCatalogComposition,
   type CatalogCompositionDraft,
+  type CatalogSortMode,
 } from "@/application/admin/CatalogComposition";
 import {
   loadAllCampaigns,
@@ -66,7 +67,6 @@ function getScopeKey(draft: CatalogCompositionDraft): string {
 
 export function CatalogWorkspace({
   selectedProductIds,
-  onSelectedProductIdsChange,
   onBackToProducts,
   loadData = loadCatalogWorkspaceData,
 }: CatalogWorkspaceProps) {
@@ -130,7 +130,12 @@ export function CatalogWorkspace({
         orderedProductIds: [],
       }).included.map((product) => product.id);
 
-      return { ...current, orderedProductIds: initialOrder };
+      return {
+        ...current,
+        orderedProductIds: initialOrder,
+        manuallyExcludedProductIds: [],
+        sortMode: "manual",
+      };
     });
   }, [data.products, scopeKey]);
 
@@ -141,17 +146,37 @@ export function CatalogWorkspace({
   const moveIncludedProduct = (productId: string, direction: "up" | "down") => {
     setDraft((current) => ({
       ...current,
+      sortMode: "manual",
       orderedProductIds: moveProduct(
-        current.orderedProductIds,
+        resolveCatalogComposition(data.products, current).included.map(
+          (product) => product.id,
+        ),
         productId,
         direction,
       ),
     }));
   };
 
-  const removeCustomProduct = (productId: string) => {
-    const nextIds = selectedProductIds.filter((id) => id !== productId);
-    onSelectedProductIdsChange(nextIds);
+  const excludeProduct = (productId: string) => {
+    setDraft((current) => ({
+      ...current,
+      manuallyExcludedProductIds: [
+        ...new Set([...current.manuallyExcludedProductIds, productId]),
+      ],
+    }));
+  };
+
+  const restoreProduct = (productId: string) => {
+    setDraft((current) => ({
+      ...current,
+      manuallyExcludedProductIds: current.manuallyExcludedProductIds.filter(
+        (id) => id !== productId,
+      ),
+    }));
+  };
+
+  const setSortMode = (sortMode: CatalogSortMode) => {
+    updateDraft({ sortMode });
   };
 
   return (
@@ -198,26 +223,50 @@ export function CatalogWorkspace({
         <>
           <div className="gla-composition-metrics" aria-label="Resumen de la composición">
             <article><span>Incluidos</span><strong>{composition.included.length}</strong></article>
-            <article><span>Excluidos por estado</span><strong>{composition.excluded.length}</strong></article>
-            <article><span>Selección manual</span><strong>{selectedProductIds.length}</strong></article>
-            <article><span>Fuentes disponibles</span><strong>{data.products.length}</strong></article>
+            <article><span>Excluidos automáticos</span><strong>{composition.automaticExcluded.length}</strong></article>
+            <article><span>Excluidos manuales</span><strong>{composition.manuallyExcluded.length}</strong></article>
+            <article><span>Productos disponibles</span><strong>{data.products.length}</strong></article>
           </div>
 
           <div className="gla-composition-layout">
-            <CatalogBuilder
-              draft={draft}
-              subcategories={data.subcategories}
-              campaigns={data.campaigns}
-              selectedProductCount={selectedProductIds.length}
-              onDraftChange={updateDraft}
-              onBackToProducts={onBackToProducts}
-            />
+            <div className="gla-builder-stack">
+              <CatalogBuilder
+                draft={draft}
+                subcategories={data.subcategories}
+                campaigns={data.campaigns}
+                selectedProductCount={selectedProductIds.length}
+                onDraftChange={updateDraft}
+                onBackToProducts={onBackToProducts}
+              />
+              <section className="gla-catalog-settings" aria-labelledby="gla-catalog-settings-title">
+                <div className="gla-builder-heading">
+                  <span>03</span>
+                  <div>
+                    <strong id="gla-catalog-settings-title">Configuración</strong>
+                    <small>Identidad del borrador comercial.</small>
+                  </div>
+                </div>
+                <label className="gla-builder-control">
+                  <span>Título del catálogo</span>
+                  <input
+                    value={draft.settings.title}
+                    onChange={(event) => updateDraft({
+                      settings: { ...draft.settings, title: event.target.value },
+                    })}
+                    placeholder="Ej. Detalles para enamorar"
+                  />
+                </label>
+                <span className="gla-draft-status">Borrador</span>
+              </section>
+            </div>
 
             <CatalogCompositionPanel
               composition={composition}
-              mode={draft.mode}
+              sortMode={draft.sortMode}
               onMove={moveIncludedProduct}
-              onRemove={removeCustomProduct}
+              onSortModeChange={setSortMode}
+              onExclude={excludeProduct}
+              onRestore={restoreProduct}
               onPreview={() => setPreviewOpen(true)}
             />
           </div>
@@ -226,9 +275,9 @@ export function CatalogWorkspace({
 
       {previewOpen ? (
         <CatalogPreviewDialog
-          title={draft.title}
+          title={draft.settings.title}
           products={composition.included}
-          excludedCount={composition.excluded.length}
+          excludedCount={composition.automaticExcluded.length + composition.manuallyExcluded.length}
           onClose={() => setPreviewOpen(false)}
         />
       ) : null}

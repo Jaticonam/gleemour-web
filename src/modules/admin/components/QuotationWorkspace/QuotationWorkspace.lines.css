@@ -14,7 +14,7 @@
   border-radius: 12px;
   background: var(--w-surface-soft);
   display: grid;
-  grid-template-columns: 45px minmax(150px, 1.3fr) 80px 105px 95px 31px;
+  grid-template-columns: 48px minmax(220px, 1.6fr) 90px 125px 110px 36px;
   align-items: center;
   gap: 9px;
 }
@@ -40,18 +40,18 @@
 }
 
 .gla-quotation-line-product { min-width: 0; display: grid; gap: 2px; }
-.gla-quotation-line-product > span { color: var(--w-muted); font-size: 0.49rem; font-weight: 800; }
-.gla-quotation-line-product > strong { overflow: hidden; color: var(--w-heading); font-size: 0.66rem; text-overflow: ellipsis; white-space: nowrap; }
-.gla-quotation-line-product > small { color: var(--w-muted); font-size: 0.51rem; }
+.gla-quotation-line-product > span { color: var(--w-muted); font-size: 0.61rem; font-weight: 800; }
+.gla-quotation-line-product > strong { overflow: hidden; color: var(--w-heading); font-size: 0.84rem; text-overflow: ellipsis; white-space: nowrap; }
+.gla-quotation-line-product > small { color: var(--w-muted); font-size: 0.63rem; }
 .gla-quotation-line-product .gla-stock-warning { color: #a75447; font-weight: 750; }
 
 .gla-quotation-line label,
 .gla-quotation-line-subtotal { display: grid; gap: 4px; }
 .gla-quotation-line label > span,
-.gla-quotation-line-subtotal span { color: var(--w-muted); font-size: 0.5rem; font-weight: 750; }
-.gla-quotation-line input { width: 100%; min-height: 34px; padding: 0 7px; border: 1px solid var(--w-border); border-radius: 8px; background: #fff; color: var(--w-heading); font: inherit; font-size: 0.62rem; }
+.gla-quotation-line-subtotal span { color: var(--w-muted); font-size: 0.62rem; font-weight: 750; }
+.gla-quotation-line input { width: 100%; min-height: 38px; padding: 0 8px; border: 1px solid var(--w-border); border-radius: 8px; background: #fff; color: var(--w-heading); font: inherit; font-size: 0.74rem; }
 .gla-quotation-line label > small { color: var(--w-muted); font-size: 0.46rem; }
-.gla-quotation-line-subtotal strong { color: var(--w-primary-dark); font-size: 0.66rem; }
+.gla-quotation-line-subtotal strong { color: var(--w-primary-dark); font-size: 0.8rem; }
 
 .gla-quotation-line > button {
   width: 30px;

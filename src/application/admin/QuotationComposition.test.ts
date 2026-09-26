@@ -4,6 +4,9 @@ import type { Product } from "@/shared/types/product";
 
 import {
   createQuotationDraft,
+  createQuotationSnapshot,
+  getQuotationLineSubtotal,
+  getQuotationValidUntil,
   getQuotationTotals,
   isQuotationReady,
   updateQuotationLine,
@@ -52,7 +55,10 @@ describe("QuotationComposition", () => {
       quantity: 1,
       unitPrice: 99.9,
       originalUnitPrice: 120,
-      subtotal: 99.9,
+      quotedUnitPrice: 99.9,
+      baseUnitPrice: 120,
+      productCode: "GLE-001",
+      productName: "Ramo Aurora",
       stockSnapshot: 3,
     });
   });
@@ -61,12 +67,23 @@ describe("QuotationComposition", () => {
     const draft = createQuotationDraft([product()], ["GLE-001"]);
     const updated = updateQuotationLine(draft.lines[0], {
       quantity: 2.8,
-      unitPrice: 88.555,
+      quotedUnitPrice: 88.555,
     });
 
     expect(updated.quantity).toBe(2);
     expect(updated.unitPrice).toBe(88.56);
-    expect(updated.subtotal).toBe(177.12);
+    expect(getQuotationLineSubtotal(updated)).toBe(177.12);
+  });
+
+  it("deriva vencimiento y congela un snapshot trazable", () => {
+    const draft = createQuotationDraft([product()], ["GLE-001"], new Date("2026-09-25T12:00:00Z"));
+    draft.client = { name: "Cliente Demo", whatsapp: "00000000", document: "" };
+    expect(getQuotationValidUntil(draft.conditions)).toBe("2026-09-28");
+
+    const snapshot = createQuotationSnapshot(draft, new Date("2026-09-25T13:00:00Z"));
+    expect(snapshot.status).toBe("ready");
+    expect(snapshot.client.whatsapp).toBe("00000000");
+    expect(snapshot.totals.total).toBe(99.9);
   });
 
   it("calcula totales y valida datos mínimos del cliente", () => {
@@ -83,7 +100,7 @@ describe("QuotationComposition", () => {
     });
     expect(isQuotationReady(draft)).toBe(false);
 
-    draft.client = { name: "Ana", whatsapp: "51900111222", document: "" };
+    draft.client = { name: "Cliente Demo", whatsapp: "00000000", document: "" };
     expect(isQuotationReady(draft)).toBe(true);
 
     draft.client.whatsapp = "123";

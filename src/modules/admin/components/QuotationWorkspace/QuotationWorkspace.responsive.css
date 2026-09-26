@@ -1,9 +1,9 @@
 /* =========================================================
    QUOTATION WORKSPACE · RESPONSIVE
 ========================================================= */
-@media (max-width: 1160px) {
-  .gla-quotation-layout { grid-template-columns: minmax(520px, 1fr) 280px; }
-  .gla-quotation-line { grid-template-columns: 45px minmax(140px, 1fr) 74px 96px 31px; }
+@media (max-width: 1199px) {
+  .gla-quotation-layout { grid-template-columns: minmax(0, 1fr) 310px; }
+  .gla-quotation-line { grid-template-columns: 45px minmax(160px, 1fr) 78px 105px 36px; }
   .gla-quotation-line-subtotal { grid-column: 2; }
   .gla-quotation-line > button { grid-column: 5; grid-row: 1; }
 }

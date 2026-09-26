@@ -63,10 +63,10 @@ describe("QuotationWorkspace", () => {
       target: { value: "2" },
     });
     fireEvent.change(screen.getByLabelText("Nombre del cliente *"), {
-      target: { value: "Ana Torres" },
+      target: { value: "Cliente Demo" },
     });
     fireEvent.change(screen.getByLabelText("WhatsApp *"), {
-      target: { value: "51900111222" },
+      target: { value: "00000000" },
     });
 
     expect(screen.getAllByText("S/ 199.80")).toHaveLength(2);
@@ -74,7 +74,7 @@ describe("QuotationWorkspace", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Guardar borrador" }));
     expect(screen.getByRole("status")).toHaveTextContent("Borrador guardado");
-    expect(screen.getByText("Ana Torres")).toBeInTheDocument();
+    expect(screen.getByText("Cliente Demo")).toBeInTheDocument();
   });
 
   it("publica el PDF por el port de JUNG CORE y lo adjunta a WhatsApp", async () => {
@@ -109,10 +109,10 @@ describe("QuotationWorkspace", () => {
 
     await screen.findByText("Ramo Aurora");
     fireEvent.change(screen.getByLabelText("Nombre del cliente *"), {
-      target: { value: "Ana Torres" },
+      target: { value: "Cliente Demo" },
     });
     fireEvent.change(screen.getByLabelText("WhatsApp *"), {
-      target: { value: "+51 900 111 222" },
+      target: { value: "00000000" },
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Generar PDF" }));
@@ -124,7 +124,7 @@ describe("QuotationWorkspace", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Enviar por WhatsApp" }));
     expect(openExternal).toHaveBeenCalledWith(
-      expect.stringContaining("https://wa.me/51900111222?text="),
+      expect.stringContaining("https://wa.me/00000000?text="),
     );
     expect(decodeURIComponent(openExternal.mock.calls[0][0])).toContain(
       "https://media.jungnegocios.com/quotations/GLQ-1",
@@ -175,10 +175,10 @@ describe("QuotationWorkspace", () => {
 
     await screen.findByText("Ramo Aurora");
     fireEvent.change(screen.getByLabelText("Nombre del cliente *"), {
-      target: { value: "Ana Torres" },
+      target: { value: "Cliente Demo" },
     });
     fireEvent.change(screen.getByLabelText("WhatsApp *"), {
-      target: { value: "51900111222" },
+      target: { value: "00000000" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Generar PDF" }));
 
@@ -210,5 +210,33 @@ describe("QuotationWorkspace", () => {
 
     await waitFor(() => expect(loadProducts).toHaveBeenCalledTimes(2));
     expect(await screen.findByText("Ramo Aurora")).toBeInTheDocument();
+  });
+
+  it("retira una línea sin mutar ProductSelection y protege cambios sin guardar", async () => {
+    const onSelectedProductIdsChange = vi.fn();
+    const onBackToProducts = vi.fn();
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+
+    render(
+      <QuotationWorkspace
+        selectedProductIds={["GLE-001"]}
+        onSelectedProductIdsChange={onSelectedProductIdsChange}
+        onBackToProducts={onBackToProducts}
+        loadProducts={() => Promise.resolve([product()])}
+        draftStore={draftStore()}
+        now={NOW}
+      />,
+    );
+
+    await screen.findByText("Ramo Aurora");
+    fireEvent.change(screen.getByLabelText("Cantidad"), { target: { value: "2" } });
+    fireEvent.click(screen.getByRole("button", { name: "Product Explorer" }));
+    expect(confirm).toHaveBeenCalled();
+    expect(onBackToProducts).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "Quitar Ramo Aurora" }));
+    expect(screen.getByText("No hay productos en la cotización")).toBeInTheDocument();
+    expect(onSelectedProductIdsChange).not.toHaveBeenCalled();
+    confirm.mockRestore();
   });
 });

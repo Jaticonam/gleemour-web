@@ -6,6 +6,7 @@ import {
   createCatalogCompositionDraft,
   moveProduct,
   resolveCatalogComposition,
+  toCatalogDraftContract,
 } from "./CatalogComposition";
 
 function product(overrides: Partial<Product> = {}): Product {
@@ -36,11 +37,13 @@ const PRODUCTS = [
   product(),
   product({
     id: "GLE-002",
+    title: "Box Corazón",
     category: "para-sorprender",
     categories: ["para-sorprender", "para-enamorar"],
     subcategories: ["pense-en-ti"],
     campaigns: ["dia-de-la-novia"],
     priority: 20,
+    price: 80,
   }),
   product({ id: "GLE-003", status: "Borrador", priority: 30 }),
 ];
@@ -62,6 +65,34 @@ describe("CatalogComposition", () => {
     ]);
     expect(result.included.map(({ id }) => id)).toEqual(["GLE-002", "GLE-001"]);
     expect(result.excluded.map(({ id }) => id)).toEqual(["GLE-003"]);
+  });
+
+  it("aplica exclusiones manuales reversibles sin alterar la fuente", () => {
+    const draft = createCatalogCompositionDraft();
+    draft.manuallyExcludedProductIds = ["GLE-002"];
+
+    const excluded = resolveCatalogComposition(PRODUCTS, draft);
+    expect(excluded.candidates.map(({ id }) => id)).toEqual([
+      "GLE-001",
+      "GLE-002",
+      "GLE-003",
+    ]);
+    expect(excluded.manuallyExcluded.map(({ id }) => id)).toEqual(["GLE-002"]);
+
+    draft.manuallyExcludedProductIds = [];
+    expect(resolveCatalogComposition(PRODUCTS, draft).included.map(({ id }) => id))
+      .toEqual(["GLE-002", "GLE-001"]);
+  });
+
+  it("ordena globalmente por nombre y precio", () => {
+    const draft = createCatalogCompositionDraft();
+    draft.sortMode = "name-asc";
+    expect(resolveCatalogComposition(PRODUCTS, draft).included.map(({ id }) => id))
+      .toEqual(["GLE-002", "GLE-001"]);
+
+    draft.sortMode = "price-desc";
+    expect(resolveCatalogComposition(PRODUCTS, draft).included.map(({ id }) => id))
+      .toEqual(["GLE-001", "GLE-002"]);
   });
 
   it("crea una selección personalizada sin duplicados", () => {
@@ -107,5 +138,28 @@ describe("CatalogComposition", () => {
   it("mueve productos sin salir de los límites", () => {
     expect(moveProduct(["A", "B", "C"], "B", "up")).toEqual(["B", "A", "C"]);
     expect(moveProduct(["A", "B", "C"], "C", "down")).toEqual(["A", "B", "C"]);
+  });
+
+  it("expone un contrato draft neutral para JUNG CORE", () => {
+    const draft = createCatalogCompositionDraft(["GLE-001", "GLE-002"]);
+    draft.settings.title = "Selección comercial";
+    draft.manuallyExcludedProductIds = ["GLE-002"];
+
+    const contract = toCatalogDraftContract(
+      draft,
+      resolveCatalogComposition(PRODUCTS, draft),
+    );
+
+    expect(contract).toMatchObject({
+      status: "draft",
+      compositionStrategy: "dynamic",
+      source: { type: "manual", productIds: ["GLE-001", "GLE-002"] },
+      composition: {
+        productIds: ["GLE-001"],
+        excludedProductIds: ["GLE-002"],
+        order: ["GLE-001"],
+      },
+      settings: { title: "Selección comercial" },
+    });
   });
 });

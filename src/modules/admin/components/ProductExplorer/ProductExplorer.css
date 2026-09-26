@@ -3,8 +3,9 @@
 ========================================================= */
 
 .gla-explorer {
-  width: min(1320px, 100%);
-  padding: 34px 34px 64px;
+  width: min(var(--gla-content-max-width), 100%);
+  margin-inline: auto;
+  padding: clamp(28px, 2vw, 40px) var(--gla-content-padding) 72px;
 }
 
 .gla-explorer-header {
@@ -22,7 +23,7 @@
 
 .gla-explorer-kicker span {
   color: var(--w-secondary-strong);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 850;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -34,13 +35,13 @@
   border-radius: 999px;
   background: #ffffff;
   color: var(--w-muted);
-  font-size: 0.56rem;
+  font-size: 0.68rem;
 }
 
 .gla-explorer-header h1 {
   margin: 9px 0 0;
   color: var(--w-heading);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2.5rem, 3vw, 3rem);
   line-height: 1;
 }
 
@@ -48,14 +49,14 @@
   max-width: 720px;
   margin: 14px 0 0;
   color: var(--w-muted);
-  font-size: 0.86rem;
+  font-size: 0.94rem;
   line-height: 1.65;
 }
 
 .gla-refresh-button,
 .gla-results-heading button,
 .gla-explorer-state button {
-  min-height: 39px;
+  min-height: var(--gla-control-height);
   padding: 0 13px;
   border: 1px solid var(--w-border);
   border-radius: 11px;
@@ -66,7 +67,7 @@
   justify-content: center;
   gap: 8px;
   font: inherit;
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 800;
   cursor: pointer;
   transition:
@@ -170,13 +171,13 @@
 
 .gla-metrics span {
   color: var(--w-muted);
-  font-size: 0.61rem;
+  font-size: 0.72rem;
   font-weight: 700;
 }
 
 .gla-metrics strong {
   color: var(--w-heading);
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   line-height: 1;
 }
 
@@ -191,7 +192,7 @@
   border-radius: 15px;
   background: rgba(255, 255, 255, 0.92);
   display: grid;
-  grid-template-columns: minmax(260px, 1.6fr) minmax(160px, 0.7fr) minmax(180px, 0.8fr);
+  grid-template-columns: minmax(320px, 1.7fr) minmax(190px, 0.65fr) minmax(210px, 0.7fr);
   gap: 10px;
 }
 
@@ -204,12 +205,12 @@
 .gla-search-control > span,
 .gla-select-control > span {
   color: var(--w-muted);
-  font-size: 0.58rem;
+  font-size: 0.7rem;
   font-weight: 800;
 }
 
 .gla-search-control > div {
-  min-height: 40px;
+  min-height: var(--gla-control-height);
   padding: 0 11px;
   border: 1px solid var(--w-border);
   border-radius: 10px;
@@ -224,13 +225,13 @@
 .gla-select-control select {
   width: 100%;
   min-width: 0;
-  min-height: 40px;
+  min-height: var(--gla-control-height);
   border: 1px solid var(--w-border);
   border-radius: 10px;
   background: var(--w-surface-soft);
   color: var(--w-heading);
   font: inherit;
-  font-size: 0.71rem;
+  font-size: 0.82rem;
   outline: none;
 }
 
@@ -309,12 +310,12 @@
 
 .gla-results-heading strong {
   color: var(--w-heading);
-  font-size: 0.78rem;
+  font-size: 0.92rem;
 }
 
 .gla-results-heading span {
   color: var(--w-muted);
-  font-size: 0.64rem;
+  font-size: 0.74rem;
 }
 
 .gla-results-heading button {
@@ -343,12 +344,12 @@
 
 .gla-selection-bar strong {
   color: var(--w-heading);
-  font-size: 0.66rem;
+  font-size: 0.78rem;
 }
 
 .gla-selection-bar span {
   color: var(--w-muted);
-  font-size: 0.55rem;
+  font-size: 0.68rem;
 }
 
 .gla-selection-bar > div:last-child {

@@ -4,12 +4,10 @@ import type { Product } from "@/shared/types/product";
 import { getCategoryName } from "@/tenant/config/catalog";
 
 import { getAdminStatusClassName } from "./ProductExplorer.utils";
-
-const PEN_FORMATTER = new Intl.NumberFormat("es-PE", {
-  style: "currency",
-  currency: "PEN",
-  minimumFractionDigits: 2,
-});
+import {
+  formatProductCurrency,
+  getProductActivePrice,
+} from "./ProductExplorer.fields";
 
 interface AdminProductRowProps {
   product: Product;
@@ -31,10 +29,7 @@ export function AdminProductRow({
   onInspect,
 }: AdminProductRowProps) {
   const statusClass = getAdminStatusClassName(product.status);
-  const activePrice =
-    product.offer_price && product.offer_price > 0
-      ? product.offer_price
-      : product.price;
+  const activePrice = getProductActivePrice(product);
   return (
     <article className={`gla-product-row${selected ? " gla-product-row-selected" : ""}`}>
       <label className="gla-product-selector">
@@ -76,9 +71,9 @@ export function AdminProductRow({
         <div>
           <dt>Precio</dt>
           <dd>
-            {PEN_FORMATTER.format(activePrice)}
+            {formatProductCurrency(activePrice)}
             {activePrice !== product.price ? (
-              <small>{PEN_FORMATTER.format(product.price)}</small>
+              <small>{formatProductCurrency(product.price)}</small>
             ) : null}
           </dd>
         </div>

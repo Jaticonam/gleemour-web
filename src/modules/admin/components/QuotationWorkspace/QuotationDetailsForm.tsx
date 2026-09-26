@@ -40,16 +40,33 @@ export function QuotationDetailsForm({
           <input
             value={client.whatsapp}
             onChange={(event) => onClientChange({ whatsapp: event.target.value })}
-            placeholder="Ej. 51900111222"
+            placeholder="Número con código de país"
             inputMode="tel"
           />
         </label>
         <label>
-          <span>Documento</span>
+          <span>Tipo de documento</span>
+          <select
+            value={client.documentType ?? ""}
+            onChange={(event) => onClientChange({
+              documentType: event.target.value as QuotationClient["documentType"],
+            })}
+          >
+            <option value="">Sin especificar</option>
+            <option value="DNI">DNI</option>
+            <option value="RUC">RUC</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </label>
+        <label>
+          <span>Número de documento</span>
           <input
-            value={client.document}
-            onChange={(event) => onClientChange({ document: event.target.value })}
-            placeholder="DNI o RUC"
+            value={client.documentNumber ?? client.document}
+            onChange={(event) => onClientChange({
+              documentNumber: event.target.value,
+              document: event.target.value,
+            })}
+            placeholder="Número"
           />
         </label>
         <label>

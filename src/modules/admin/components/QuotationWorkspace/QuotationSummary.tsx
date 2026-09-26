@@ -4,6 +4,7 @@ import type {
   QuotationDraft,
   QuotationTotals,
 } from "@/application/admin/QuotationComposition";
+import { getQuotationValidUntil } from "@/application/admin/QuotationComposition";
 import type { QuotationOutputState } from "./QuotationWorkspace";
 
 interface QuotationSummaryProps {
@@ -55,6 +56,7 @@ export function QuotationSummary({
         <div><dt>Productos</dt><dd>{totals.lineCount}</dd></div>
         <div><dt>Unidades</dt><dd>{totals.totalUnits}</dd></div>
         <div className="gla-quotation-total"><dt>Total</dt><dd>{PEN_FORMATTER.format(totals.total)}</dd></div>
+        <div><dt>Válida hasta</dt><dd>{getQuotationValidUntil(draft.conditions) || "Pendiente"}</dd></div>
       </dl>
 
       <button type="button" className="gla-save-draft" onClick={onSave}>

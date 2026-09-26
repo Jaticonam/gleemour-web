@@ -25,13 +25,13 @@
 .gla-composition-panel > header h2 {
   margin: 5px 0 0;
   color: var(--w-heading);
-  font-size: 1rem;
+  font-size: 1.15rem;
 }
 
 .gla-composition-panel > header p {
   margin: 4px 0 0;
   color: var(--w-muted);
-  font-size: 0.59rem;
+  font-size: 0.72rem;
 }
 
 .gla-preview-button {
@@ -42,6 +42,31 @@
 .gla-preview-button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
+}
+
+.gla-sort-control {
+  margin: 10px 0 13px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.gla-sort-control span {
+  color: var(--w-muted);
+  font-size: 0.69rem;
+  font-weight: 800;
+}
+
+.gla-sort-control select {
+  min-height: 38px;
+  padding: 0 9px;
+  border: 1px solid var(--w-border);
+  border-radius: 9px;
+  background: #ffffff;
+  color: var(--w-heading);
+  font: inherit;
+  font-size: 0.73rem;
 }
 
 .gla-composition-list {
@@ -98,21 +123,21 @@
 
 .gla-composition-product span {
   color: var(--w-muted);
-  font-size: 0.51rem;
+  font-size: 0.63rem;
   font-weight: 800;
 }
 
 .gla-composition-product strong {
   overflow: hidden;
   color: var(--w-heading);
-  font-size: 0.68rem;
+  font-size: 0.84rem;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .gla-composition-product small {
   color: var(--w-primary-dark);
-  font-size: 0.56rem;
+  font-size: 0.69rem;
   font-weight: 800;
 }
 
@@ -206,6 +231,37 @@
 .gla-excluded-products li strong {
   color: var(--w-muted);
   font-size: 0.53rem;
+}
+
+.gla-excluded-products li button {
+  padding: 3px 7px;
+  border: 1px solid currentColor;
+  border-radius: 7px;
+  background: transparent;
+  color: #7f6219;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: inherit;
+  font-size: 0.53rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.gla-output-readiness {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--w-border);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--w-muted);
+  font-size: 0.55rem;
+}
+
+.gla-output-readiness strong {
+  color: var(--w-heading);
+  text-align: right;
 }
 
 .gla-preview-layer {

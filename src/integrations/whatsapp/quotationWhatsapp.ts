@@ -1,6 +1,8 @@
 import {
   getQuotationTotals,
-  type QuotationDraft,
+  getQuotationLineSubtotal,
+  normalizeQuotationWhatsapp,
+  type QuotationSnapshot,
 } from "@/application/admin/QuotationComposition";
 
 const PEN_FORMATTER = new Intl.NumberFormat("es-PE", {
@@ -9,18 +11,14 @@ const PEN_FORMATTER = new Intl.NumberFormat("es-PE", {
   minimumFractionDigits: 2,
 });
 
-export function normalizeWhatsappNumber(value: string): string {
-  return value.replace(/\D/g, "");
-}
-
 export function buildQuotationWhatsAppMessage(
-  draft: QuotationDraft,
+  draft: QuotationSnapshot,
   publicUrl?: string,
 ): string {
   const totals = getQuotationTotals(draft.lines);
   const lines = draft.lines.map(
     (line) =>
-      `• ${line.quantity} × ${line.title} — ${PEN_FORMATTER.format(line.subtotal)}`,
+      `• ${line.quantity} × ${line.productName} — ${PEN_FORMATTER.format(getQuotationLineSubtotal(line))}`,
   );
   const sections = [
     "*✨ Cotización Gleemour*",
@@ -40,10 +38,10 @@ export function buildQuotationWhatsAppMessage(
 }
 
 export function buildQuotationWhatsAppUrl(
-  draft: QuotationDraft,
+  draft: QuotationSnapshot,
   publicUrl?: string,
 ): string {
-  const number = normalizeWhatsappNumber(draft.client.whatsapp);
+  const number = normalizeQuotationWhatsapp(draft.client.whatsapp);
   return `https://wa.me/${number}?text=${encodeURIComponent(
     buildQuotationWhatsAppMessage(draft, publicUrl),
   )}`;

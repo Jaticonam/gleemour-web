@@ -8,19 +8,63 @@ export type CatalogCompositionMode =
   | "campaign"
   | "custom";
 
+export type CatalogSource =
+  | { type: "all" }
+  | { type: "category"; categoryId: string }
+  | { type: "subcategory"; categoryId: string; subcategoryId: string }
+  | { type: "campaign"; campaignId: string }
+  | { type: "manual"; productIds: string[] };
+
+export type CatalogSortMode =
+  | "manual"
+  | "name-asc"
+  | "name-desc"
+  | "price-asc"
+  | "price-desc"
+  | "priority";
+
+export interface CatalogSettings {
+  title: string;
+}
+
+export type CatalogLifecycleStatus = "draft" | "ready" | "published" | "archived";
+export type CatalogCompositionStrategy = "dynamic" | "snapshot";
+
+export interface CatalogCompositionSnapshot {
+  productIds: string[];
+  excludedProductIds: string[];
+  order: string[];
+}
+
+/** Provider-neutral boundary for future CatalogVersion persistence in JUNG CORE. */
+export interface CatalogDraftContract {
+  catalogId?: string;
+  version?: number;
+  status: "draft";
+  compositionStrategy: CatalogCompositionStrategy;
+  source: CatalogSource;
+  composition: CatalogCompositionSnapshot;
+  settings: CatalogSettings;
+}
+
 export interface CatalogCompositionDraft {
   mode: CatalogCompositionMode;
-  title: string;
+  settings: CatalogSettings;
   categoryId: string;
   subcategoryId: string;
   campaignId: string;
   customProductIds: string[];
   orderedProductIds: string[];
+  manuallyExcludedProductIds: string[];
+  sortMode: CatalogSortMode;
 }
 
 export interface CatalogCompositionResult {
   candidates: Product[];
   included: Product[];
+  automaticExcluded: Product[];
+  manuallyExcluded: Product[];
+  /** @deprecated Use automaticExcluded. */
   excluded: Product[];
 }
 
@@ -29,40 +73,67 @@ export function createCatalogCompositionDraft(
 ): CatalogCompositionDraft {
   return {
     mode: customProductIds.length > 0 ? "custom" : "full",
-    title: "Catálogo Gleemour",
+    settings: { title: "Catálogo Gleemour" },
     categoryId: "",
     subcategoryId: "",
     campaignId: "",
     customProductIds: [...new Set(customProductIds)],
     orderedProductIds: [],
+    manuallyExcludedProductIds: [],
+    sortMode: "manual",
   };
 }
 
-function matchesDraft(product: Product, draft: CatalogCompositionDraft): boolean {
-  if (draft.mode === "full") return true;
-
+export function getCatalogSource(draft: CatalogCompositionDraft): CatalogSource {
+  if (draft.mode === "full") return { type: "all" };
   if (draft.mode === "category") {
-    return Boolean(draft.categoryId) &&
-      [product.category, ...(product.categories ?? [])].includes(draft.categoryId);
+    return { type: "category", categoryId: draft.categoryId };
+  }
+  if (draft.mode === "subcategory") {
+    return {
+      type: "subcategory",
+      categoryId: draft.categoryId,
+      subcategoryId: draft.subcategoryId,
+    };
+  }
+  if (draft.mode === "campaign") {
+    return { type: "campaign", campaignId: draft.campaignId };
+  }
+  return { type: "manual", productIds: draft.customProductIds };
+}
+
+function matchesSource(product: Product, source: CatalogSource): boolean {
+  if (source.type === "all") return true;
+
+  if (source.type === "category") {
+    return Boolean(source.categoryId) &&
+      [product.category, ...(product.categories ?? [])].includes(source.categoryId);
   }
 
-  if (draft.mode === "subcategory") {
+  if (source.type === "subcategory") {
     const matchesCategory = [
       product.category,
       ...(product.categories ?? []),
-    ].includes(draft.categoryId);
+    ].includes(source.categoryId);
 
-    return Boolean(draft.categoryId && draft.subcategoryId) &&
+    return Boolean(source.categoryId && source.subcategoryId) &&
       matchesCategory &&
-      (product.subcategories ?? []).includes(draft.subcategoryId);
+      (product.subcategories ?? []).includes(source.subcategoryId);
   }
 
-  if (draft.mode === "campaign") {
-    return Boolean(draft.campaignId) &&
-      (product.campaigns ?? []).includes(draft.campaignId);
+  if (source.type === "campaign") {
+    return Boolean(source.campaignId) &&
+      (product.campaigns ?? []).includes(source.campaignId);
   }
 
-  return draft.customProductIds.includes(product.id);
+  return source.productIds.includes(product.id);
+}
+
+export function resolveCatalogSource(
+  products: readonly Product[],
+  source: CatalogSource,
+): Product[] {
+  return products.filter((product) => matchesSource(product, source));
 }
 
 function orderProducts(
@@ -88,20 +159,74 @@ function orderProducts(
   });
 }
 
+function getPrice(product: Product): number {
+  return product.offer_price ?? product.price;
+}
+
+function sortProducts(
+  products: readonly Product[],
+  draft: CatalogCompositionDraft,
+): Product[] {
+  if (draft.sortMode === "manual") {
+    return orderProducts(products, draft.orderedProductIds);
+  }
+
+  return [...products].sort((left, right) => {
+    if (draft.sortMode === "name-asc") return left.title.localeCompare(right.title, "es");
+    if (draft.sortMode === "name-desc") return right.title.localeCompare(left.title, "es");
+    if (draft.sortMode === "price-asc") return getPrice(left) - getPrice(right);
+    if (draft.sortMode === "price-desc") return getPrice(right) - getPrice(left);
+    return right.priority - left.priority;
+  });
+}
+
 export function resolveCatalogComposition(
   products: readonly Product[],
   draft: CatalogCompositionDraft,
 ): CatalogCompositionResult {
-  const candidates = products.filter((product) => matchesDraft(product, draft));
-  const included = orderProducts(
-    candidates.filter((product) => isVisibleProductStatus(product.status)),
-    draft.orderedProductIds,
-  );
-  const excluded = candidates.filter(
+  const candidates = resolveCatalogSource(products, getCatalogSource(draft));
+  const automaticExcluded = candidates.filter(
     (product) => !isVisibleProductStatus(product.status),
   );
+  const publicCandidates = candidates.filter((product) =>
+    isVisibleProductStatus(product.status),
+  );
+  const manuallyExcluded = publicCandidates.filter((product) =>
+    draft.manuallyExcludedProductIds.includes(product.id),
+  );
+  const included = sortProducts(
+    publicCandidates.filter(
+      (product) => !draft.manuallyExcludedProductIds.includes(product.id),
+    ),
+    draft,
+  );
 
-  return { candidates, included, excluded };
+  return {
+    candidates,
+    included,
+    automaticExcluded,
+    manuallyExcluded,
+    excluded: automaticExcluded,
+  };
+}
+
+export function toCatalogDraftContract(
+  draft: CatalogCompositionDraft,
+  result: CatalogCompositionResult,
+): CatalogDraftContract {
+  const productIds = result.included.map((product) => product.id);
+
+  return {
+    status: "draft",
+    compositionStrategy: "dynamic",
+    source: getCatalogSource(draft),
+    composition: {
+      productIds,
+      excludedProductIds: result.manuallyExcluded.map((product) => product.id),
+      order: productIds,
+    },
+    settings: { ...draft.settings },
+  };
 }
 
 export function moveProduct(

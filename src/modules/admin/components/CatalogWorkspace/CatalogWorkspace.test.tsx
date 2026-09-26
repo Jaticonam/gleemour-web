@@ -96,14 +96,14 @@ describe("CatalogWorkspace", () => {
     expect(screen.queryByRole("button", { name: "Subir Borrador Interno" }))
       .not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("1 producto excluido por estado"));
+    fireEvent.click(screen.getByText("1 producto excluido automáticamente"));
     expect(screen.getByText("Borrador Interno")).toBeInTheDocument();
   });
 
   it("usa la selección personalizada, permite ordenar y abre preview", async () => {
     renderWorkspace({ selectedProductIds: ["GLE-001", "GLE-002"] });
 
-    expect(await screen.findByText("2 productos seleccionados")).toBeInTheDocument();
+    expect(await screen.findByText("2 productos desde Product Explorer")).toBeInTheDocument();
 
     const list = screen.getByRole("heading", { name: "Productos incluidos" })
       .closest("section");
@@ -120,6 +120,49 @@ describe("CatalogWorkspace", () => {
     fireEvent.click(screen.getByRole("button", { name: "Vista previa" }));
     expect(screen.getByRole("dialog")).toHaveTextContent("Catálogo Gleemour");
     expect(screen.getByRole("dialog")).toHaveTextContent("2 productos listos");
+  });
+
+  it("excluye y restaura localmente sin modificar ProductSelection", async () => {
+    const onSelectedProductIdsChange = vi.fn();
+    renderWorkspace({
+      selectedProductIds: ["GLE-001", "GLE-002"],
+      onSelectedProductIdsChange,
+    });
+
+    expect(await screen.findByText("Ramo Aurora")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", {
+      name: "Excluir Ramo Aurora del catálogo",
+    }));
+
+    expect(screen.queryByRole("button", { name: "Subir Ramo Aurora" }))
+      .not.toBeInTheDocument();
+    expect(screen.getByText("1 producto excluido manualmente")).toBeInTheDocument();
+    expect(onSelectedProductIdsChange).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "Restaurar" }));
+    expect(screen.getByRole("button", { name: "Subir Ramo Aurora" }))
+      .toBeInTheDocument();
+  });
+
+  it("aplica orden global y mantiene el mismo resultado en preview", async () => {
+    renderWorkspace();
+    expect(await screen.findByText("Box Corazón")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Orden global" }), {
+      target: { value: "name-asc" },
+    });
+
+    const panel = screen.getByRole("heading", { name: "Productos incluidos" })
+      .closest("section") as HTMLElement;
+    expect(within(panel).getAllByRole("article")[0]).toHaveTextContent("Box Corazón");
+
+    fireEvent.change(screen.getByLabelText("Título del catálogo"), {
+      target: { value: "Catálogo Primavera" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Vista previa" }));
+    expect(screen.getByRole("dialog")).toHaveTextContent("Catálogo Primavera");
+    expect(within(screen.getByRole("dialog")).getAllByRole("article")[0])
+      .toHaveTextContent("Box Corazón");
   });
 
   it("informa errores y reintenta las tres fuentes", async () => {

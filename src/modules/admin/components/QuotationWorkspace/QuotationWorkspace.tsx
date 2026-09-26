@@ -7,6 +7,7 @@ import { AlertCircle, ArrowLeft, Loader2, RefreshCw } from "lucide-react";
 
 import {
   createQuotationDraft,
+  createQuotationSnapshot,
   getQuotationTotals,
   isQuotationReady,
   updateQuotationLine,
@@ -51,7 +52,6 @@ export type QuotationOutputState =
 
 export function QuotationWorkspace({
   selectedProductIds,
-  onSelectedProductIdsChange,
   onBackToProducts,
   loadProducts = loadAllProductsForAdmin,
   draftStore,
@@ -81,6 +81,7 @@ export function QuotationWorkspace({
   const [outputState, setOutputState] = useState<QuotationOutputState>({
     status: "idle",
   });
+  const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -123,9 +124,10 @@ export function QuotationWorkspace({
 
   const changeLine = (
     productId: string,
-    patch: Partial<Pick<QuotationLineSnapshot, "quantity" | "unitPrice">>,
+    patch: Partial<Pick<QuotationLineSnapshot, "quantity" | "quotedUnitPrice">>,
   ) => {
     setOutputState({ status: "idle" });
+    setDirty(true);
     setDraft((current) =>
       current
         ? {
@@ -142,6 +144,7 @@ export function QuotationWorkspace({
 
   const removeLine = (productId: string) => {
     setOutputState({ status: "idle" });
+    setDirty(true);
     setDraft((current) =>
       current
         ? {
@@ -150,13 +153,11 @@ export function QuotationWorkspace({
           }
         : current,
     );
-    onSelectedProductIdsChange(
-      selectedProductIds.filter((id) => id !== productId),
-    );
   };
 
   const changeClient = (patch: Partial<QuotationClient>) => {
     setOutputState({ status: "idle" });
+    setDirty(true);
     setDraft((current) =>
       current ? { ...current, client: { ...current.client, ...patch } } : current,
     );
@@ -164,6 +165,7 @@ export function QuotationWorkspace({
 
   const changeConditions = (patch: Partial<QuotationConditions>) => {
     setOutputState({ status: "idle" });
+    setDirty(true);
     setDraft((current) =>
       current
         ? { ...current, conditions: { ...current.conditions, ...patch } }
@@ -176,11 +178,14 @@ export function QuotationWorkspace({
     const updated = { ...draft, updatedAt: now().toISOString() };
     setDraft(updated);
     setSavedDrafts(store.save(updated));
+    setDirty(false);
     setStatusMessage("Borrador guardado en este navegador.");
   };
 
   const startNewDraft = () => {
+    if (dirty && !window.confirm("Hay cambios sin guardar. ¿Descartarlos y crear una nueva cotización?")) return;
     setDraft(createQuotationDraft(products, selectedProductIds, now()));
+    setDirty(false);
     setStatusMessage("");
     setOutputState({ status: "idle" });
   };
@@ -210,7 +215,12 @@ export function QuotationWorkspace({
     if (!draft || !isQuotationReady(draft)) return;
     const publicUrl =
       outputState.status === "ready" ? outputState.publicUrl : undefined;
-    openExternal(buildQuotationWhatsAppUrl(draft, publicUrl));
+    openExternal(buildQuotationWhatsAppUrl(createQuotationSnapshot(draft, now()), publicUrl));
+  };
+
+  const backToProducts = () => {
+    if (dirty && !window.confirm("Hay cambios sin guardar. ¿Salir de la cotización?")) return;
+    onBackToProducts();
   };
 
   return (
@@ -226,7 +236,7 @@ export function QuotationWorkspace({
         </div>
         <div>
           <button type="button" onClick={startNewDraft} disabled={loading}>Nueva cotización</button>
-          <button type="button" onClick={onBackToProducts}>
+          <button type="button" onClick={backToProducts}>
             <ArrowLeft size={16} aria-hidden="true" /> Product Explorer
           </button>
         </div>
@@ -289,6 +299,7 @@ export function QuotationWorkspace({
             onWhatsapp={sendWhatsapp}
             onLoad={(saved) => {
               setDraft(saved);
+              setDirty(false);
               setStatusMessage("Borrador restaurado.");
               setOutputState({ status: "idle" });
             }}

@@ -3,8 +3,9 @@
 ========================================================= */
 
 .gla-catalog-workspace {
-  width: min(1440px, 100%);
-  padding: 34px 34px 68px;
+  width: min(var(--gla-content-max-width), 100%);
+  margin-inline: auto;
+  padding: clamp(28px, 2vw, 40px) var(--gla-content-padding) 72px;
 }
 .gla-catalog-workspace-header {
   display: flex;
@@ -21,7 +22,7 @@
 
 .gla-catalog-workspace-kicker span {
   color: var(--w-secondary-strong);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 850;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -33,13 +34,13 @@
   border-radius: 999px;
   background: #ffffff;
   color: var(--w-muted);
-  font-size: 0.56rem;
+  font-size: 0.68rem;
 }
 
 .gla-catalog-workspace-header h1 {
   margin: 9px 0 0;
   color: var(--w-heading);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2.5rem, 3vw, 3rem);
   line-height: 1;
 }
 
@@ -47,14 +48,14 @@
   max-width: 720px;
   margin: 14px 0 0;
   color: var(--w-muted);
-  font-size: 0.86rem;
+  font-size: 0.94rem;
   line-height: 1.65;
 }
 
 .gla-workspace-back,
 .gla-workspace-state button,
 .gla-preview-button {
-  min-height: 39px;
+  min-height: var(--gla-control-height);
   padding: 0 13px;
   border: 1px solid var(--w-border);
   border-radius: 11px;
@@ -65,7 +66,7 @@
   justify-content: center;
   gap: 8px;
   font: inherit;
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 800;
   cursor: pointer;
 }
@@ -119,35 +120,55 @@
 
 .gla-composition-metrics span {
   color: var(--w-muted);
-  font-size: 0.59rem;
+  font-size: 0.7rem;
   font-weight: 750;
 }
 
 .gla-composition-metrics strong {
   color: var(--w-heading);
-  font-size: 1.16rem;
+  font-size: 1.35rem;
 }
 
 .gla-composition-layout {
   margin-top: 14px;
   display: grid;
-  grid-template-columns: minmax(290px, 0.72fr) minmax(520px, 1.45fr);
-  gap: 14px;
+  grid-template-columns: clamp(360px, 24vw, 420px) minmax(0, 1fr);
+  gap: var(--gla-workspace-gap);
   align-items: start;
 }
 
 .gla-composition-builder,
-.gla-composition-panel {
+.gla-composition-panel,
+.gla-catalog-settings {
+  min-width: 0;
   border: 1px solid var(--w-border);
   border-radius: 17px;
   background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 10px 30px rgba(106, 90, 138, 0.05);
 }
 
-.gla-composition-builder {
+.gla-builder-stack {
   position: sticky;
   top: 74px;
+  display: grid;
+  gap: 12px;
+}
+
+.gla-composition-builder,
+.gla-catalog-settings {
   padding: 17px;
+}
+
+.gla-draft-status {
+  display: inline-flex;
+  margin-top: 12px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: var(--w-primary-soft);
+  color: var(--w-primary-dark);
+  font-size: 0.55rem;
+  font-weight: 850;
+  text-transform: uppercase;
 }
 
 .gla-builder-heading {
@@ -175,12 +196,12 @@
 
 .gla-builder-heading strong {
   color: var(--w-heading);
-  font-size: 0.78rem;
+  font-size: 0.9rem;
 }
 
 .gla-builder-heading small {
   color: var(--w-muted);
-  font-size: 0.58rem;
+  font-size: 0.7rem;
 }
 
 .gla-mode-grid {
@@ -248,14 +269,14 @@
 .gla-builder-control input,
 .gla-builder-control select {
   width: 100%;
-  min-height: 41px;
+  min-height: var(--gla-control-height);
   padding: 0 10px;
   border: 1px solid var(--w-border);
   border-radius: 10px;
   background: var(--w-surface-soft);
   color: var(--w-heading);
   font: inherit;
-  font-size: 0.7rem;
+  font-size: 0.82rem;
   outline: 0;
 }
 

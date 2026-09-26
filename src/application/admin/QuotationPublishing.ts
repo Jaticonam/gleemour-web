@@ -1,6 +1,7 @@
 import {
-  getQuotationTotals,
+  createQuotationSnapshot,
   type QuotationDraft,
+  type QuotationSnapshot,
 } from "./QuotationComposition";
 
 export const QUOTATION_DOCUMENT_SCHEMA_VERSION =
@@ -23,9 +24,7 @@ export interface QuotationDocumentRequest {
   locale: "es-PE";
   currency: "PEN";
   requestedAt: string;
-  quotation: QuotationDraft & {
-    totals: ReturnType<typeof getQuotationTotals>;
-  };
+  quotation: QuotationSnapshot;
 }
 
 export type QuotationDocumentResult =
@@ -84,11 +83,7 @@ export function createQuotationDocumentRequest(
     currency: "PEN",
     requestedAt: requestedAt.toISOString(),
     quotation: {
-      ...draft,
-      client: { ...draft.client },
-      conditions: { ...draft.conditions },
-      lines: draft.lines.map((line) => ({ ...line })),
-      totals: getQuotationTotals(draft.lines),
+      ...createQuotationSnapshot(draft, requestedAt),
     },
   };
 }

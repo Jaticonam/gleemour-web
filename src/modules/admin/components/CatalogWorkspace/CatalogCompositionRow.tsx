@@ -6,9 +6,8 @@ interface CatalogCompositionRowProps {
   product: Product;
   index: number;
   total: number;
-  removable: boolean;
   onMove: (productId: string, direction: "up" | "down") => void;
-  onRemove: (productId: string) => void;
+  onExclude: (productId: string) => void;
 }
 const PEN_FORMATTER = new Intl.NumberFormat("es-PE", {
   style: "currency",
@@ -20,9 +19,8 @@ export function CatalogCompositionRow({
   product,
   index,
   total,
-  removable,
   onMove,
-  onRemove,
+  onExclude,
 }: CatalogCompositionRowProps) {
   const price = product.offer_price ?? product.price;
 
@@ -58,16 +56,14 @@ export function CatalogCompositionRow({
         >
           <ChevronDown size={15} aria-hidden="true" />
         </button>
-        {removable ? (
-          <button
-            type="button"
-            className="gla-composition-remove"
-            aria-label={`Quitar ${product.title}`}
-            onClick={() => onRemove(product.id)}
-          >
-            <X size={15} aria-hidden="true" />
-          </button>
-        ) : null}
+        <button
+          type="button"
+          className="gla-composition-remove"
+          aria-label={`Excluir ${product.title} del catálogo`}
+          onClick={() => onExclude(product.id)}
+        >
+          <X size={15} aria-hidden="true" />
+        </button>
       </div>
     </article>
   );

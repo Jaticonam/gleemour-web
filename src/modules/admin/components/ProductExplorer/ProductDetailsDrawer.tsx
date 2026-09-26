@@ -7,12 +7,10 @@ import type { Product } from "@/shared/types/product";
 import { getCategoryName } from "@/tenant/config/catalog";
 
 import { getAdminStatusClassName } from "./ProductExplorer.utils";
-
-const PEN_FORMATTER = new Intl.NumberFormat("es-PE", {
-  style: "currency",
-  currency: "PEN",
-  minimumFractionDigits: 2,
-});
+import {
+  formatProductCurrency,
+  getProductActivePrice,
+} from "./ProductExplorer.fields";
 
 interface ProductDetailsDrawerProps {
   product: Product | null;
@@ -40,10 +38,7 @@ export function ProductDetailsDrawer({
 
   if (!product) return null;
 
-  const activePrice =
-    product.offer_price && product.offer_price > 0
-      ? product.offer_price
-      : product.price;
+  const activePrice = getProductActivePrice(product);
   const categories = [
     ...new Set([product.category, ...product.categories].filter(Boolean)),
   ];
@@ -92,9 +87,9 @@ export function ProductDetailsDrawer({
         <section className="gla-product-drawer-section">
           <h3>Comercial</h3>
           <dl>
-            <div><dt>Precio</dt><dd>{PEN_FORMATTER.format(activePrice)}</dd></div>
+            <div><dt>Precio</dt><dd>{formatProductCurrency(activePrice)}</dd></div>
             {activePrice !== product.price ? (
-              <div><dt>Precio anterior</dt><dd>{PEN_FORMATTER.format(product.price)}</dd></div>
+              <div><dt>Precio anterior</dt><dd>{formatProductCurrency(product.price)}</dd></div>
             ) : null}
             <div><dt>Stock</dt><dd>{getStockLabel(product.stock)}</dd></div>
             <div><dt>Prioridad</dt><dd>{product.priority}</dd></div>

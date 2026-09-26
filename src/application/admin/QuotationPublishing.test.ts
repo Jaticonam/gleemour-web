@@ -10,7 +10,7 @@ import {
 describe("QuotationPublishing", () => {
   it("crea un request versionado, idempotente y desacoplado del draft", () => {
     const draft = createQuotationDraft([], [], new Date("2026-09-19T15:00:00Z"));
-    draft.client.name = "Ana";
+    draft.client.name = "Cliente Demo";
 
     const request = createQuotationDocumentRequest(
       draft,
@@ -28,7 +28,7 @@ describe("QuotationPublishing", () => {
     });
 
     draft.client.name = "Mutado";
-    expect(request.quotation.client.name).toBe("Ana");
+    expect(request.quotation.client.name).toBe("Cliente Demo");
   });
 
   it("delega la salida PDF exclusivamente al port documental", async () => {

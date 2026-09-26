@@ -30,6 +30,28 @@ function isQuotationDraft(value: unknown): value is QuotationDraft {
   );
 }
 
+function normalizeDraft(draft: QuotationDraft): QuotationDraft {
+  return {
+    ...draft,
+    quotationId: draft.quotationId ?? draft.id,
+    revision: draft.revision ?? 1,
+    status: "draft",
+    client: {
+      ...draft.client,
+      documentType: draft.client.documentType ?? "",
+      documentNumber: draft.client.documentNumber ?? draft.client.document ?? "",
+    },
+    lines: draft.lines.map((line) => ({
+      ...line,
+      lineId: line.lineId ?? `line:${line.productId}`,
+      productCode: line.productCode ?? line.productId,
+      productName: line.productName ?? line.title,
+      baseUnitPrice: line.baseUnitPrice ?? line.originalUnitPrice,
+      quotedUnitPrice: line.quotedUnitPrice ?? line.unitPrice,
+    })),
+  };
+}
+
 export function createQuotationDraftStore(
   storage: DraftStorage,
 ): QuotationDraftStore {
@@ -43,6 +65,7 @@ export function createQuotationDraftStore(
 
       return parsed
         .filter(isQuotationDraft)
+        .map(normalizeDraft)
         .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
     } catch {
       return [];

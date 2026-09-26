@@ -1,12 +1,12 @@
 import { ImageOff, Trash2 } from "lucide-react";
 
-import type { QuotationLineSnapshot } from "@/application/admin/QuotationComposition";
+import { getQuotationLineSubtotal, type QuotationLineSnapshot } from "@/application/admin/QuotationComposition";
 
 interface QuotationLineEditorProps {
   lines: readonly QuotationLineSnapshot[];
   onLineChange: (
     productId: string,
-    patch: Partial<Pick<QuotationLineSnapshot, "quantity" | "unitPrice">>,
+    patch: Partial<Pick<QuotationLineSnapshot, "quantity" | "quotedUnitPrice">>,
   ) => void;
   onRemove: (productId: string) => void;
 }
@@ -50,8 +50,8 @@ export function QuotationLineEditor({
             </div>
 
             <div className="gla-quotation-line-product">
-              <span>{line.productId} · {line.status}</span>
-              <strong>{line.title}</strong>
+              <span>{line.productCode} · {line.status}</span>
+              <strong>{line.productName}</strong>
               <small className={exceedsStock ? "gla-stock-warning" : ""}>
                 {getStockLabel(line.stockSnapshot)}
                 {exceedsStock ? " · cantidad superior al snapshot" : ""}
@@ -79,21 +79,21 @@ export function QuotationLineEditor({
                 type="number"
                 min="0"
                 step="0.01"
-                value={line.unitPrice}
+                value={line.quotedUnitPrice}
                 onChange={(event) =>
                   onLineChange(line.productId, {
-                    unitPrice: Number(event.target.value),
+                    quotedUnitPrice: Number(event.target.value),
                   })
                 }
               />
-              {line.unitPrice !== line.originalUnitPrice ? (
-                <small>Base {PEN_FORMATTER.format(line.originalUnitPrice)}</small>
+              {line.quotedUnitPrice !== line.baseUnitPrice ? (
+                <small>Base {PEN_FORMATTER.format(line.baseUnitPrice)}</small>
               ) : null}
             </label>
 
             <div className="gla-quotation-line-subtotal">
               <span>Subtotal</span>
-              <strong>{PEN_FORMATTER.format(line.subtotal)}</strong>
+              <strong>{PEN_FORMATTER.format(getQuotationLineSubtotal(line))}</strong>
             </div>
 
             <button
