@@ -26,6 +26,7 @@ import type {
 
 import { CatalogBuilder } from "./CatalogBuilder";
 import { CatalogCompositionPanel } from "./CatalogCompositionPanel";
+import { CatalogImageOutputControl } from "./CatalogImageOutputControl";
 import { CatalogPreviewDialog } from "./CatalogPreviewDialog";
 
 export interface CatalogWorkspaceData {
@@ -266,6 +267,8 @@ export function CatalogWorkspace({
               onPreview={() => setPreviewOpen(true)}
             />
           </div>
+
+          <CatalogImageOutputControl draft={draft} composition={composition} />
         </>
       ) : null}
 
