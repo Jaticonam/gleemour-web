@@ -32,4 +32,4 @@
 .gla-table-action button { width: 31px; height: 31px; border: 1px solid var(--w-border); border-radius: 8px; background: var(--w-primary-soft); color: var(--w-primary-dark); display: inline-grid; place-items: center; cursor: pointer; }
 .gla-density-compact .gla-product-table td { height: 40px; padding-top: 4px; padding-bottom: 4px; }
 .gla-density-compact .gla-table-image { width: 25px; height: 31px; }
-@media (max-width: 700px) { .gla-view-controls { align-items: stretch; flex-wrap: wrap; } .gla-view-switch { margin-right: auto; } .gla-column-picker > div { right: -4px; width: min(280px, calc(100vw - 36px)); } }
+@media (max-width: 700px) { .gla-view-controls { align-items: stretch; flex-wrap: wrap; } .gla-view-switch { min-width: 0; margin-right: auto; flex-wrap: wrap; } .gla-column-picker > div { right: -4px; width: min(280px, calc(100vw - 36px)); } }

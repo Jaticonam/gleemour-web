@@ -8,6 +8,13 @@ import {
 } from "./ProductExplorer.preferences";
 
 describe("Product Explorer preferences", () => {
+  it("usa Tarjetas por defecto y conserva preferencias anteriores de Filas", () => {
+    expect(readProductExplorerPreferences().viewMode).toBe("cards");
+    expect(readProductExplorerPreferences({
+      getItem: () => JSON.stringify({ viewMode: "rows" }),
+    }).viewMode).toBe("rows");
+  });
+
   it("persiste y recupera vista, densidad, columnas y sort", () => {
     const values = new Map<string, string>();
     const storage = {
@@ -23,5 +30,7 @@ describe("Product Explorer preferences", () => {
     writeProductExplorerPreferences({ ...preferences, visibleColumns: [...preferences.visibleColumns] }, storage);
     expect(readProductExplorerPreferences(storage)).toMatchObject({ viewMode: "table", density: "compact", visibleColumns: ["id", "title"] });
     expect(values.has(PRODUCT_EXPLORER_PREFERENCES_KEY)).toBe(true);
+    writeProductExplorerPreferences({ ...preferences, viewMode: "cards", visibleColumns: [...preferences.visibleColumns] }, storage);
+    expect(readProductExplorerPreferences(storage).viewMode).toBe("cards");
   });
 });

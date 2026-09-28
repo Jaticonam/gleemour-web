@@ -1,5 +1,6 @@
 import "./ProductExplorer.css";
 import "./ProductExplorer.products.css";
+import "./ProductExplorer.cards.css";
 import "./ProductExplorer.responsive.css";
 import "./ProductTable.css";
 
@@ -18,6 +19,7 @@ import type { Product } from "@/shared/types/product";
 import { CATEGORIES } from "@/tenant/config/catalog";
 
 import { AdminProductRow } from "./AdminProductRow";
+import { AdminProductCard } from "./AdminProductCard";
 import { ActiveProductFilters } from "./ActiveProductFilters";
 import { ProductDetailsDrawer } from "./ProductDetailsDrawer";
 import { ProductExplorerMetrics } from "./ProductExplorerMetrics";
@@ -401,7 +403,19 @@ export function ProductExplorer({
       ) : null}
 
       {!loading && !error && displayedProducts.length > 0 ? (
-        preferences.viewMode === "rows" ? (
+        preferences.viewMode === "cards" ? (
+          <div className={`gla-card-list gla-card-list-${preferences.density}`}>
+            {displayedProducts.map((product) => (
+              <AdminProductCard
+                key={product.id}
+                product={product}
+                selected={selectedProductIdSet.has(product.id)}
+                onToggle={toggleProduct}
+                onInspect={setInspectedProduct}
+              />
+            ))}
+          </div>
+        ) : preferences.viewMode === "rows" ? (
           <div className={`gla-product-list gla-product-list-${preferences.density}`}>
             {displayedProducts.map((product) => (
               <AdminProductRow

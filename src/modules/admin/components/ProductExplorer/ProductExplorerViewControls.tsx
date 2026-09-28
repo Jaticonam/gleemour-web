@@ -1,4 +1,4 @@
-import { List, Rows3, Table2 } from "lucide-react";
+import { LayoutGrid, List, Rows3, Table2 } from "lucide-react";
 
 import {
   PRODUCT_FIELDS,
@@ -34,6 +34,9 @@ export function ProductExplorerViewControls({
     <div className="gla-view-controls" aria-label="Preferencias de visualización">
       <div className="gla-view-switch" aria-label="Vista" role="group">
         <span>Vista</span>
+        <button type="button" aria-pressed={viewMode === "cards"} onClick={() => onViewModeChange("cards")}>
+          <LayoutGrid size={15} aria-hidden="true" /> Tarjetas
+        </button>
         <button type="button" aria-pressed={viewMode === "rows"} onClick={() => onViewModeChange("rows")}>
           <Rows3 size={15} aria-hidden="true" /> Filas
         </button>

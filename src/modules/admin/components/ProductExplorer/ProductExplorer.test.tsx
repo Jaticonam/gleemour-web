@@ -231,11 +231,31 @@ describe("ProductExplorer", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("comparte dataset y selección entre Vista Filas y Vista Tabla", async () => {
-    render(<ControlledProductExplorer />);
+  it("ofrece Tarjetas, Filas y Tabla sin perder selección ni acciones", async () => {
+    const prepareCatalog = vi.fn();
+    const prepareQuotation = vi.fn();
+    function ExplorerWithActions() {
+      const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
+      return (
+        <ProductExplorer
+          loadProducts={loadControlledProducts}
+          selectedProductIds={selectedProductIds}
+          onSelectedProductIdsChange={setSelectedProductIds}
+          onPrepareCatalog={prepareCatalog}
+          onPrepareQuotation={prepareQuotation}
+        />
+      );
+    }
+    const view = render(<ExplorerWithActions />);
 
     await screen.findByRole("heading", { name: "Ramo Corazón" });
+    expect(screen.getByRole("button", { name: "Tarjetas" })).toHaveAttribute("aria-pressed", "true");
+    expect(view.container.querySelectorAll(".gla-card")).toHaveLength(3);
     fireEvent.click(screen.getByRole("checkbox", { name: "Seleccionar Ramo Corazón" }));
+    fireEvent.click(screen.getByRole("button", { name: "Filas" }));
+    expect(view.container.querySelectorAll(".gla-product-row")).toHaveLength(3);
+    expect(screen.getByRole("checkbox", { name: "Seleccionar Ramo Corazón" })).toBeChecked();
+    expect(screen.getAllByRole("button", { name: "Ver producto" })).toHaveLength(3);
     fireEvent.click(screen.getByRole("button", { name: "Tabla" }));
 
     expect(screen.getByRole("table")).toBeInTheDocument();
@@ -248,6 +268,13 @@ describe("ProductExplorer", () => {
 
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
     expect(screen.getByText("2 seleccionados")).toBeInTheDocument();
+    expect(screen.getByRole("checkbox", { name: "Seleccionar Box Sorpresa" })).toBeChecked();
+    fireEvent.click(screen.getByRole("button", { name: "Preparar catálogo" }));
+    fireEvent.click(screen.getByRole("button", { name: "Cotizar selección" }));
+    expect(prepareCatalog).toHaveBeenCalledTimes(1);
+    expect(prepareQuotation).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole("button", { name: "Tarjetas" }));
+    expect(view.container.querySelectorAll(".gla-card")).toHaveLength(3);
     expect(screen.getByRole("checkbox", { name: "Seleccionar Box Sorpresa" })).toBeChecked();
   });
 

@@ -1,4 +1,5 @@
 import { Eye, ImageOff } from "lucide-react";
+import { useState } from "react";
 
 import type { Product } from "@/shared/types/product";
 import { getCategoryName } from "@/tenant/config/catalog";
@@ -9,7 +10,7 @@ import {
   getProductActivePrice,
 } from "./ProductExplorer.fields";
 
-interface AdminProductRowProps {
+interface AdminProductCardProps {
   product: Product;
   selected?: boolean;
   onToggle?: (productId: string) => void;
@@ -22,44 +23,51 @@ function getStockLabel(stock: number | null): string {
   return `${stock} unidades`;
 }
 
-export function AdminProductRow({
+export function AdminProductCard({
   product,
   selected = false,
   onToggle,
   onInspect,
-}: AdminProductRowProps) {
+}: AdminProductCardProps) {
   const statusClass = getAdminStatusClassName(product.status);
   const activePrice = getProductActivePrice(product);
-  return (
-    <article className={`gla-product-row${selected ? " gla-product-row-selected" : ""}`}>
-      <label className="gla-product-selector">
-        <input
-          type="checkbox"
-          checked={selected}
-          onChange={() => onToggle?.(product.id)}
-          aria-label={`Seleccionar ${product.title}`}
-        />
-        <span aria-hidden="true" />
-      </label>
+  const [failedImageSrc, setFailedImageSrc] = useState<string | null>(null);
+  const hasImage = Boolean(product.img && failedImageSrc !== product.img);
 
-      <div className="gla-product-media">
-        <ImageOff size={20} aria-hidden="true" />
-        {product.img ? <img src={product.img} alt="" loading="lazy" /> : null}
+  return (
+    <article className={`gla-card${selected ? " gla-card-selected" : ""}`}>
+      <div className="gla-card-media">
+        {hasImage ? (
+          <img
+            src={product.img}
+            alt={product.title}
+            loading="lazy"
+            onError={() => setFailedImageSrc(product.img)}
+          />
+        ) : (
+          <ImageOff size={28} aria-hidden="true" />
+        )}
+        <label className="gla-card-selector">
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={() => onToggle?.(product.id)}
+            aria-label={`Seleccionar ${product.title}`}
+          />
+          <span aria-hidden="true" />
+        </label>
+        <span className={`gla-status gla-status-${statusClass}`}>
+          {product.status || "Sin estado"}
+        </span>
       </div>
 
-      <div className="gla-product-identity">
-        <div className="gla-product-code-line">
-          <span>{product.id}</span>
-          <span className={`gla-status gla-status-${statusClass}`}>
-            {product.status || "Sin estado"}
-          </span>
-        </div>
-
+      <div className="gla-card-identity">
+        <p className="gla-card-occasion">{getCategoryName(product.category)}</p>
         <h2>{product.title}</h2>
-        <p>{getCategoryName(product.category)}</p>
+        <p className="gla-card-code-line">Ref. {product.id}</p>
 
         {product.badges.length > 0 ? (
-          <div className="gla-product-badges">
+          <div className="gla-card-badges">
             {product.badges.slice(0, 3).map((badge) => (
               <span key={badge}>{badge}</span>
             ))}
@@ -67,7 +75,7 @@ export function AdminProductRow({
         ) : null}
       </div>
 
-      <dl className="gla-product-data">
+      <dl className="gla-card-data">
         <div>
           <dt>Precio</dt>
           <dd>
@@ -89,7 +97,7 @@ export function AdminProductRow({
         </div>
       </dl>
 
-      <div className="gla-product-action">
+      <div className="gla-card-action">
         <span>{product.updated_at || "Sin fecha de actualización"}</span>
         <button type="button" onClick={() => onInspect?.(product)}>
           <Eye size={15} aria-hidden="true" />

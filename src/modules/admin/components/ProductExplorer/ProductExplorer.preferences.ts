@@ -5,7 +5,7 @@ import {
   type ProductSortState,
 } from "./ProductExplorer.fields";
 
-export type ProductViewMode = "rows" | "table";
+export type ProductViewMode = "cards" | "rows" | "table";
 export type ProductDensity = "comfortable" | "compact";
 
 export interface ProductExplorerPreferences {
@@ -17,7 +17,7 @@ export interface ProductExplorerPreferences {
 
 export const PRODUCT_EXPLORER_PREFERENCES_KEY = "gleemour.admin.product-explorer.v1";
 export const DEFAULT_PRODUCT_EXPLORER_PREFERENCES: ProductExplorerPreferences = {
-  viewMode: "rows",
+  viewMode: "cards",
   density: "comfortable",
   visibleColumns: [...DEFAULT_PRODUCT_COLUMNS],
   sort: { field: "priority", direction: "desc" },
@@ -38,7 +38,9 @@ export function readProductExplorerPreferences(storage?: Pick<Storage, "getItem"
       ? saved.visibleColumns.filter((key): key is ProductFieldKey => VALID_FIELDS.has(key as ProductFieldKey))
       : [...DEFAULT_PRODUCT_COLUMNS];
     return {
-      viewMode: saved.viewMode === "table" ? "table" : "rows",
+      viewMode: saved.viewMode === "table" || saved.viewMode === "rows"
+        ? saved.viewMode
+        : "cards",
       density: saved.density === "compact" ? "compact" : "comfortable",
       visibleColumns,
       sort: saved.sort &&
