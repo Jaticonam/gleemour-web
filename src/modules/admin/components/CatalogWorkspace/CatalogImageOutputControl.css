@@ -1,0 +1,89 @@
+.gla-image-output {
+  margin-top: 16px;
+  padding: 20px;
+  border: 1px solid var(--w-border);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--w-heading);
+}
+
+.gla-image-output-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.gla-image-output-heading span {
+  color: var(--w-secondary-strong);
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.gla-image-output h2 {
+  margin: 8px 0;
+  font-size: 1.3rem;
+}
+
+.gla-image-output p,
+.gla-image-output-result span,
+.gla-image-output-result small {
+  color: var(--w-muted);
+  font-size: 0.86rem;
+}
+
+.gla-image-output button,
+.gla-image-output-result a {
+  min-height: var(--gla-control-height);
+  padding: 0 15px;
+  border: 1px solid var(--w-border);
+  border-radius: 11px;
+  background: var(--w-primary-dark);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.gla-image-output button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.gla-image-output-result {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 18px;
+}
+
+.gla-image-output-result img {
+  width: min(190px, 35%);
+  aspect-ratio: 3 / 4;
+  object-fit: contain;
+  border-radius: 8px;
+  background: var(--w-primary-soft);
+}
+
+.gla-image-output-result > div {
+  display: grid;
+  justify-items: start;
+  gap: 9px;
+}
+
+@media (max-width: 620px) {
+  .gla-image-output-heading,
+  .gla-image-output-result {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .gla-image-output-result img { width: min(230px, 100%); }
+}
