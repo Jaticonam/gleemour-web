@@ -35,32 +35,33 @@ export function CatalogCompositionPanel({
             {composition.included.length} listos · {composition.automaticExcluded.length} automáticos · {composition.manuallyExcluded.length} manuales
           </p>
         </div>
-        <button
-          type="button"
-          className="gla-preview-button"
-          onClick={onPreview}
-          disabled={composition.included.length === 0}
-        >
-          <Eye size={16} aria-hidden="true" />
-          Vista previa
-        </button>
+        <div className="gla-composition-tools">
+          <label className="gla-sort-control">
+            <span>Orden global</span>
+            <select
+              aria-label="Orden global"
+              value={sortMode}
+              onChange={(event) => onSortModeChange(event.target.value as CatalogSortMode)}
+            >
+              <option value="manual">Manual</option>
+              <option value="priority">Prioridad comercial</option>
+              <option value="name-asc">Nombre A–Z</option>
+              <option value="name-desc">Nombre Z–A</option>
+              <option value="price-asc">Precio menor a mayor</option>
+              <option value="price-desc">Precio mayor a menor</option>
+            </select>
+          </label>
+          <button
+            type="button"
+            className="gla-preview-button"
+            onClick={onPreview}
+            disabled={composition.included.length === 0}
+          >
+            <Eye size={16} aria-hidden="true" />
+            Vista previa
+          </button>
+        </div>
       </header>
-
-      <label className="gla-sort-control">
-        <span>Orden global</span>
-        <select
-          aria-label="Orden global"
-          value={sortMode}
-          onChange={(event) => onSortModeChange(event.target.value as CatalogSortMode)}
-        >
-          <option value="manual">Manual</option>
-          <option value="priority">Prioridad comercial</option>
-          <option value="name-asc">Nombre A–Z</option>
-          <option value="name-desc">Nombre Z–A</option>
-          <option value="price-asc">Precio menor a mayor</option>
-          <option value="price-desc">Precio mayor a menor</option>
-        </select>
-      </label>
 
       {composition.included.length > 0 ? (
         <div className="gla-composition-list">

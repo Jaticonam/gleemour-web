@@ -4,7 +4,7 @@
 .gla-quotation-workspace {
   width: min(var(--gla-content-max-width), 100%);
   margin-inline: auto;
-  padding: clamp(28px, 2vw, 40px) var(--gla-content-padding) 72px;
+  padding: clamp(16px, 1.4vw, 24px) var(--gla-content-padding) 72px;
 }
 
 .gla-quotation-header {
@@ -38,7 +38,7 @@
 }
 
 .gla-quotation-header h1 {
-  margin: 9px 0 0;
+  margin: 5px 0 0;
   color: var(--w-heading);
   font-size: clamp(2.5rem, 3vw, 3rem);
   line-height: 1;
@@ -46,7 +46,7 @@
 
 .gla-quotation-header p {
   max-width: 720px;
-  margin: 14px 0 0;
+  margin: 8px 0 0;
   color: var(--w-muted);
   font-size: 0.94rem;
   line-height: 1.65;
@@ -99,7 +99,7 @@
 .gla-quotation-state-error { color: #a75447; }
 
 .gla-quotation-layout {
-  margin-top: 27px;
+  margin-top: 18px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) clamp(320px, 24vw, 390px);
   gap: var(--gla-workspace-gap);
@@ -109,14 +109,14 @@
 .gla-quotation-main {
   min-width: 0;
   display: grid;
-  gap: 14px;
+  gap: 11px;
 }
 
 .gla-quotation-products,
 .gla-quotation-details,
 .gla-quotation-summary {
   min-width: 0;
-  padding: 17px;
+  padding: 15px;
   border: 1px solid var(--w-border);
   border-radius: 17px;
   background: rgba(255, 255, 255, 0.94);
@@ -163,7 +163,7 @@
    CLIENTE Y CONDICIONES
 ========================================================= */
 .gla-client-grid {
-  margin-top: 16px;
+  margin-top: 12px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 11px;

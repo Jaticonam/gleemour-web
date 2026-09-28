@@ -296,6 +296,16 @@ export function ProductExplorer({
             ))}
           </select>
         </label>
+
+        <ProductExplorerViewControls
+          viewMode={preferences.viewMode}
+          density={preferences.density}
+          visibleColumns={preferences.visibleColumns}
+          onViewModeChange={(viewMode) => updatePreferences({ viewMode })}
+          onDensityChange={(density) => updatePreferences({ density })}
+          onColumnToggle={toggleColumn}
+          onColumnsReset={() => updatePreferences({ visibleColumns: [...DEFAULT_PRODUCT_COLUMNS] })}
+        />
       </div>
 
       <ActiveProductFilters
@@ -308,16 +318,6 @@ export function ProductExplorer({
         onCategoryClear={() => setCategory(ALL_ADMIN_FILTERS)}
         onQuickFilterClear={() => setQuickFilter(ALL_ADMIN_FILTERS)}
         onClearAll={clearFilters}
-      />
-
-      <ProductExplorerViewControls
-        viewMode={preferences.viewMode}
-        density={preferences.density}
-        visibleColumns={preferences.visibleColumns}
-        onViewModeChange={(viewMode) => updatePreferences({ viewMode })}
-        onDensityChange={(density) => updatePreferences({ density })}
-        onColumnToggle={toggleColumn}
-        onColumnsReset={() => updatePreferences({ visibleColumns: [...DEFAULT_PRODUCT_COLUMNS] })}
       />
 
       <div className="gla-results-heading">

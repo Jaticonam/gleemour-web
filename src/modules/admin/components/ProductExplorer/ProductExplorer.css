@@ -5,7 +5,7 @@
 .gla-explorer {
   width: min(var(--gla-content-max-width), 100%);
   margin-inline: auto;
-  padding: clamp(28px, 2vw, 40px) var(--gla-content-padding) 72px;
+  padding: clamp(16px, 1.4vw, 24px) var(--gla-content-padding) 72px;
 }
 
 .gla-explorer-header {
@@ -39,7 +39,7 @@
 }
 
 .gla-explorer-header h1 {
-  margin: 9px 0 0;
+  margin: 5px 0 0;
   color: var(--w-heading);
   font-size: clamp(2.5rem, 3vw, 3rem);
   line-height: 1;
@@ -47,7 +47,7 @@
 
 .gla-explorer-header p {
   max-width: 720px;
-  margin: 14px 0 0;
+  margin: 8px 0 0;
   color: var(--w-muted);
   font-size: 0.94rem;
   line-height: 1.65;
@@ -92,7 +92,7 @@
 ========================================================= */
 
 .gla-metrics {
-  margin-top: 29px;
+  margin-top: 18px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 11px;
@@ -186,14 +186,24 @@
 ========================================================= */
 
 .gla-explorer-toolbar {
-  margin-top: 18px;
-  padding: 14px;
+  margin-top: 12px;
+  padding: 12px;
   border: 1px solid var(--w-border);
   border-radius: 15px;
   background: rgba(255, 255, 255, 0.92);
   display: grid;
-  grid-template-columns: minmax(320px, 1.7fr) minmax(190px, 0.65fr) minmax(210px, 0.7fr);
+  grid-template-columns: minmax(260px, 1fr) minmax(150px, 180px) minmax(170px, 200px) auto;
+  align-items: end;
   gap: 10px;
+}
+
+.gla-explorer-toolbar .gla-view-controls {
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  align-self: end;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .gla-search-control,
@@ -295,7 +305,7 @@
 }
 
 .gla-results-heading {
-  min-height: 54px;
+  min-height: 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -326,7 +336,7 @@
 
 .gla-selection-bar {
   min-height: 58px;
-  margin-bottom: 9px;
+  margin-bottom: 6px;
   padding: 9px 11px 9px 14px;
   border: 1px solid rgba(154, 139, 186, 0.32);
   border-radius: 13px;

@@ -14,7 +14,7 @@
 
 @media (max-width: 900px) {
   .gla-catalog-workspace {
-    padding: 30px 18px 50px;
+    padding: 18px 18px 50px;
   }
 
   .gla-composition-layout {
@@ -51,8 +51,16 @@
     display: grid;
   }
 
-  .gla-preview-button {
-    width: 100%;
+  .gla-composition-tools {
+    justify-content: flex-start;
+  }
+
+  .gla-sort-control {
+    flex-wrap: wrap;
+  }
+
+  .gla-sort-control select {
+    max-width: 100%;
   }
 
   .gla-composition-row {

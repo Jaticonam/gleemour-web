@@ -5,7 +5,7 @@
 .gla-catalog-workspace {
   width: min(var(--gla-content-max-width), 100%);
   margin-inline: auto;
-  padding: clamp(28px, 2vw, 40px) var(--gla-content-padding) 72px;
+  padding: clamp(16px, 1.4vw, 24px) var(--gla-content-padding) 72px;
 }
 .gla-catalog-workspace-header {
   display: flex;
@@ -38,7 +38,7 @@
 }
 
 .gla-catalog-workspace-header h1 {
-  margin: 9px 0 0;
+  margin: 5px 0 0;
   color: var(--w-heading);
   font-size: clamp(2.5rem, 3vw, 3rem);
   line-height: 1;
@@ -46,7 +46,7 @@
 
 .gla-catalog-workspace-header p {
   max-width: 720px;
-  margin: 14px 0 0;
+  margin: 8px 0 0;
   color: var(--w-muted);
   font-size: 0.94rem;
   line-height: 1.65;
@@ -73,7 +73,7 @@
 
 .gla-workspace-state {
   min-height: 340px;
-  margin-top: 28px;
+  margin-top: 18px;
   border: 1px dashed var(--w-border);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.7);
@@ -101,7 +101,7 @@
 }
 
 .gla-composition-metrics {
-  margin-top: 28px;
+  margin-top: 18px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
@@ -130,7 +130,7 @@
 }
 
 .gla-composition-layout {
-  margin-top: 14px;
+  margin-top: 11px;
   display: grid;
   grid-template-columns: clamp(360px, 24vw, 420px) minmax(0, 1fr);
   gap: var(--gla-workspace-gap);
@@ -151,12 +151,12 @@
   position: sticky;
   top: 74px;
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .gla-composition-builder,
 .gla-catalog-settings {
-  padding: 17px;
+  padding: 15px;
 }
 
 .gla-draft-status {
@@ -205,7 +205,7 @@
 }
 
 .gla-mode-grid {
-  margin-top: 15px;
+  margin-top: 11px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 7px;
@@ -255,7 +255,7 @@
 }
 
 .gla-builder-control {
-  margin-top: 13px;
+  margin-top: 10px;
   display: grid;
   gap: 6px;
 }

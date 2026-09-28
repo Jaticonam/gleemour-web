@@ -2,6 +2,17 @@
    RESPONSIVE
 ========================================================= */
 
+@media (max-width: 1280px) {
+  .gla-explorer-toolbar {
+    grid-template-columns: minmax(260px, 1fr) minmax(150px, 180px) minmax(170px, 200px);
+  }
+
+  .gla-explorer-toolbar .gla-view-controls {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+}
+
 @media (max-width: 1080px) {
   .gla-product-row {
     grid-template-columns: 28px 60px minmax(180px, 1fr) minmax(270px, 1fr);
@@ -16,7 +27,7 @@
 
 @media (max-width: 900px) {
   .gla-explorer {
-    padding: 30px 18px 48px;
+    padding: 18px 18px 48px;
   }
 
   .gla-metrics {
@@ -28,6 +39,10 @@
   }
 
   .gla-search-control {
+    grid-column: 1 / -1;
+  }
+
+  .gla-explorer-toolbar .gla-view-controls {
     grid-column: 1 / -1;
   }
 
@@ -65,11 +80,19 @@
   }
 
   .gla-explorer-toolbar {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .gla-search-control {
-    grid-column: auto;
+    grid-column: 1 / -1;
+  }
+
+  .gla-explorer-toolbar .gla-view-switch > span {
+    display: none;
+  }
+
+  .gla-explorer-toolbar .gla-view-controls button {
+    padding-inline: 8px;
   }
 
   .gla-product-row {
@@ -110,5 +133,11 @@
   .gla-selection-bar .gla-prepare-catalog,
   .gla-selection-bar .gla-prepare-quotation {
     grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 420px) {
+  .gla-explorer-toolbar {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

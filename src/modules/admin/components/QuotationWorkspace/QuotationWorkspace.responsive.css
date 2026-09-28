@@ -9,7 +9,7 @@
 }
 
 @media (max-width: 900px) {
-  .gla-quotation-workspace { padding: 30px 18px 50px; }
+  .gla-quotation-workspace { padding: 18px 18px 50px; }
   .gla-quotation-layout { grid-template-columns: 1fr; }
   .gla-quotation-summary { position: static; }
 }

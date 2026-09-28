@@ -4,14 +4,22 @@
 
 .gla-composition-panel {
   min-width: 0;
-  padding: 17px;
+  padding: 15px;
 }
 .gla-composition-panel > header {
-  min-height: 55px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 18px;
+}
+
+.gla-composition-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .gla-composition-panel > header span {
@@ -45,10 +53,8 @@
 }
 
 .gla-sort-control {
-  margin: 10px 0 13px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 8px;
 }
 
@@ -70,7 +76,7 @@
 }
 
 .gla-composition-list {
-  margin-top: 10px;
+  margin-top: 12px;
   display: grid;
   gap: 7px;
 }

@@ -67,8 +67,9 @@
 }
 
 .gla-quotation-empty {
-  min-height: 180px;
-  margin-top: 14px;
+  min-height: 100px;
+  margin-top: 11px;
+  padding: 14px;
   border: 1px dashed var(--w-border);
   border-radius: 13px;
   display: flex;
