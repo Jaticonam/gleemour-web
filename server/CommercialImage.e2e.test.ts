@@ -77,7 +77,14 @@ it.skipIf(process.env.GLEEMOUR_CORE_E2E !== "1")("renders a real JPEG in Chrome 
       await page.goto(viteUrl);
       const encoded = await page.evaluate(async (input) => {
         const url = "/src/integrations/browser/CanvasCatalogImageRenderer.ts";
-        const { CanvasCatalogImageRenderer } = await import(/* @vite-ignore */ url);
+        // Keep the import inside Chrome; Vitest rewrites import() in the test file.
+        const browserImport = new Function("moduleUrl", "return import(moduleUrl)") as
+          (moduleUrl: string) => Promise<{
+            CanvasCatalogImageRenderer: new () => {
+              render: (value: typeof input) => Promise<CatalogImageArtifact>;
+            };
+          }>;
+        const { CanvasCatalogImageRenderer } = await browserImport(url);
         const jpeg = await new CanvasCatalogImageRenderer().render(input);
         return { ...jpeg, bytes: Array.from(jpeg.bytes) };
       }, composition);
