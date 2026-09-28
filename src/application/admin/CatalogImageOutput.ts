@@ -1,4 +1,5 @@
 import type { CatalogCommercialComposition } from "./AdminCommercialComposition";
+import type { CommercialOutputRequest, CommercialOutputResult } from "./CommercialOutput";
 
 export interface CatalogImagePreset {
   id: string; version: number; width: number; height: number;
@@ -24,6 +25,14 @@ export interface CatalogImageArtifact {
 
 export interface CatalogImageRenderer {
   render(composition: CatalogCommercialComposition, preset?: Readonly<CatalogImagePreset>): Promise<CatalogImageArtifact>;
+}
+
+/** Publication receives already rendered bytes; transport runs on the server. */
+export interface CatalogImagePublicationPort {
+  publish(
+    request: CommercialOutputRequest<CatalogCommercialComposition>,
+    image: CatalogImageArtifact,
+  ): Promise<CommercialOutputResult>;
 }
 
 export type CatalogImageOutputErrorCode = "INVALID_COMPOSITION" | "INVALID_PRESET" | "TOO_MANY_PRODUCTS" | "RENDER_FAILED";

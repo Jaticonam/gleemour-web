@@ -50,6 +50,7 @@ export interface CommercialOutputArtifact {
   mimeType?: string;
   publicUrl?: string;
   downloadUrl?: string;
+  checksumSha256?: string;
 }
 
 export type CommercialOutputResult =

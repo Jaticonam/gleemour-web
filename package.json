@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:m9b2:e2e": "vitest run server/CommercialImage.e2e.test.ts",
+    "typecheck:m9b2": "tsc --noEmit -p tsconfig.m9b2.json"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
