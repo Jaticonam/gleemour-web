@@ -51,12 +51,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cd dist
-          git init
+          git fetch origin refs/heads/hostinger-production:refs/remotes/origin/hostinger-production
+          publish_dir="${RUNNER_TEMP}/gleemour-hostinger-production"
+          git worktree add -b hostinger-production "$publish_dir" origin/hostinger-production
+          git -C "$publish_dir" rm -qr -- .
+          cp -a dist/. "$publish_dir/"
+          cd "$publish_dir"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "deploy: ${GITHUB_SHA}"
-          git branch -M hostinger-production
-          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push --force origin hostinger-production
+          git commit --allow-empty -m "deploy: ${GITHUB_SHA}"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin hostinger-production
