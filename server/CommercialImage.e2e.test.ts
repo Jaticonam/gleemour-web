@@ -14,13 +14,16 @@ import { JungCoreCommercialImagePublisher } from "./JungCoreCommercialImagePubli
 
 const hash = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex");
 const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-async function ready(url: string, child: ChildProcess) {
-  for (let i = 0; i < 45; i++) {
-    if (child.exitCode !== null) throw new Error("SERVICE_START_FAILED");
-    if (await fetch(url, { signal: AbortSignal.timeout(700) }).then((r) => r.ok, () => false)) return;
+async function ready(url: string, child: ChildProcess, service: "VITE" | "CORE") {
+  let lastResponse = "UNREACHABLE";
+  for (let i = 0; i < 120; i++) {
+    if (child.exitCode !== null) throw new Error(`${service}_START_FAILED_${child.exitCode}`);
+    const response = await fetch(url, { signal: AbortSignal.timeout(1000) }).catch(() => null);
+    if (response?.ok) return;
+    lastResponse = response ? `HTTP_${response.status}` : "UNREACHABLE";
     await pause(500);
   }
-  throw new Error("SERVICE_NOT_READY");
+  throw new Error(`${service}_NOT_READY_${lastResponse}`);
 }
 
 it.skipIf(process.env.GLEEMOUR_CORE_E2E !== "1")("renders a real JPEG in Chrome and publishes it through CORE to dev R2", async () => {
@@ -47,9 +50,10 @@ it.skipIf(process.env.GLEEMOUR_CORE_E2E !== "1")("renders a real JPEG in Chrome 
     { cwd: process.cwd(), env: viteEnv, stdio: "ignore", windowsHide: true });
   let core: ChildProcess | undefined;
   try {
-    await ready(viteUrl, vite);
-    core = spawn(process.execPath, ["dist/src/main.js"], { cwd: root, stdio: "ignore", windowsHide: true });
-    await ready(`${coreUrl}/ready`, core);
+    await ready(viteUrl, vite, "VITE");
+    core = spawn(process.execPath, ["--env-file=.env", "dist/src/main.js"],
+      { cwd: root, stdio: "ignore", windowsHide: true });
+    await ready(`${coreUrl}/ready`, core, "CORE");
 
     const composition: CatalogCommercialComposition = {
       schemaVersion: "gleemour.catalog-output.v1", compositionId: `m9b2-cert-${Date.now()}`,
@@ -115,4 +119,4 @@ it.skipIf(process.env.GLEEMOUR_CORE_E2E !== "1")("renders a real JPEG in Chrome 
     core?.kill();
     vite.kill();
   }
-}, 120_000);
+}, 240_000);
