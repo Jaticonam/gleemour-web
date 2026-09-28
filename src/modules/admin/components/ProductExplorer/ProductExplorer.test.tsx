@@ -197,11 +197,29 @@ describe("ProductExplorer", () => {
     expect(screen.getByDisplayValue("Borrador")).toBeInTheDocument();
   });
 
-  it("abre una ficha lateral de solo lectura con datos reales", async () => {
+  it("muestra la imagen comercial real y conserva el fallback al fallar", async () => {
+    render(
+      <ProductExplorer
+        loadProducts={() => Promise.resolve([
+          product({ img: "https://media.example/ramo.jpg" }),
+        ])}
+      />,
+    );
+
+    const image = await screen.findByRole("img", { name: "Ramo Corazón" });
+    expect(image).toHaveAttribute("src", "https://media.example/ramo.jpg");
+    expect(screen.getByText("Ref. GLE-001")).toBeInTheDocument();
+    expect(screen.getByText("Premium")).toBeInTheDocument();
+    fireEvent.error(image);
+    expect(screen.queryByRole("img", { name: "Ramo Corazón" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Ver producto" })).toBeInTheDocument();
+  });
+
+  it("abre una ficha lateral de solo lectura con Ver producto", async () => {
     render(<ProductExplorer loadProducts={() => Promise.resolve(PRODUCTS)} />);
 
     await screen.findByRole("heading", { name: "Ramo Corazón" });
-    fireEvent.click(screen.getAllByRole("button", { name: "Ver ficha" })[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: "Ver producto" })[0]);
 
     const dialog = screen.getByRole("dialog", { name: "Ramo Corazón" });
     expect(dialog).toHaveTextContent("Solo lectura");

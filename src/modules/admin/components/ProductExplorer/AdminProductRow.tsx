@@ -1,4 +1,5 @@
 import { Eye, ImageOff } from "lucide-react";
+import { useState } from "react";
 
 import type { Product } from "@/shared/types/product";
 import { getCategoryName } from "@/tenant/config/catalog";
@@ -30,33 +31,40 @@ export function AdminProductRow({
 }: AdminProductRowProps) {
   const statusClass = getAdminStatusClassName(product.status);
   const activePrice = getProductActivePrice(product);
+  const [failedImageSrc, setFailedImageSrc] = useState<string | null>(null);
+  const hasImage = Boolean(product.img && failedImageSrc !== product.img);
+
   return (
     <article className={`gla-product-row${selected ? " gla-product-row-selected" : ""}`}>
-      <label className="gla-product-selector">
-        <input
-          type="checkbox"
-          checked={selected}
-          onChange={() => onToggle?.(product.id)}
-          aria-label={`Seleccionar ${product.title}`}
-        />
-        <span aria-hidden="true" />
-      </label>
-
       <div className="gla-product-media">
-        <ImageOff size={20} aria-hidden="true" />
-        {product.img ? <img src={product.img} alt="" loading="lazy" /> : null}
+        {hasImage ? (
+          <img
+            src={product.img}
+            alt={product.title}
+            loading="lazy"
+            onError={() => setFailedImageSrc(product.img)}
+          />
+        ) : (
+          <ImageOff size={28} aria-hidden="true" />
+        )}
+        <label className="gla-product-selector">
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={() => onToggle?.(product.id)}
+            aria-label={`Seleccionar ${product.title}`}
+          />
+          <span aria-hidden="true" />
+        </label>
+        <span className={`gla-status gla-status-${statusClass}`}>
+          {product.status || "Sin estado"}
+        </span>
       </div>
 
       <div className="gla-product-identity">
-        <div className="gla-product-code-line">
-          <span>{product.id}</span>
-          <span className={`gla-status gla-status-${statusClass}`}>
-            {product.status || "Sin estado"}
-          </span>
-        </div>
-
+        <p className="gla-product-occasion">{getCategoryName(product.category)}</p>
         <h2>{product.title}</h2>
-        <p>{getCategoryName(product.category)}</p>
+        <p className="gla-product-code-line">Ref. {product.id}</p>
 
         {product.badges.length > 0 ? (
           <div className="gla-product-badges">
@@ -93,7 +101,7 @@ export function AdminProductRow({
         <span>{product.updated_at || "Sin fecha de actualización"}</span>
         <button type="button" onClick={() => onInspect?.(product)}>
           <Eye size={15} aria-hidden="true" />
-          Ver ficha
+          Ver producto
         </button>
       </div>
     </article>
