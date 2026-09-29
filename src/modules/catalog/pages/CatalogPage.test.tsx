@@ -179,7 +179,11 @@ describe("CatalogPage: estados de resultados", () => {
     expect(sink.mock.calls.filter(([event]) => event.type === "catalog_view")).toHaveLength(1);
     expect(sink.mock.calls.filter(([event]) => event.type === "catalog_search")).toHaveLength(1);
     expect(JSON.stringify(sink.mock.calls)).not.toContain("rosas");
-    fireEvent.click(screen.getByRole("link", { name: "Ayúdame a elegir" }));
+    const inspire = screen.getByRole("link", { name: "Inspírame: descubre qué elegir" });
+    expect(inspire).toHaveAttribute("href", "/experiencia?origen=catalogo");
+    expect(inspire).toHaveTextContent("Inspírame");
+    fireEvent.click(inspire);
+    expect(screen.getByTestId("location")).toHaveTextContent("origen=catalogo");
     expect(sink).toHaveBeenCalledWith({
       type: "catalog_help_choose", source: "catalog_header", categoryId: "special",
       campaignId: "vigente", hasSearch: true,

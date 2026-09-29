@@ -17,7 +17,7 @@ export function ProductCardActions({
         type="button"
         onClick={onPersonalize}
         className="product-card-button-personalize"
-        aria-label={`Personalizar ${productTitle}`}
+        aria-label="Personalizar"
         title="Personalizar"
       >
         <Sparkles className="w-4 h-4" aria-hidden="true" />
@@ -31,7 +31,7 @@ export function ProductCardActions({
         title="Consultar por WhatsApp"
       >
         <MessageCircle className="w-4 h-4" aria-hidden="true" />
-        <span>WhatsApp</span>
+        <span>Consultar</span>
       </button>
     </div>
   );

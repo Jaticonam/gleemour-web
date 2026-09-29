@@ -10,9 +10,8 @@ export const UI_CONFIG = {
   floating: {
     cartLabel: "Mi pedido",
     catalogLabel: "Ver catálogo",
-    whatsappLabel: "Te ayudamos",
+    whatsappLabel: "Ayuda",
   },
 } as const;
-
 
 

@@ -30,6 +30,8 @@ export function FloatingButtons({
         target="_blank"
         rel="noopener noreferrer"
         className="floating-btn floating-btn-whatsapp"
+        aria-label="Ayuda general por WhatsApp"
+        title="Ayuda general por WhatsApp"
       >
         <MessageCircle className="h-5 w-5" aria-hidden="true" />
         <span className="hidden sm:inline">

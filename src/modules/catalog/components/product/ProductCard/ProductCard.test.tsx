@@ -77,11 +77,13 @@ describe("ProductCard", () => {
     renderCard();
 
     const whatsapp = screen.getByRole("button", { name: `Consultar ${product.title} por WhatsApp` });
+    expect(whatsapp).toHaveTextContent("Consultar");
+    expect(whatsapp).toHaveAttribute("title", "Consultar por WhatsApp");
     fireEvent.click(whatsapp);
     expect(open).toHaveBeenCalledWith(buildProductWhatsAppUrl({ product, qty: 1 }), "_blank", "noopener,noreferrer");
     expect(screen.getByTestId("location")).toHaveTextContent("/catalogo");
 
-    const personalize = screen.getByRole("button", { name: `Personalizar ${product.title}` });
+    const personalize = screen.getByRole("button", { name: "Personalizar" });
     expect(personalize).toHaveAttribute("title", "Personalizar");
     fireEvent.click(personalize);
     expect(screen.getByTestId("location")).toHaveTextContent("/experiencia?origen=producto&producto=GLE-001");
@@ -147,7 +149,7 @@ describe("ProductCard", () => {
     expect(open).toHaveBeenCalledWith(
       buildProductWhatsAppUrl({ product, qty: 1 }), "_blank", "noopener,noreferrer",
     );
-    fireEvent.click(screen.getByRole("button", { name: `Personalizar ${product.title}` }));
+    fireEvent.click(screen.getByRole("button", { name: "Personalizar" }));
     expect(sink).toHaveBeenCalledTimes(3);
     expect(sink).toHaveBeenLastCalledWith({
       type: "catalog_product_customize", source: "catalog_card", productId: product.id,

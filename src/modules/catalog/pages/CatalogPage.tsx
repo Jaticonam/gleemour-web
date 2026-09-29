@@ -325,6 +325,7 @@ useEffect(() => {
           <Link
             to={getExperienceUrl("catalogo")}
             className="catalog-help-link"
+            aria-label="Inspírame: descubre qué elegir"
             onClick={() => trackCommerceEvent({
               type: "catalog_help_choose", source: "catalog_header",
               categoryId: activeCategory, ...(activeCampaign ? { campaignId: activeCampaign } : {}),
@@ -332,7 +333,7 @@ useEffect(() => {
             })}
           >
             <Sparkles className="h-5 w-5" aria-hidden="true" />
-            Ayúdame a elegir
+            Inspírame
           </Link>
         }
       />
