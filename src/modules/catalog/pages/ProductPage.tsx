@@ -15,13 +15,11 @@ import { ProductBenefits } from "@/modules/catalog/components/product/ProductBen
 import { ProductHeader } from "@/modules/catalog/components/product/ProductHeader";
 import { ProductIntentionNav } from "@/modules/catalog/components/product/ProductIntentionNav";
 import { ProductMeta } from "@/modules/catalog/components/product/ProductMeta";
-import { ProductMobileBar } from "@/modules/catalog/components/product/ProductMobileBar";
 import { ProductNotFound } from "@/modules/catalog/components/product/ProductNotFound";
 import { ProductProfileActions } from "@/modules/catalog/components/product/ProductProfileActions";
 import { ProductRelated } from "@/modules/catalog/components/product/ProductRelated";
 import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActivity";
 import {
-  useLiveViewers,
   useProductActions,
   useProductDetail,
 } from "@/modules/catalog/hooks";
@@ -57,12 +55,6 @@ export default function ProductPage() {
   } = useProductDetail({
     productId,
     relatedLimit: 4,
-  });
-
-  const viewers = useLiveViewers({
-    min: 3,
-    max: 18,
-    interval: 7000,
   });
 
   const productActions = useProductActions({
@@ -117,26 +109,21 @@ export default function ProductPage() {
 
       <ProductHeader
         title={product.title}
-        code={product.id}
-        onBack={() => navigate(-1)}
+        onBack={() =>
+          navigate(currentCategory ? getCategoryUrl(currentCategory) : getCatalogUrl())
+        }
         onShare={productActions.handleShare}
       />
 
       <main className="product-detail-main">
         <section className="product-detail-experience">
-          <ProductIntentionNav
-            activeCategory={product.category}
-            onSelect={(categoryId) =>
-              navigate(getCategoryUrl(categoryId))
-            }
-          />
-
           <section
             className="product-detail-configurator"
             aria-label="Información del producto"
           >
             <div className="product-detail-gallery">
               <ProductGallery
+                key={product.id}
                 product={product}
                 available={available}
               />
@@ -145,29 +132,26 @@ export default function ProductPage() {
             <div className="product-detail-overview">
               <ProductMeta
                 product={product}
-                available={available}
-                viewers={viewers}
                 productState={productState}
                 stockClass={stockClass}
                 StockIcon={StockIcon}
               />
+              <ProductProfileActions
+                product={product}
+                finalPrice={finalPrice}
+                originalPrice={originalPrice}
+                hasOffer={hasOffer}
+                onPersonalize={openExperience}
+                onWhatsApp={productActions.handleWhatsApp}
+              />
             </div>
           </section>
-
-          <aside
-            className="product-detail-summary"
-            aria-label="Acciones del producto"
-          >
-            <ProductProfileActions
-              productTitle={product.title}
-              finalPrice={finalPrice}
-              originalPrice={originalPrice}
-              hasOffer={hasOffer}
-              onPersonalize={openExperience}
-              onWhatsApp={productActions.handleWhatsApp}
-            />
-          </aside>
         </section>
+
+        <ProductIntentionNav
+          activeCategory={product.category}
+          onSelect={(categoryId) => navigate(getCategoryUrl(categoryId))}
+        />
 
         <section className="product-detail-support">
           <ProductBenefits />
@@ -182,12 +166,6 @@ export default function ProductPage() {
       <div className="product-detail-recent-activity">
         <RecentActivity products={products} />
       </div>
-
-      <ProductMobileBar
-        price={finalPrice}
-        onPersonalize={openExperience}
-        onWhatsApp={productActions.handleWhatsApp}
-      />
     </div>
   );
 }

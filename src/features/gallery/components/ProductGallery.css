@@ -13,7 +13,7 @@
 .product-gallery-main {
   grid-column: 2;
   grid-row: 1;
-  width: min(100%, 38rem);
+  width: min(100%, 36rem);
   margin: 0 auto;
   position: relative;
   overflow: hidden;
@@ -167,6 +167,7 @@
 
   .product-gallery-main {
     width: 100%;
+    max-height: min(70vh, 30rem);
     border-radius: 1.5rem;
   }
 

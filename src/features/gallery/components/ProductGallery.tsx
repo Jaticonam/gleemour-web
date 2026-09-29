@@ -26,7 +26,7 @@ export function ProductGallery({
   } = useProductGallery({ product });
 
   const handleZoom = () => {
-    openZoom(activeImage || product.img, product.title);
+    openZoom(activeImage || product.img || "/placeholder.svg", product.title);
   };
 
   return (
@@ -34,7 +34,7 @@ export function ProductGallery({
       <div className="product-gallery">
         <div className="product-gallery-main">
           <img
-            src={activeImage || product.img}
+            src={activeImage || product.img || "/placeholder.svg"}
             alt={product.title}
             className={
               !available
@@ -77,8 +77,9 @@ export function ProductGallery({
                 }
                 onClick={() => selectImage(index)}
                 aria-label={`Ver imagen ${index + 1}`}
+                aria-pressed={index === activeIndex}
               >
-                <img src={image} alt={`${product.title} ${index + 1}`} />
+                <img src={image} alt="" loading="lazy" />
               </button>
             ))}
           </div>
