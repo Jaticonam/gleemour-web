@@ -45,13 +45,14 @@ function renderCard(value: Product = product) {
 afterEach(() => { vi.restoreAllMocks(); setCommerceEventSink(null); });
 
 describe("ProductCard", () => {
-  it("muestra una sola señal comercial, precio de oferta y contenido compacto", () => {
+  it("prioriza el precio y badge comercial sin mostrar alertas de stock", () => {
     renderCard();
 
     expect(screen.getByRole("img", { name: product.title })).toHaveAttribute("src", product.img);
     expect(screen.getByText("S/ 120.00")).toBeInTheDocument();
     expect(screen.getByText("95.00")).toBeInTheDocument();
-    expect(screen.getByText("Últimos 2")).toBeInTheDocument();
+    expect(screen.queryByText("Últimos 2")).not.toBeInTheDocument();
+    expect(screen.queryByText("Pocas unidades")).not.toBeInTheDocument();
     expect(screen.getByText(/Oferta/)).toBeInTheDocument();
     expect(screen.queryByText("Nuevo")).not.toBeInTheDocument();
     expect(screen.queryByText(/Ref\. GLE-001/)).not.toBeInTheDocument();
@@ -93,7 +94,7 @@ describe("ProductCard", () => {
     renderCard(soldOut);
 
     expect(screen.getByRole("img", { name: product.title })).toHaveAttribute("src", "/product-fallback.svg");
-    expect(screen.getByText("Agotado")).toBeInTheDocument();
+    expect(screen.queryByText("Agotado")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: `Consultar ${product.title} por WhatsApp` }));
     expect(open).toHaveBeenCalledWith(buildProductWhatsAppUrl({ product: soldOut, qty: 1 }), "_blank", "noopener,noreferrer");
   });
@@ -116,6 +117,13 @@ describe("ProductCard", () => {
     renderCard({ ...product, badges: ["Premium"] });
     expect(screen.getByText(/Premium/)).toHaveClass("product-card-badge", "product-badge--premium");
     expect(screen.queryByText(/Oferta/)).not.toBeInTheDocument();
+  });
+
+  it("oculta un badge de urgencia sin alterar el badge comercial Premium", () => {
+    renderCard({ ...product, stock: 4, badges: ["Últimas unidades", "Premium"] });
+    expect(screen.queryByText(/Últimas unidades/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Pocas unidades/)).not.toBeInTheDocument();
+    expect(screen.getByText(/Premium/)).toHaveClass("product-card-badge", "product-badge--premium");
   });
 
   it("emite apertura, personalización y WhatsApp una vez sin alterar el destino", () => {

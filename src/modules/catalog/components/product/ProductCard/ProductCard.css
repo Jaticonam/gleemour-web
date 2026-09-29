@@ -216,27 +216,6 @@
   font-size: 1rem;
   font-weight: 850;
 }
-.product-card-social-row {
-  display: flex;
-  align-items: center;
-  min-height: 1.4rem;
-  margin-top: .35rem;
-}
-.product-card-status {
-  min-width: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: .25rem;
-  color: var(--w-muted);
-  font-size: .62rem;
-  font-weight: 750;
-  line-height: 1.2;
-}
-.product-card-status svg { flex: none; }
-.product-card-status-warning { color: #896000; }
-.product-card-status-danger { color: var(--w-danger); }
-.product-card-status-preorder,
-.product-card-status-success { color: var(--w-whatsapp-dark); }
 .product-card-actions {
   display: flex;
   align-items: stretch;
@@ -302,7 +281,6 @@
   .product-card-body { padding: .45rem .05rem .05rem; }
   .product-card-title { font-size: .78rem; }
   .product-card-price strong { font-size: 1.1rem; }
-  .product-card-status { font-size: .56rem; }
   .product-card-button-wa { gap: .2rem; padding: 0 .2rem; font-size: .64rem; }
 }
 

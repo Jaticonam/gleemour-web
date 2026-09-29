@@ -21,14 +21,13 @@ import { trackCommerceEvent } from "@/core/services/commerceEvents";
 import { ProductCardImage } from "./ProductCardImage";
 import { ProductCardContent } from "./ProductCardContent";
 import { ProductCardPrice } from "./ProductCardPrice";
-import { ProductCardSocial } from "./ProductCardSocial";
 import { ProductCardActions } from "./ProductCardActions";
 
 import {
   CAMPAIGN_BADGE_KEYS,
   STATE_BADGE_KEYS,
   pickBadgeByKeys,
-  getStockPresentation,
+  isUrgencyBadge,
 } from "./ProductCard.utils";
 
 interface ProductCardProps {
@@ -46,7 +45,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const hasOffer = hasOfferPrice(product);
 
   const sortedBadges = useMemo(() => {
-    return sortBadges(product.badges ?? []);
+    return sortBadges(product.badges ?? []).filter((badge) => !isUrgencyBadge(badge));
   }, [product.badges]);
 
   const campaignBadge = pickBadgeByKeys(sortedBadges, CAMPAIGN_BADGE_KEYS);
@@ -75,8 +74,6 @@ export function ProductCard({ product }: ProductCardProps) {
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  const { StockIcon, stockClass } = getStockPresentation(productState.type);
-
   return (
     <article className="product-card">
       <ProductCardImage
@@ -97,12 +94,6 @@ export function ProductCard({ product }: ProductCardProps) {
             hasOffer={hasOffer}
             price={price}
             originalPrice={originalPrice}
-          />
-
-          <ProductCardSocial
-            stockClass={stockClass}
-            StockIcon={StockIcon}
-            productStateLabel={productState.label}
           />
         </Link>
 

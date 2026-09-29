@@ -30,6 +30,10 @@ export function normalizeBadge(value: string) {
   return value.trim().toLowerCase();
 }
 
+export function isUrgencyBadge(badge: string) {
+  return ["últimas unidades", "ultimas unidades"].includes(normalizeBadge(badge));
+}
+
 export function pickBadgeByKeys(
   badges: string[],
   keys: string[],
