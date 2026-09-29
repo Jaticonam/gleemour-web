@@ -18,7 +18,7 @@
   position: sticky;
   top: 0;
   z-index: 120;
-  padding: 0.85rem 1rem 0.75rem;
+  padding: 0.65rem 1rem 0.8rem;
   background:
     radial-gradient(
       circle at top left,
@@ -35,17 +35,17 @@
 ========================================== */
 
 .catalog-top-nav-brand-row {
-  width: min(100%, 1480px);
-  margin: 0 auto 0.7rem;
+  width: min(100%, 1760px);
+  margin: 0 auto 0.45rem;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .catalog-top-nav-brand {
-  width: 14rem;
-  height: 3.35rem;
+  width: 11rem;
+  height: 2.6rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -58,12 +58,12 @@
 .catalog-top-nav-brand img {
   width: auto;
   max-width: 100%;
-  max-height: 3.35rem;
+  max-height: 2.6rem;
   object-fit: contain;
 }
 
 .catalog-top-nav-brand-row p {
-  margin: 0.15rem 0 0;
+  margin: 0;
   color: rgba(106, 90, 138, 0.7);
   font-size: 0.72rem;
   font-weight: 800;
@@ -71,17 +71,40 @@
   text-transform: uppercase;
 }
 
+.catalog-top-nav-heading {
+  width: min(100%, 1760px);
+  margin: 0 auto 0.65rem;
+}
+
+.catalog-heading h1 {
+  margin: 0.1rem 0 0;
+  color: var(--w-heading);
+  font-family: var(--font-brand);
+  font-size: clamp(1.85rem, 3vw, 2.6rem);
+  font-weight: 950;
+  line-height: 1.05;
+  letter-spacing: -0.055em;
+}
+
+.catalog-heading p:last-child {
+  margin: 0.25rem 0 0;
+  color: var(--w-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 /* ==========================================
    03. Categorías desktop
 ========================================== */
 
 .catalog-top-nav-categories {
-  width: min(100%, 1480px);
+  width: min(100%, 1760px);
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
+  justify-content: flex-start;
+  gap: 0.45rem;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -92,11 +115,11 @@
 
 .catalog-category-chip {
   flex-shrink: 0;
-  min-height: 2.45rem;
+  min-height: 2.2rem;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0 0.95rem;
+  padding: 0 0.75rem;
   border-radius: 999px;
   border: 1px solid rgba(106, 90, 138, 0.14);
   background: rgba(255, 255, 255, 0.92);
@@ -136,46 +159,33 @@
 ========================================== */
 
 .catalog-top-nav-campaign-row {
-  width: min(100%, 1480px);
-  margin: 0.95rem auto 0;
+  width: min(100%, 1760px);
+  margin: 0.65rem auto 0;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
 }
 
 .catalog-campaign-row-label {
-  position: relative;
-  width: min(100%, 980px);
-  margin: 0 auto 0.9rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.85rem;
+  flex-shrink: 0;
   color: var(--w-primary);
   font-size: 0.74rem;
   font-weight: 850;
-  letter-spacing: 0.18em;
-  text-align: center;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 .catalog-campaign-row-label::before,
 .catalog-campaign-row-label::after {
-  content: "";
-  height: 1px;
-  flex: 1;
-  max-width: 20rem;
-  background: linear-gradient(90deg, transparent, rgba(236, 164, 194, 0.45));
-}
-
-.catalog-campaign-row-label::after {
-  background: linear-gradient(90deg, rgba(236, 164, 194, 0.45), transparent);
+  content: none;
 }
 
 .catalog-top-nav-campaigns {
-  width: min(100%, 1220px);
-  margin: 0 auto;
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.7rem;
+  gap: 0.5rem;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -201,13 +211,13 @@
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
-  min-width: 13.9rem;
-  min-height: 4.05rem;
+  min-width: 10.25rem;
+  min-height: 2.8rem;
   display: inline-flex;
   align-items: stretch;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.62rem 0.65rem 0.62rem 0.9rem;
+  padding: 0.35rem 0.4rem 0.35rem 0.7rem;
   border: 0;
   border-radius: 0.9rem;
   background: var(--campaign-bg);
@@ -244,7 +254,7 @@
 
 .catalog-campaign-content strong {
   color: inherit;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   font-weight: 900;
   letter-spacing: -0.025em;
   line-height: 1.05;
@@ -253,21 +263,21 @@
 .catalog-campaign-content small {
   margin-top: 0.2rem;
   color: inherit;
-  font-size: 0.74rem;
+  font-size: 0.65rem;
   font-weight: 750;
   line-height: 1;
   opacity: 0.94;
 }
 
 .catalog-campaign-icon {
-  width: 3.05rem;
+  width: 2.25rem;
   min-height: 100%;
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 0.78rem;
-  font-size: 1.8rem;
+  font-size: 1.3rem;
   background: var(--campaign-icon-bg);
   color: inherit;
   box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.16);
@@ -278,8 +288,46 @@
 ========================================== */
 
 .catalog-top-nav-search-row {
-  width: min(100%, 920px);
-  margin: 0.8rem auto 0;
+  width: min(100%, 1760px);
+  margin: 0.65rem auto 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.catalog-top-nav-search {
+  flex: 1 1 26rem;
+  min-width: 0;
+}
+
+.catalog-help-link {
+  flex: 0 0 auto;
+  min-height: 3.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid rgba(106, 90, 138, 0.18);
+  border-radius: 1rem;
+  background: linear-gradient(135deg, var(--w-primary), var(--w-primary-dark));
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(106, 90, 138, 0.18);
+  font-size: 0.84rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.catalog-help-link:hover {
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.catalog-help-link:focus-visible,
+.catalog-category-chip:focus-visible,
+.catalog-campaign-chip:focus-visible {
+  outline: 3px solid var(--w-secondary);
+  outline-offset: 2px;
 }
 
 /* ==========================================
@@ -771,28 +819,67 @@
 
 @media (max-width: 720px) {
   .catalog-top-nav {
-    padding: 0.75rem 0.75rem 0.85rem;
+    position: relative;
+    padding: 0.6rem 0.75rem 0.75rem;
   }
 
   .catalog-top-nav-brand {
-    width: 11.5rem;
-    height: 2.95rem;
+    width: 9.5rem;
+    height: 2.4rem;
   }
 
   .catalog-top-nav-brand img {
-    max-height: 2.95rem;
+    max-height: 2.4rem;
   }
 
   .catalog-top-nav-brand-row p {
-    font-size: 0.62rem;
+    font-size: 0.56rem;
+    text-align: right;
+  }
+
+  .catalog-top-nav-heading {
+    margin-bottom: 0.5rem;
+  }
+
+  .catalog-heading h1 {
+    font-size: 1.8rem;
+  }
+
+  .catalog-heading p:last-child {
+    font-size: 0.78rem;
   }
 
   .catalog-top-nav-search-row {
-    margin-top: 0.65rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.45rem;
+    margin-top: 0;
   }
 
-  .catalog-top-nav-categories,
+  .catalog-top-nav-search {
+    flex: none;
+  }
+
+  .catalog-help-link {
+    min-height: 2.6rem;
+    font-size: 0.78rem;
+  }
+
   .catalog-top-nav-campaign-row {
+    gap: 0.55rem;
+    margin-top: 0.6rem;
+  }
+
+  .catalog-campaign-row-label {
+    font-size: 0.65rem;
+  }
+
+  .catalog-campaign-chip {
+    min-width: 9rem;
+    min-height: 2.5rem;
+  }
+
+  .catalog-top-nav-categories {
     display: none;
   }
 

@@ -20,4 +20,6 @@ export interface CatalogTopNavProps {
 
   searchSlot?: React.ReactNode;
   logoSlot?: React.ReactNode;
+  headingSlot?: React.ReactNode;
+  helpSlot?: React.ReactNode;
 }

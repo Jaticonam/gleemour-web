@@ -16,6 +16,8 @@ export function CatalogTopNav({
   onCategorySelect,
   searchSlot,
   logoSlot,
+  headingSlot,
+  helpSlot,
 }: CatalogTopNavProps) {
   const [exploreOpen, setExploreOpen] = useState(false);
   const hasCampaigns = campaignItems.length > 0;
@@ -37,6 +39,8 @@ export function CatalogTopNav({
           {logoSlot}
           <p>Detalles para emocionar</p>
         </div>
+
+        <div className="catalog-top-nav-heading">{headingSlot}</div>
 
         <nav className="catalog-top-nav-categories" aria-label="Categorías">
           {categoryItems.map((item) => {
@@ -66,10 +70,15 @@ export function CatalogTopNav({
           })}
         </nav>
 
+        <div className="catalog-top-nav-search-row">
+          <div className="catalog-top-nav-search">{searchSlot}</div>
+          {helpSlot}
+        </div>
+
         {hasCampaigns && (
           <div className="catalog-top-nav-campaign-row">
             <span className="catalog-campaign-row-label">
-              Campañas activas
+              Campañas
             </span>
 
             <div className="catalog-top-nav-campaigns">
@@ -109,7 +118,6 @@ export function CatalogTopNav({
           </div>
         )}
 
-        <div className="catalog-top-nav-search-row">{searchSlot}</div>
       </header>
 
       <button
