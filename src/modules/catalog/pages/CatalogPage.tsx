@@ -58,6 +58,7 @@ export default function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCampaign, setActiveCampaign] = useState("");
@@ -80,6 +81,7 @@ useEffect(() => {
         } else {
           console.error("Error cargando productos:", productsResult.reason);
           setProducts([]);
+          setLoadError(true);
         }
 
         if (campaignsResult.status === "fulfilled") {
@@ -217,6 +219,25 @@ useEffect(() => {
         : undefined)
       ?? "Todos los detalles";
 
+  const hasPurchaseFilters = purchaseFilters.minPrice !== "" ||
+    purchaseFilters.maxPrice !== "" || purchaseFilters.availability !== "all" ||
+    Boolean(purchaseFilters.subcategory);
+  const emptyState = searchQuery.trim()
+    ? { message: "No encontramos productos para tu búsqueda.", action: "Limpiar búsqueda" }
+    : hasPurchaseFilters
+      ? { message: "No encontramos productos con estos filtros.", action: "Limpiar filtros" }
+      : { message: "No encontramos productos en esta selección.", action: "Ver todo el catálogo" };
+
+  const resetEmptyState = () => {
+    if (searchQuery.trim()) setSearchQuery("");
+    else if (hasPurchaseFilters) setPurchaseFilters({ ...EMPTY_PURCHASE_FILTERS });
+    else {
+      setActiveCategory("todas");
+      setActiveCampaign("");
+      setActiveDiscover("");
+    }
+  };
+
 
   if (loading) return <CatalogSkeleton />;
 
@@ -284,7 +305,15 @@ useEffect(() => {
           onSortChange={setSort}
           subcategories={subcategoryItems}
         />
-        {visibleProducts.length > 0 ? (
+        {loadError ? (
+          <div className="catalog-empty" role="alert">
+            <p>No pudimos cargar los productos.</p>
+            <small>Revisa tu conexión e inténtalo de nuevo.</small>
+            <button type="button" className="catalog-empty-reset" onClick={() => window.location.reload()}>
+              Reintentar
+            </button>
+          </div>
+        ) : visibleProducts.length > 0 ? (
           <section
             className="catalog-section"
             data-aos="fade-up"
@@ -305,23 +334,16 @@ useEffect(() => {
           </section>
         ) : (
           <div className="catalog-empty">
-            <p>No encontramos productos con esta combinación.</p>
+            <p>{emptyState.message}</p>
             <small>
               Prueba con otros criterios o vuelve al catálogo completo.
             </small>
             <button
               type="button"
               className="catalog-empty-reset"
-              onClick={() => {
-                setActiveCategory("todas");
-                setActiveCampaign("");
-                setActiveDiscover("");
-                setSearchQuery("");
-                setPurchaseFilters({ ...EMPTY_PURCHASE_FILTERS });
-                setSort("featured");
-              }}
+              onClick={resetEmptyState}
             >
-              Limpiar todo
+              {emptyState.action}
             </button>
           </div>
         )}
