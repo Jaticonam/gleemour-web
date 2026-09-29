@@ -10,10 +10,13 @@ export function CatalogTopNav({
   categoryItems,
   activeCampaign = "",
   activeCategory = "todas",
+  activeDiscover = "",
+  discoverItems = [],
   campaignCounts = {},
   categoryCounts = {},
   onCampaignSelect,
   onCategorySelect,
+  onDiscoverSelect,
   searchSlot,
   logoSlot,
   headingSlot,
@@ -74,6 +77,33 @@ export function CatalogTopNav({
           <div className="catalog-top-nav-search">{searchSlot}</div>
           {helpSlot}
         </div>
+
+        {discoverItems.length > 0 && (
+          <div className="catalog-discover-row" role="group" aria-label="Descubre">
+            <span className="catalog-discover-label">Descubre</span>
+            <div className="catalog-discover-chips">
+              <button
+                type="button"
+                className={`catalog-discover-chip ${!activeDiscover ? "active" : ""}`}
+                aria-pressed={!activeDiscover}
+                onClick={() => onDiscoverSelect?.("")}
+              >
+                Todos
+              </button>
+              {discoverItems.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={`catalog-discover-chip ${activeDiscover === item.id ? "active" : ""}`}
+                  aria-pressed={activeDiscover === item.id}
+                  onClick={() => onDiscoverSelect?.(activeDiscover === item.id ? "" : item.id)}
+                >
+                  {item.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {hasCampaigns && (
           <div className="catalog-top-nav-campaign-row">

@@ -325,9 +325,59 @@
 
 .catalog-help-link:focus-visible,
 .catalog-category-chip:focus-visible,
-.catalog-campaign-chip:focus-visible {
+.catalog-campaign-chip:focus-visible,
+.catalog-discover-chip:focus-visible {
   outline: 3px solid var(--w-secondary);
   outline-offset: 2px;
+}
+
+.catalog-discover-row {
+  width: min(100%, 1760px);
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0.55rem auto 0;
+}
+
+.catalog-discover-label {
+  flex: none;
+  color: var(--w-primary);
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.catalog-discover-chips {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.catalog-discover-chips::-webkit-scrollbar { display: none; }
+
+.catalog-discover-chip {
+  flex: none;
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+  border: 1px solid rgba(106, 90, 138, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--w-heading);
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.catalog-discover-chip.active {
+  border-color: var(--w-primary);
+  background: var(--w-primary);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(106, 90, 138, 0.18);
 }
 
 /* ==========================================
@@ -864,6 +914,10 @@
     min-height: 2.6rem;
     font-size: 0.78rem;
   }
+
+  .catalog-discover-row { gap: 0.5rem; }
+  .catalog-discover-label { font-size: 0.62rem; }
+  .catalog-discover-chip { min-height: 2.5rem; padding-inline: 0.65rem; }
 
   .catalog-top-nav-campaign-row {
     gap: 0.55rem;

@@ -109,6 +109,23 @@
   font-weight: 700;
 }
 
+.catalog-empty-reset {
+  min-height: 2.5rem;
+  margin-top: 0.75rem;
+  padding: 0 1rem;
+  border: 1px solid var(--w-primary);
+  border-radius: 999px;
+  background: var(--w-primary);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.catalog-empty-reset:focus-visible {
+  outline: 3px solid var(--w-secondary);
+  outline-offset: 2px;
+}
+
 @media (max-width: 720px) {
   .catalog-section-header-clean {
     margin-bottom: 1rem;

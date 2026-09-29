@@ -25,45 +25,13 @@ import {
 } from "@/shared/components/feedback/NotificationStack";
 
 import { CatalogSkeleton } from "@/shared/components/skeletons/CatalogSkeleton";
-
-function normalizeFilterKey(value: unknown): string {
-  return String(value ?? "")
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/_/g, "-")
-    .replace(/\s+/g, "-")
-    .replace(/[^\w-]+/g, "")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-}
-
-/**
- * Normalizador canónico de campañas.
- *
- * Regla de negocio:
- * El ID técnico de campaña debe quedar corto y comercial.
- *
- * Ejemplos:
- * "Día de la Novia"  -> "dia-novia"
- * "Día del Maestro"  -> "dia-maestro"
- * "Día de la Madre"  -> "dia-madre"
- * "San Valentín"     -> "san-valentin"
- * "Cyber Gleemour"   -> "cyber-gleemour"
- */
-function normalizeCampaignKey(value: unknown): string {
-  const normalized = normalizeFilterKey(value);
-
-  if (!normalized) return "";
-
-  const stopWords = new Set(["de", "del", "la", "el", "las", "los", "al"]);
-
-  return normalized
-    .split("-")
-    .filter((part) => part && !stopWords.has(part))
-    .join("-");
-}
+import {
+  filterCatalogProducts,
+  getAvailableDiscoverOptions,
+  normalizeCampaignKey,
+  normalizeFilterKey,
+  type DiscoverKey,
+} from "./CatalogFilters";
 
 function isPublishedCampaignStatus(value: unknown): boolean {
   const status = normalizeFilterKey(value);
@@ -80,29 +48,6 @@ function isPublishedCampaignStatus(value: unknown): boolean {
   ].includes(status);
 }
 
-function titleFromSlug(value: string): string {
-  return value
-    .split("-")
-    .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
-
-function productBelongsToCategory(
-  product: Product,
-  categoryId: string,
-): boolean {
-  if (categoryId === "todas") return true;
-
-  const productCategories = Array.isArray(product.categories)
-    ? product.categories
-    : [];
-
-  return (
-    product.category === categoryId || productCategories.includes(categoryId)
-  );
-}
-
 export default function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -111,6 +56,7 @@ export default function CatalogPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCampaign, setActiveCampaign] = useState("");
   const [activeCategory, setActiveCategory] = useState("todas");
+  const [activeDiscover, setActiveDiscover] = useState<DiscoverKey | "">("");
 
 
 
@@ -167,6 +113,8 @@ useEffect(() => {
       return acc;
     }, {});
   }, [products]);
+
+  const discoverItems = useMemo(() => getAvailableDiscoverOptions(products), [products]);
 
   const campaignCounts = useMemo(() => {
     return products.reduce<Record<string, number>>((acc, product) => {
@@ -239,60 +187,18 @@ useEffect(() => {
 
   const handleCampaignSelect = (campaignId: string) => {
     setActiveCampaign(campaignId);
-    setActiveCategory("todas");
-    setSearchQuery("");
   };
 
   const handleCategorySelect = (categoryId: string) => {
     setActiveCategory(categoryId);
-    setActiveCampaign("");
-    setSearchQuery("");
   };
 
-  const visibleProducts = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    const normalizedActiveCampaign = normalizeCampaignKey(activeCampaign);
-
-    const byCampaign = !normalizedActiveCampaign
-      ? products
-      : products.filter((product) => {
-          const productCampaigns = Array.isArray(product.campaigns)
-            ? product.campaigns
-            : [];
-
-          return productCampaigns
-            .map(normalizeCampaignKey)
-            .includes(normalizedActiveCampaign);
-        });
-
-    const byCategory =
-      activeCategory === "todas"
-        ? byCampaign
-        : byCampaign.filter((product) =>
-            productBelongsToCategory(product, activeCategory),
-          );
-
-    if (!query) return byCategory;
-
-    return byCategory.filter((product) => {
-      const haystack = [
-        product.id,
-        product.title,
-        product.description,
-        product.category,
-        product.occasion,
-        product.message,
-        product.highlight,
-        ...(product.badges ?? []),
-        ...(product.campaigns ?? []),
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-
-      return haystack.includes(query);
-    });
-  }, [products, searchQuery, activeCampaign, activeCategory]);
+  const visibleProducts = useMemo(
+    () => filterCatalogProducts(products, {
+      searchQuery, activeCampaign, activeCategory, activeDiscover,
+    }),
+    [products, searchQuery, activeCampaign, activeCategory, activeDiscover],
+  );
 
 
   if (loading) return <CatalogSkeleton />;
@@ -308,10 +214,13 @@ useEffect(() => {
         )}
         activeCampaign={activeCampaign}
         activeCategory={activeCategory}
+        activeDiscover={activeDiscover}
+        discoverItems={discoverItems}
         campaignCounts={campaignCounts}
         categoryCounts={categoryCounts}
         onCampaignSelect={handleCampaignSelect}
         onCategorySelect={handleCategorySelect}
+        onDiscoverSelect={setActiveDiscover}
         logoSlot={
           <button
             type="button"
@@ -370,10 +279,22 @@ useEffect(() => {
           </section>
         ) : (
           <div className="catalog-empty">
-            <p>No encontramos detalles con esa búsqueda.</p>
+            <p>No encontramos productos con esta combinación.</p>
             <small>
-              Prueba con otra palabra o revisa el catálogo completo.
+              Prueba con otros criterios o vuelve al catálogo completo.
             </small>
+            <button
+              type="button"
+              className="catalog-empty-reset"
+              onClick={() => {
+                setActiveCategory("todas");
+                setActiveCampaign("");
+                setActiveDiscover("");
+                setSearchQuery("");
+              }}
+            >
+              Limpiar filtros
+            </button>
           </div>
         )}
       </main>
