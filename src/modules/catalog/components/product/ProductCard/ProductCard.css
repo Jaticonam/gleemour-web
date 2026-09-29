@@ -88,7 +88,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: .5rem;
+  padding: .45rem;
   overflow: hidden;
   border: 1px solid var(--w-border);
   border-radius: var(--w-radius-lg);
@@ -152,7 +152,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  padding: .55rem .1rem .1rem;
+  padding: .4rem .1rem .1rem;
 }
 .product-card-detail {
   flex: 1;
@@ -176,25 +176,26 @@
   -webkit-line-clamp: 2;
   overflow: hidden;
   min-height: 2.5em;
-  margin: .25rem 0 0;
+  margin: .16rem 0 0;
   color: var(--w-heading);
   font-size: .88rem;
   font-weight: 850;
   line-height: 1.25;
 }
-.product-card-price-block { min-width: 0; margin-top: .45rem; }
+.product-card-price-block { min-width: 0; margin-top: auto; padding-top: .3rem; }
 .product-card-price-wrap {
   min-width: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: .15rem .45rem;
+  gap: .1rem .35rem;
 }
 .product-card-price-old {
   color: var(--w-muted);
   font-size: .7rem;
   line-height: 1;
   text-decoration: line-through;
+  white-space: nowrap;
 }
 .product-card-price {
   min-width: 0;
@@ -203,13 +204,13 @@
   gap: .18rem;
   color: var(--w-secondary);
   line-height: 1.1;
+  white-space: nowrap;
 }
 .product-card-price span { font-size: .72rem; font-weight: 800; }
 .product-card-price strong {
-  font-size: clamp(1.05rem, 1.3vw, 1.4rem);
+  font-size: clamp(1rem, 1.15vw, 1.25rem);
   font-weight: 950;
   letter-spacing: -.04em;
-  overflow-wrap: anywhere;
 }
 .product-card-preorder {
   color: var(--w-whatsapp-dark);
@@ -221,7 +222,7 @@
   align-items: stretch;
   gap: .3rem;
   min-width: 0;
-  margin-top: .45rem;
+  margin-top: .35rem;
 }
 .product-card-button-personalize,
 .product-card-button-wa {
@@ -229,7 +230,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--w-radius-md);
+  border-radius: var(--w-radius-sm);
   cursor: pointer;
   transition: filter 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
 }
@@ -278,9 +279,9 @@
   .product-card-button-wa { border-radius: var(--w-radius-sm); }
   .product-card-badges { top: .45rem; left: .45rem; max-width: calc(100% - .9rem); }
   .product-card-badge { font-size: .68rem; padding: .34rem .54rem; }
-  .product-card-body { padding: .45rem .05rem .05rem; }
+  .product-card-body { padding: .35rem .05rem .05rem; }
   .product-card-title { font-size: .78rem; }
-  .product-card-price strong { font-size: 1.1rem; }
+  .product-card-price strong { font-size: 1.05rem; }
   .product-card-button-wa { gap: .2rem; padding: 0 .2rem; font-size: .64rem; }
 }
 
