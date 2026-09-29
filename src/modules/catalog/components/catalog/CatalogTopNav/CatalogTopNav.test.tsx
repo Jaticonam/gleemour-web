@@ -27,4 +27,21 @@ describe("CatalogTopNav Descubre", () => {
     render(<CatalogTopNav campaignItems={[]} categoryItems={[]} />);
     expect(screen.queryByRole("group", { name: "Descubre" })).not.toBeInTheDocument();
   });
+
+  it("mantiene categorías accesibles y cierra Explorar con Escape devolviendo el foco", () => {
+    const onCategorySelect = vi.fn();
+    render(<CatalogTopNav campaignItems={[]} categoryItems={[{ id: "todas", name: "Todos" }]}
+      onCategorySelect={onCategorySelect} />);
+    fireEvent.click(within(screen.getByRole("navigation", { name: "Categorías" })).getByRole("button", { name: "Todos" }));
+    expect(onCategorySelect).toHaveBeenCalledWith("todas");
+    const trigger = screen.getByRole("button", { name: "Explorar" });
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog", { name: "Encuentra el detalle ideal" })).toBeInTheDocument();
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(document.body.style.overflow).toBe("hidden");
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Encuentra el detalle ideal" })).not.toBeInTheDocument();
+    expect(document.body.style.overflow).toBe("");
+    expect(trigger).toHaveFocus();
+  });
 });

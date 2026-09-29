@@ -39,7 +39,7 @@ describe("CatalogResultsToolbar", () => {
     expect(onFiltersChange).toHaveBeenCalledWith({ ...filters, minPrice: "", maxPrice: "" });
     fireEvent.click(screen.getByRole("button", { name: "Quitar filtro de disponibilidad" }));
     expect(onFiltersChange).toHaveBeenCalledWith({ ...filters, availability: "all" });
-    fireEvent.click(screen.getByRole("button", { name: "Quitar filtro de subcategoría" }));
+    fireEvent.click(screen.getByRole("button", { name: /Quitar filtro de subcategoría/ }));
     expect(onFiltersChange).toHaveBeenCalledWith({ ...filters, subcategory: "" });
     fireEvent.click(screen.getByRole("button", { name: "Limpiar filtros" }));
     expect(onFiltersChange).toHaveBeenCalledWith(EMPTY_PURCHASE_FILTERS);
@@ -55,5 +55,6 @@ describe("CatalogResultsToolbar", () => {
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
     expect(await screen.findByRole("button", { name: "Quitar filtro de precio" })).toBeInTheDocument();
     expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(trigger).toHaveFocus();
   });
 });

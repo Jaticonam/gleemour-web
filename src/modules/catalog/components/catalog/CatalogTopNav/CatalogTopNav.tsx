@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Compass, X } from "lucide-react";
 
 import "./CatalogTopNav.css";
@@ -23,7 +23,38 @@ export function CatalogTopNav({
   helpSlot,
 }: CatalogTopNavProps) {
   const [exploreOpen, setExploreOpen] = useState(false);
+  const exploreTrigger = useRef<HTMLButtonElement>(null);
+  const exploreSheet = useRef<HTMLDivElement>(null);
   const hasCampaigns = campaignItems.length > 0;
+
+  useEffect(() => {
+    if (!exploreOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    const trigger = exploreTrigger.current;
+    document.body.style.overflow = "hidden";
+    exploreSheet.current?.querySelector<HTMLButtonElement>("button")?.focus();
+    const handleKeys = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setExploreOpen(false);
+      if (event.key !== "Tab") return;
+      const buttons = exploreSheet.current?.querySelectorAll<HTMLButtonElement>("button");
+      if (!buttons?.length) return;
+      const first = buttons[0];
+      const last = buttons[buttons.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeys);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeys);
+      trigger?.focus();
+    };
+  }, [exploreOpen]);
 
   const handleCampaignSelect = (id: string) => {
     onCampaignSelect?.(id);
@@ -41,6 +72,17 @@ export function CatalogTopNav({
         <div className="catalog-top-nav-brand-row">
           {logoSlot}
           <p>Detalles para emocionar</p>
+          <button
+            ref={exploreTrigger}
+            type="button"
+            className="catalog-explore-fab"
+            aria-expanded={exploreOpen}
+            aria-controls="catalog-explore-sheet"
+            onClick={() => setExploreOpen(true)}
+          >
+            <Compass className="w-4 h-4" aria-hidden="true" />
+            Explorar
+          </button>
         </div>
 
         <div className="catalog-top-nav-heading">{headingSlot}</div>
@@ -150,15 +192,6 @@ export function CatalogTopNav({
 
       </header>
 
-      <button
-        type="button"
-        className="catalog-explore-fab"
-        onClick={() => setExploreOpen(true)}
-      >
-        <Compass className="w-4 h-4" />
-        Explorar
-      </button>
-
       {exploreOpen && (
         <div className="catalog-explore-overlay">
           <button
@@ -168,15 +201,16 @@ export function CatalogTopNav({
             aria-label="Cerrar explorar"
           />
 
-          <div className="catalog-explore-sheet">
+          <div ref={exploreSheet} className="catalog-explore-sheet" id="catalog-explore-sheet" role="dialog"
+            aria-modal="true" aria-labelledby="catalog-explore-title">
             <div className="catalog-explore-header">
               <div>
                 <span>Explorar catálogo</span>
-                <h3>Encuentra el detalle ideal</h3>
+                <h3 id="catalog-explore-title">Encuentra el detalle ideal</h3>
               </div>
 
-              <button type="button" onClick={() => setExploreOpen(false)}>
-                <X className="w-5 h-5" />
+              <button type="button" aria-label="Cerrar explorar" onClick={() => setExploreOpen(false)}>
+                <X className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
 

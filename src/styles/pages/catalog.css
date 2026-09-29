@@ -12,6 +12,9 @@
     var(--w-background);
 }
 
+/* Mantener la ayuda flotante por debajo de los paneles modales del catálogo. */
+.catalog-page .floating-buttons-wrap { z-index: 40; }
+
 .catalog-sticky-header {
   position: sticky;
   top: 0;

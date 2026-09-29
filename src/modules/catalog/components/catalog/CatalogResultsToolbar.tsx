@@ -79,19 +79,20 @@ export function CatalogResultsToolbar({
           {priceActive && (
             <button type="button" aria-label="Quitar filtro de precio"
               onClick={() => update({ minPrice: "", maxPrice: "" })}>
-              S/ {filters.minPrice || "0"} – {filters.maxPrice || "más"} <X size={14} aria-hidden="true" />
+              <span>S/ {filters.minPrice || "0"} – {filters.maxPrice || "más"}</span> <X size={14} aria-hidden="true" />
             </button>
           )}
           {filters.availability !== "all" && (
             <button type="button" aria-label="Quitar filtro de disponibilidad"
               onClick={() => update({ availability: "all" })}>
-              {filters.availability === "available" ? "Disponible" : "Últimas unidades"} <X size={14} aria-hidden="true" />
+              <span>{filters.availability === "available" ? "Disponible" : "Últimas unidades"}</span> <X size={14} aria-hidden="true" />
             </button>
           )}
           {filters.subcategory && (
-            <button type="button" aria-label="Quitar filtro de subcategoría"
+            <button type="button" aria-label={`Quitar filtro de subcategoría: ${filters.subcategory}`}
+              title={filters.subcategory}
               onClick={() => update({ subcategory: "" })}>
-              {filters.subcategory} <X size={14} aria-hidden="true" />
+              <span>{filters.subcategory}</span> <X size={14} aria-hidden="true" />
             </button>
           )}
           <button type="button" className="catalog-results-clear" onClick={() => onFiltersChange(EMPTY_PURCHASE_FILTERS)}>
