@@ -19,8 +19,8 @@
   margin: 0;
   color: var(--w-heading);
   font-family: var(--font-brand);
-  font-size: clamp(1.15rem, 1.6vw, 1.55rem);
-  font-weight: 900;
+  font-size: clamp(1.125rem, 1.5vw, 1.375rem);
+  font-weight: 700;
   line-height: 1.2;
 }
 .catalog-results-heading p { margin: 0; color: var(--w-muted); font-size: 0.8rem; font-weight: 700; white-space: nowrap; }
@@ -32,7 +32,7 @@
   align-items: center;
   gap: 0.4rem;
   border: 1px solid var(--w-border);
-  border-radius: var(--w-radius-sm);
+  border-radius: 0.75rem;
   background: var(--w-surface);
   color: var(--w-heading);
   font-size: 0.78rem;

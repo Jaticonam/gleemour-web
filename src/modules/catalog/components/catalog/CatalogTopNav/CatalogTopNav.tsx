@@ -68,131 +68,132 @@ export function CatalogTopNav({
   return (
     <>
       <header className="catalog-top-nav">
-        <div className="catalog-top-nav-brand-row">
-          <h1 className="catalog-top-nav-brand-heading">{logoSlot}</h1>
-          <button
-            ref={exploreTrigger}
-            type="button"
-            className="catalog-explore-fab"
-            aria-label="Explorar"
-            aria-expanded={exploreOpen}
-            aria-controls="catalog-explore-sheet"
-            onClick={() => setExploreOpen(true)}
-          >
-            <Compass className="w-4 h-4" aria-hidden="true" />
-            <span>Explorar</span>
-          </button>
-        </div>
-
-        <nav className="catalog-top-nav-categories" aria-label="Categorías">
-          <div className="catalog-category-list">
-            {categoryItems.map((item) => {
-              const isActive = activeCategory === item.id;
-
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  className={[
-                    "catalog-category-chip",
-                    isActive ? "active" : "",
-                  ].join(" ")}
-                  aria-pressed={isActive}
-                  onClick={() => handleCategorySelect(item.id)}
-                >
-                  {item.icon && (
-                    <span className="catalog-category-icon">{item.icon}</span>
-                  )}
-
-                  <span>{item.name}</span>
-
-                  {categoryCounts[item.id] !== undefined && (
-                    <small>({categoryCounts[item.id]})</small>
-                  )}
-                </button>
-              );
-            })}
+        <div className="catalog-top-nav-inner">
+          <div className="catalog-top-nav-brand-row">
+            <h1 className="catalog-top-nav-brand-heading">{logoSlot}</h1>
+            <button
+              ref={exploreTrigger}
+              type="button"
+              className="catalog-explore-fab"
+              aria-label="Explorar"
+              aria-expanded={exploreOpen}
+              aria-controls="catalog-explore-sheet"
+              onClick={() => setExploreOpen(true)}
+            >
+              <Compass className="w-4 h-4" aria-hidden="true" />
+              <span>Explorar</span>
+            </button>
           </div>
-        </nav>
 
-        <div className="catalog-top-nav-discovery">
-          {discoverItems.length > 0 && (
-            <div className="catalog-discover-row" role="group" aria-label="Descubre">
-              <span className="catalog-discover-label">Descubre</span>
-              <div className="catalog-discover-chips">
-                <button
-                  type="button"
-                  className={`catalog-discover-chip ${!activeDiscover ? "active" : ""}`}
-                  aria-pressed={!activeDiscover}
-                  onClick={() => onDiscoverSelect?.("")}
-                >
-                  Todos
-                </button>
-                {discoverItems.map((item) => (
+          <nav className="catalog-top-nav-categories" aria-label="Categorías">
+            <div className="catalog-category-list">
+              {categoryItems.map((item) => {
+                const isActive = activeCategory === item.id;
+
+                return (
                   <button
                     key={item.id}
                     type="button"
-                    className={`catalog-discover-chip ${activeDiscover === item.id ? "active" : ""}`}
-                    aria-pressed={activeDiscover === item.id}
-                    onClick={() => onDiscoverSelect?.(activeDiscover === item.id ? "" : item.id)}
+                    className={[
+                      "catalog-category-chip",
+                      isActive ? "active" : "",
+                    ].join(" ")}
+                    aria-pressed={isActive}
+                    onClick={() => handleCategorySelect(item.id)}
                   >
-                    {item.name}
+                    {item.icon && (
+                      <span className="catalog-category-icon">{item.icon}</span>
+                    )}
+
+                    <span>{item.name}</span>
+
+                    {categoryCounts[item.id] !== undefined && (
+                      <small>({categoryCounts[item.id]})</small>
+                    )}
                   </button>
-                ))}
-              </div>
+                );
+              })}
             </div>
-          )}
+          </nav>
 
-          {hasCampaigns && (
-            <div className="catalog-top-nav-campaign-row">
-              <span className="catalog-campaign-row-label">
-                Campañas
-              </span>
-
-              <div className="catalog-top-nav-campaigns">
-                {campaignItems.map((item) => {
-                  const isActive = activeCampaign === item.id;
-
-                  return (
+          <div className="catalog-top-nav-discovery">
+            {discoverItems.length > 0 && (
+              <div className="catalog-discover-row" role="group" aria-label="Descubre">
+                <span className="catalog-discover-label">Descubre</span>
+                <div className="catalog-discover-chips">
+                  <button
+                    type="button"
+                    className={`catalog-discover-chip ${!activeDiscover ? "active" : ""}`}
+                    aria-pressed={!activeDiscover}
+                    onClick={() => onDiscoverSelect?.("")}
+                  >
+                    Todos
+                  </button>
+                  {discoverItems.map((item) => (
                     <button
                       key={item.id}
                       type="button"
-                      className={[
-                        "catalog-campaign-chip",
-                        item.colorClass ?? "",
-                        isActive ? "active" : "",
-                      ].join(" ")}
-                      aria-pressed={isActive}
-                      onClick={() =>
-                        handleCampaignSelect(isActive ? "" : item.id)
-                      }
+                      className={`catalog-discover-chip ${activeDiscover === item.id ? "active" : ""}`}
+                      aria-pressed={activeDiscover === item.id}
+                      onClick={() => onDiscoverSelect?.(activeDiscover === item.id ? "" : item.id)}
                     >
-                      <span className="catalog-campaign-content">
-                        <strong>{item.name}</strong>
-
-                        {campaignCounts[item.id] !== undefined && (
-                          <small>{campaignCounts[item.id]} productos</small>
-                        )}
-                      </span>
-
-                      {item.icon && (
-                        <span className="catalog-campaign-icon">
-                          {item.icon}
-                        </span>
-                      )}
+                      {item.name}
                     </button>
-                  );
-                })}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
 
-        <div className="catalog-top-nav-search-row">
-          <div className="catalog-top-nav-search">{searchSlot}</div>
-          {helpSlot}
-        </div>
+            {hasCampaigns && (
+              <div className="catalog-top-nav-campaign-row">
+                <span className="catalog-campaign-row-label">
+                  Campañas
+                </span>
 
+                <div className="catalog-top-nav-campaigns">
+                  {campaignItems.map((item) => {
+                    const isActive = activeCampaign === item.id;
+
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        className={[
+                          "catalog-campaign-chip",
+                          item.colorClass ?? "",
+                          isActive ? "active" : "",
+                        ].join(" ")}
+                        aria-pressed={isActive}
+                        onClick={() =>
+                          handleCampaignSelect(isActive ? "" : item.id)
+                        }
+                      >
+                        <span className="catalog-campaign-content">
+                          <strong>{item.name}</strong>
+
+                          {campaignCounts[item.id] !== undefined && (
+                            <small>{campaignCounts[item.id]} productos</small>
+                          )}
+                        </span>
+
+                        {item.icon && (
+                          <span className="catalog-campaign-icon">
+                            {item.icon}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="catalog-top-nav-search-row">
+            <div className="catalog-top-nav-search">{searchSlot}</div>
+            {helpSlot}
+          </div>
+        </div>
       </header>
 
       {exploreOpen && (
