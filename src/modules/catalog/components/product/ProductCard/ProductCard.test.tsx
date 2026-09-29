@@ -92,10 +92,30 @@ describe("ProductCard", () => {
     const open = vi.spyOn(window, "open").mockImplementation(() => null);
     renderCard(soldOut);
 
-    expect(screen.getByRole("img", { name: product.title })).toHaveAttribute("src", "/placeholder.svg");
+    expect(screen.getByRole("img", { name: product.title })).toHaveAttribute("src", "/product-fallback.svg");
     expect(screen.getByText("Agotado")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: `Consultar ${product.title} por WhatsApp` }));
     expect(open).toHaveBeenCalledWith(buildProductWhatsAppUrl({ product: soldOut, qty: 1 }), "_blank", "noopener,noreferrer");
+  });
+
+  it("conserva fotos válidas y reemplaza una URL rota con el SVG local sin repetir errores", () => {
+    renderCard({ ...product, img: "https://example.com/ramo.jpg" });
+    const image = screen.getByRole("img", { name: product.title });
+    expect(image).toHaveAttribute("src", "https://example.com/ramo.jpg");
+
+    fireEvent.error(image);
+    expect(screen.getByRole("img", { name: product.title })).toHaveAttribute("src", "/product-fallback.svg");
+    fireEvent.error(screen.getByRole("img", { name: product.title }));
+    expect(screen.queryByRole("img", { name: product.title })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: `Ver detalle de ${product.title}` })).toHaveAttribute(
+      "href", "/catalogo/p/GLE-001.html",
+    );
+  });
+
+  it("mantiene Premium solo si está presente en los datos del producto", () => {
+    renderCard({ ...product, badges: ["Premium"] });
+    expect(screen.getByText(/Premium/)).toHaveClass("product-card-badge", "product-badge--premium");
+    expect(screen.queryByText(/Oferta/)).not.toBeInTheDocument();
   });
 
   it("emite apertura, personalización y WhatsApp una vez sin alterar el destino", () => {
