@@ -35,9 +35,9 @@ export default function CatalogFiltersDialog({
           triggerRef.current?.focus();
         }}
       >
-        <DialogHeader>
-          <DialogTitle>Filtrar productos</DialogTitle>
-          <DialogDescription>Elige precio, disponibilidad o subcategoría.</DialogDescription>
+        <DialogHeader className="catalog-filters-header">
+          <DialogTitle>Filtros</DialogTitle>
+          <DialogDescription className="sr-only">Elige precio, disponibilidad o subcategoría.</DialogDescription>
         </DialogHeader>
         <div className="catalog-filters-fields">
           <fieldset>

@@ -1,4 +1,4 @@
-import { SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
 import { trackCommerceEvent } from "@/core/services/commerceEvents";
 import { lazy, Suspense, useRef, useState } from "react";
 import {
@@ -76,30 +76,33 @@ export function CatalogResultsToolbar({
               <option value="price-asc">Precio: menor a mayor</option>
               <option value="price-desc">Precio: mayor a menor</option>
             </select>
+            <ChevronDown size={16} aria-hidden="true" />
           </label>
         </div>
       </div>
       {activeCount > 0 && (
         <div className="catalog-results-active-filters" aria-label="Filtros de compra activos">
-          {priceActive && (
-            <button type="button" aria-label="Quitar filtro de precio"
-              onClick={() => removeFilter({ minPrice: "", maxPrice: "" })}>
-              <span>S/ {filters.minPrice || "0"} – {filters.maxPrice || "más"}</span> <X size={14} aria-hidden="true" />
-            </button>
-          )}
-          {filters.availability !== "all" && (
-            <button type="button" aria-label="Quitar filtro de disponibilidad"
-              onClick={() => removeFilter({ availability: "all" })}>
-              <span>{filters.availability === "available" ? "Disponible" : "Últimas unidades"}</span> <X size={14} aria-hidden="true" />
-            </button>
-          )}
-          {filters.subcategory && (
-            <button type="button" aria-label={`Quitar filtro de subcategoría: ${filters.subcategory}`}
-              title={filters.subcategory}
-              onClick={() => removeFilter({ subcategory: "" })}>
-              <span>{filters.subcategory}</span> <X size={14} aria-hidden="true" />
-            </button>
-          )}
+          <div className="catalog-results-chips">
+            {priceActive && (
+              <button type="button" aria-label="Quitar filtro de precio"
+                onClick={() => removeFilter({ minPrice: "", maxPrice: "" })}>
+                <span>S/ {filters.minPrice || "0"} – {filters.maxPrice || "más"}</span> <X size={14} aria-hidden="true" />
+              </button>
+            )}
+            {filters.availability !== "all" && (
+              <button type="button" aria-label="Quitar filtro de disponibilidad"
+                onClick={() => removeFilter({ availability: "all" })}>
+                <span>{filters.availability === "available" ? "Disponible" : "Últimas unidades"}</span> <X size={14} aria-hidden="true" />
+              </button>
+            )}
+            {filters.subcategory && (
+              <button type="button" aria-label={`Quitar filtro de subcategoría: ${filters.subcategory}`}
+                title={filters.subcategory}
+                onClick={() => removeFilter({ subcategory: "" })}>
+                <span>{filters.subcategory}</span> <X size={14} aria-hidden="true" />
+              </button>
+            )}
+          </div>
           <button type="button" className="catalog-results-clear" onClick={() => {
             trackCommerceEvent({ type: "catalog_filters_cleared", source: "filter_chip", count: activeCount });
             onFiltersChange(EMPTY_PURCHASE_FILTERS);

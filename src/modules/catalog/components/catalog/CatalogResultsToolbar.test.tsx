@@ -52,7 +52,7 @@ describe("CatalogResultsToolbar", () => {
     render(<Controlled />);
     const trigger = screen.getByRole("button", { name: "Filtros" });
     fireEvent.click(trigger);
-    expect(await screen.findByRole("dialog", { name: "Filtrar productos" })).toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: "Filtros" })).toBeInTheDocument();
     expect(trigger).toHaveAttribute("aria-expanded", "true");
     fireEvent.change(screen.getByRole("spinbutton", { name: "Desde" }), { target: { value: "50" } });
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });

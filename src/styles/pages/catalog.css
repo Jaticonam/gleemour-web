@@ -75,16 +75,16 @@
 }
 
 .catalog-empty {
-  min-height: 12rem;
+  min-height: 9rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  margin-top: 1rem;
-  padding: 1.5rem;
+  margin-top: 0.6rem;
+  padding: 1.25rem;
   text-align: center;
-  border-radius: 2rem;
+  border-radius: var(--w-radius-lg);
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(239, 227, 234, 0.8);
   box-shadow: var(--w-shadow-soft);
@@ -184,10 +184,7 @@
     display: block;
   }
 
-  .catalog-empty {
-    min-height: 11rem;
-    border-radius: 1.5rem;
-  }
+  .catalog-empty { min-height: 8.5rem; border-radius: var(--w-radius-md); }
 }
 @media (max-width: 400px) {
   .catalog-main {
