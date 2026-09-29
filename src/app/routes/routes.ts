@@ -1,5 +1,6 @@
 import type { ExperienceSource } from "@/modules/experience/types/ExperienceEntry.types";
 import type { Product } from "@/shared/types/product";
+import { productPublicPath } from "@/seo/publicMetadata";
 
 /**
  * Rutas comerciales del catálogo y Experience Studio.
@@ -16,17 +17,9 @@ export function getCategoryUrl(categoryId: string): string {
 
 export function getProductDetailUrl(
   productId: string,
-  categoryId?: string,
+  _categoryId?: string,
 ): string {
-  const params = new URLSearchParams({
-    id: productId,
-  });
-
-  if (categoryId) {
-    params.set("cat", categoryId);
-  }
-
-  return `/catalogo/producto.html?${params.toString()}`;
+  return productPublicPath(productId);
 }
 
 export function getProductUrl(product: Product): string {

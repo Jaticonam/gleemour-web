@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 
 import { getExperienceUrl } from "@/app/routes/routes";
+import { applyPageMetadata, catalogMetadata } from "@/seo/publicMetadata";
 
 import {
   loadAllProducts,
@@ -41,6 +42,7 @@ import {
 } from "./CatalogFilters";
 
 export default function CatalogPage() {
+  useEffect(() => { applyPageMetadata(catalogMetadata); }, []);
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);

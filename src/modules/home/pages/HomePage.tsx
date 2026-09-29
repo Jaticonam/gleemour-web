@@ -16,6 +16,7 @@ import HomeFloatingButtons from "../components/HomeFloatingButtons";
 import { useCart } from "@/modules/cart/hooks/useCart";
 
 export default function HomePage() {
+  useEffect(() => { applyPageMetadata(homeMetadata); }, []);
   const { totalItems } = useCart();
 
   const handleCartClick = () => {
@@ -46,3 +47,5 @@ export default function HomePage() {
     </div>
   );
 }
+import { useEffect } from "react";
+import { applyPageMetadata, homeMetadata } from "@/seo/publicMetadata";

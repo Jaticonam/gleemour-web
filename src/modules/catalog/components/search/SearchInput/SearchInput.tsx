@@ -2,6 +2,7 @@ import "./SearchInput.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Search, Sparkles, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { getProductUrl } from "@/app/routes/routes";
 import { BRAND_CONFIG } from "@/tenant/config/brand";
 import type { Product } from "@/shared/types/product";
 
@@ -149,7 +150,7 @@ export function SearchInput({
     onChange("");
     closeSuggestions();
 
-    navigate(`/catalogo/producto.html?id=${product.id}&cat=${product.category}`, {
+    navigate(getProductUrl(product), {
       state: {
         fromSearch: true,
         searchQuery: currentSearch,
@@ -426,8 +427,6 @@ export function SearchInput({
     </div>
   );
 }
-
-
 
 
 

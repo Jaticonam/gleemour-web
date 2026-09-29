@@ -3,6 +3,7 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, SearchX } from "lucide-react";
 
 import { BRAND_CONFIG } from "@/tenant/config/brand";
+import { applyPageMetadata, catalogMetadata } from "@/seo/publicMetadata";
 import { loadAllProducts } from "@/integrations/sheets/fetchSheets";
 import { productBelongsToCategory } from "@/domain/product/categories";
 import { searchProducts } from "@/shared/lib/search";
@@ -20,6 +21,7 @@ import { CategorySkeleton } from "@/shared/components/skeletons/CategorySkeleton
 import { SearchInput } from "@/modules/catalog/components/search/SearchInput";
 
 const CategoryPage = () => {
+  useEffect(() => { applyPageMetadata({ ...catalogMetadata, robots: "noindex, follow" }); }, []);
   const { id: paramCategoryId } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const categoryId = searchParams.get("cat") || paramCategoryId;

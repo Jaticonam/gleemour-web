@@ -24,11 +24,12 @@ function Location() {
   return <output data-testid="location">{location.pathname}{location.search}</output>;
 }
 
-function renderDetail(path = "/catalogo/producto.html?id=GLE-001&cat=para-enamorar") {
+function renderDetail(path = "/catalogo/p/GLE-001.html") {
   render(
     <MemoryRouter initialEntries={[path]}>
       <Routes>
         <Route path="/catalogo/producto.html" element={<ProductPage />} />
+        <Route path="/catalogo/p/:id" element={<ProductPage />} />
         <Route path="*" element={<Location />} />
       </Routes>
     </MemoryRouter>,
@@ -47,6 +48,9 @@ describe("ProductDetail V2", () => {
     renderDetail();
 
     expect(await screen.findByRole("heading", { name: product.title, level: 1 })).toBeInTheDocument();
+    expect(document.title).toBe("Rosas especiales | Gleemour");
+    expect(document.head.querySelector('link[rel="canonical"]')).toHaveAttribute("href", "https://gleemour.com/catalogo/p/GLE-001.html");
+    expect(document.head.querySelector('meta[property="og:image"]')).toHaveAttribute("content", "https://gleemour.com/og/home.jpg");
     expect(screen.getByText("S/ 95.00")).toBeInTheDocument();
     expect(screen.getByText("S/ 120.00").tagName).toBe("DEL");
     expect(screen.getByText("Últimos 2")).toBeInTheDocument();
@@ -98,6 +102,7 @@ describe("ProductDetail V2", () => {
     vi.spyOn(window, "scrollTo").mockImplementation(() => {});
     renderDetail("/catalogo/producto.html?id=inexistente");
     await waitFor(() => expect(screen.getByRole("button", { name: "Volver al catálogo" })).toBeInTheDocument());
+    expect(document.head.querySelector('meta[name="robots"]')).toHaveAttribute("content", "noindex, follow");
   });
 
   it("conserva una imagen de respaldo real y evita miniaturas sin imágenes adicionales", async () => {

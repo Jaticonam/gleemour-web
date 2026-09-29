@@ -28,6 +28,7 @@ import { NotificationStack } from "@/shared/components/feedback/NotificationStac
 import { ProductSkeleton } from "@/shared/components/skeletons/ProductSkeleton";
 import { PRODUCT_DETAIL_CONFIG } from "@/tenant/config/product";
 import { trackCommerceEvent } from "@/core/services/commerceEvents";
+import { applyPageMetadata, productMetadata, unavailableProductMetadata } from "@/seo/publicMetadata";
 
 export default function ProductPage() {
   const { id: paramId } = useParams<{ id: string }>();
@@ -37,7 +38,7 @@ export default function ProductPage() {
   const currentCategory = searchParams.get("cat") || "";
   const productId = (
     searchParams.get("id") ||
-    paramId ||
+    paramId?.replace(/\.html$/, "") ||
     ""
   ).trim();
 
@@ -56,6 +57,10 @@ export default function ProductPage() {
     productId,
     relatedLimit: 4,
   });
+
+  useEffect(() => {
+    applyPageMetadata(!loading && product ? productMetadata(product) : unavailableProductMetadata);
+  }, [loading, product]);
 
   const productActions = useProductActions({
     product,

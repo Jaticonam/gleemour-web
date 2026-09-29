@@ -33,6 +33,9 @@ jobs:
       - name: Build production
         run: npm run build
 
+      - name: Generate public SEO pages
+        run: npm run seo:generate
+
       - name: Add SPA routing for Hostinger
         shell: bash
         run: |
@@ -40,6 +43,7 @@ jobs:
           Options -MultiViews
           RewriteEngine On
           RewriteBase /
+          RewriteRule ^catalogo$ catalogo/index.html [L]
           RewriteCond %{REQUEST_FILENAME} -f [OR]
           RewriteCond %{REQUEST_FILENAME} -d
           RewriteRule ^ - [L]

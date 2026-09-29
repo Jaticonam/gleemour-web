@@ -94,6 +94,8 @@ export default function App() {
           element={<ProductPage />}
         />
 
+        <Route path="/catalogo/p/:id" element={<ProductPage />} />
+
         <Route
           path="/experiencia"
           element={<ExperiencePage />}

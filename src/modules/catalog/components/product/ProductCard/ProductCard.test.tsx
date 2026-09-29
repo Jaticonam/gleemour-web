@@ -61,7 +61,7 @@ describe("ProductCard", () => {
 
   it("abre el detalle desde la imagen, nombre y área principal", () => {
     renderCard();
-    const destination = "/catalogo/producto.html?id=GLE-001&cat=para-enamorar";
+    const destination = "/catalogo/p/GLE-001.html";
     expect(screen.getByRole("link", { name: `Ver detalle de ${product.title}` })).toHaveAttribute("href", destination);
     fireEvent.click(screen.getByRole("link", { name: `Ver detalle de ${product.title}` }));
     expect(screen.getByTestId("location")).toHaveTextContent(destination);
@@ -83,7 +83,7 @@ describe("ProductCard", () => {
     const personalize = screen.getByRole("button", { name: `Personalizar ${product.title}` });
     expect(personalize).toHaveAttribute("title", "Personalizar");
     fireEvent.click(personalize);
-    expect(screen.getByTestId("location")).toHaveTextContent("/catalogo/producto.html?id=GLE-001&cat=para-enamorar");
+    expect(screen.getByTestId("location")).toHaveTextContent("/catalogo/p/GLE-001.html");
     expect(open).toHaveBeenCalledTimes(1);
   });
 
@@ -124,7 +124,7 @@ describe("ProductCard", () => {
     expect(sink).toHaveBeenLastCalledWith({
       type: "catalog_product_customize", source: "catalog_card", productId: product.id,
     });
-    expect(screen.getByTestId("location")).toHaveTextContent("/catalogo/producto.html?id=GLE-001&cat=para-enamorar");
+    expect(screen.getByTestId("location")).toHaveTextContent("/catalogo/p/GLE-001.html");
   });
 
   it("abre WhatsApp aunque falle el adapter", () => {
