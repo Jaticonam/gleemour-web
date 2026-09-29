@@ -3,7 +3,9 @@ import type { Product } from "@/shared/types/product";
 import {
   filterCatalogProducts,
   getAvailableDiscoverOptions,
+  getAvailableSubcategories,
   matchesDiscover,
+  sortCatalogProducts,
   type CatalogFilterState,
 } from "./CatalogFilters";
 
@@ -63,5 +65,40 @@ describe("descubrimiento comercial", () => {
     expect(filterCatalogProducts(products, {
       ...defaults, activeCategory: "para-celebrar",
     }).map((item) => item.id)).toEqual(["PREMIUM-OTRA"]);
+  });
+
+  it("ordena después de filtrar con precio efectivo y mantiene destacados en orden de entrada", () => {
+    const list = [
+      product("OFERTA", { price: 150, offer_price: 50 }),
+      product("SIN-PRECIO", { price: 0 }),
+      product("NORMAL", { price: 100 }),
+    ];
+    expect(sortCatalogProducts(list, "featured")).toBe(list);
+    expect(sortCatalogProducts(list, "price-asc").map((item) => item.id))
+      .toEqual(["OFERTA", "NORMAL", "SIN-PRECIO"]);
+    expect(sortCatalogProducts(list, "price-desc").map((item) => item.id))
+      .toEqual(["NORMAL", "OFERTA", "SIN-PRECIO"]);
+    expect(list.map((item) => item.id)).toEqual(["OFERTA", "SIN-PRECIO", "NORMAL"]);
+  });
+
+  it("filtra precio inclusivo, disponibilidad real y subcategoría junto con Descubre", () => {
+    const list = [
+      product("UNO", { price: 120, offer_price: 80, stock: 2,
+        badges: ["Premium"], subcategories: ["Amor a distancia"], campaigns: ["dia-madre"] }),
+      product("DOS", { price: 80, stock: 0, status: "Agotado",
+        badges: ["Premium"], subcategories: ["Amor a distancia"], campaigns: ["dia-madre"] }),
+      product("TRES", { price: 130, stock: 7,
+        badges: ["Premium"], subcategories: ["Otro detalle"], campaigns: ["dia-madre"] }),
+    ];
+    const filtered = filterCatalogProducts(list, {
+      ...defaults, activeCampaign: "Día de la Madre", activeDiscover: "premium",
+      purchase: { minPrice: "80", maxPrice: "100", availability: "available", subcategory: "amor a distancia" },
+    });
+    expect(filtered.map((item) => item.id)).toEqual(["UNO"]);
+    expect(sortCatalogProducts(filtered, "price-desc").map((item) => item.id)).toEqual(["UNO"]);
+    expect(filterCatalogProducts(list, {
+      ...defaults, purchase: { minPrice: "", maxPrice: "", availability: "last-units", subcategory: "" },
+    }).map((item) => item.id)).toEqual(["UNO"]);
+    expect(getAvailableSubcategories(list)).toEqual(["Amor a distancia", "Otro detalle"]);
   });
 });

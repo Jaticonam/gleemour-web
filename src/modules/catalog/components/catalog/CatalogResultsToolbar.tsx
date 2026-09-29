@@ -1,0 +1,104 @@
+import { SlidersHorizontal, X } from "lucide-react";
+import { lazy, Suspense, useRef, useState } from "react";
+import {
+  EMPTY_PURCHASE_FILTERS,
+  type CatalogSort,
+  type PurchaseFilters,
+} from "@/modules/catalog/pages/CatalogFilters";
+import "./CatalogResultsToolbar.css";
+
+const CatalogFiltersDialog = lazy(() => import("./CatalogFiltersDialog"));
+
+interface CatalogResultsToolbarProps {
+  title: string;
+  count: number;
+  filters: PurchaseFilters;
+  onFiltersChange: (next: PurchaseFilters) => void;
+  sort: CatalogSort;
+  onSortChange: (next: CatalogSort) => void;
+  subcategories: string[];
+}
+
+export function CatalogResultsToolbar({
+  title, count, filters, onFiltersChange, sort, onSortChange, subcategories,
+}: CatalogResultsToolbarProps) {
+  const [filterOpen, setFilterOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const priceActive = filters.minPrice !== "" || filters.maxPrice !== "";
+  const activeCount = Number(priceActive) + Number(filters.availability !== "all") + Number(Boolean(filters.subcategory));
+  const update = (patch: Partial<PurchaseFilters>) => onFiltersChange({ ...filters, ...patch });
+
+  return (
+    <div className="catalog-results-toolbar">
+      <div className="catalog-results-topline">
+        <div className="catalog-results-heading">
+          <h2>{title}</h2>
+          <p>{count} {count === 1 ? "producto" : "productos"}</p>
+        </div>
+        <div className="catalog-results-controls">
+          <button
+            ref={triggerRef}
+            type="button"
+            className="catalog-results-filter-trigger"
+            aria-haspopup="dialog"
+            aria-expanded={filterOpen}
+            aria-controls="catalog-purchase-filters"
+            onClick={() => setFilterOpen(true)}
+          >
+            <SlidersHorizontal size={16} aria-hidden="true" />
+            Filtros{activeCount > 0 ? ` · ${activeCount}` : ""}
+          </button>
+          {filterOpen && (
+            <Suspense fallback={null}>
+              <CatalogFiltersDialog
+                open={filterOpen}
+                onOpenChange={setFilterOpen}
+                triggerRef={triggerRef}
+                count={count}
+                filters={filters}
+                onFiltersChange={onFiltersChange}
+                subcategories={subcategories}
+                activeCount={activeCount}
+              />
+            </Suspense>
+          )}
+
+          <label className="catalog-results-sort">
+            <span>Ordenar</span>
+            <select aria-label="Ordenar productos" value={sort}
+              onChange={(event) => onSortChange(event.target.value as CatalogSort)}>
+              <option value="featured">Destacados</option>
+              <option value="price-asc">Precio: menor a mayor</option>
+              <option value="price-desc">Precio: mayor a menor</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      {activeCount > 0 && (
+        <div className="catalog-results-active-filters" aria-label="Filtros de compra activos">
+          {priceActive && (
+            <button type="button" aria-label="Quitar filtro de precio"
+              onClick={() => update({ minPrice: "", maxPrice: "" })}>
+              S/ {filters.minPrice || "0"} – {filters.maxPrice || "más"} <X size={14} aria-hidden="true" />
+            </button>
+          )}
+          {filters.availability !== "all" && (
+            <button type="button" aria-label="Quitar filtro de disponibilidad"
+              onClick={() => update({ availability: "all" })}>
+              {filters.availability === "available" ? "Disponible" : "Últimas unidades"} <X size={14} aria-hidden="true" />
+            </button>
+          )}
+          {filters.subcategory && (
+            <button type="button" aria-label="Quitar filtro de subcategoría"
+              onClick={() => update({ subcategory: "" })}>
+              {filters.subcategory} <X size={14} aria-hidden="true" />
+            </button>
+          )}
+          <button type="button" className="catalog-results-clear" onClick={() => onFiltersChange(EMPTY_PURCHASE_FILTERS)}>
+            Limpiar filtros
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -14,6 +14,7 @@ import { BRAND_CONFIG } from "@/tenant/config/brand";
 
 import { ProductCard } from "@/modules/catalog/components/product/ProductCard";
 import { CatalogTopNav } from "@/modules/catalog/components/catalog/CatalogTopNav";
+import { CatalogResultsToolbar } from "@/modules/catalog/components/catalog/CatalogResultsToolbar";
 import { SearchInput } from "@/modules/catalog/components/search/SearchInput";
 
 import { RecentActivity } from "@/modules/catalog/components/overlays/RecentActivity";
@@ -27,9 +28,14 @@ import {
 import { CatalogSkeleton } from "@/shared/components/skeletons/CatalogSkeleton";
 import {
   filterCatalogProducts,
+  getAvailableSubcategories,
   getAvailableDiscoverOptions,
   normalizeCampaignKey,
   normalizeFilterKey,
+  sortCatalogProducts,
+  EMPTY_PURCHASE_FILTERS,
+  type CatalogSort,
+  type PurchaseFilters,
   type DiscoverKey,
 } from "./CatalogFilters";
 
@@ -57,6 +63,8 @@ export default function CatalogPage() {
   const [activeCampaign, setActiveCampaign] = useState("");
   const [activeCategory, setActiveCategory] = useState("todas");
   const [activeDiscover, setActiveDiscover] = useState<DiscoverKey | "">("");
+  const [purchaseFilters, setPurchaseFilters] = useState<PurchaseFilters>({ ...EMPTY_PURCHASE_FILTERS });
+  const [sort, setSort] = useState<CatalogSort>("featured");
 
 
 
@@ -115,6 +123,7 @@ useEffect(() => {
   }, [products]);
 
   const discoverItems = useMemo(() => getAvailableDiscoverOptions(products), [products]);
+  const subcategoryItems = useMemo(() => getAvailableSubcategories(products), [products]);
 
   const campaignCounts = useMemo(() => {
     return products.reduce<Record<string, number>>((acc, product) => {
@@ -194,11 +203,19 @@ useEffect(() => {
   };
 
   const visibleProducts = useMemo(
-    () => filterCatalogProducts(products, {
-      searchQuery, activeCampaign, activeCategory, activeDiscover,
-    }),
-    [products, searchQuery, activeCampaign, activeCategory, activeDiscover],
+    () => sortCatalogProducts(filterCatalogProducts(products, {
+      searchQuery, activeCampaign, activeCategory, activeDiscover, purchase: purchaseFilters,
+    }), sort),
+    [products, searchQuery, activeCampaign, activeCategory, activeDiscover, purchaseFilters, sort],
   );
+
+  const resultTitle = searchQuery.trim()
+    ? `Búsqueda: “${searchQuery.trim()}”`
+    : visibleCampaigns.find((item) => item.id === activeCampaign)?.name
+      ?? (activeCategory !== "todas"
+        ? BRAND_CONFIG.categories.find((item) => item.id === activeCategory)?.name
+        : undefined)
+      ?? "Todos los detalles";
 
 
   if (loading) return <CatalogSkeleton />;
@@ -258,6 +275,15 @@ useEffect(() => {
       />
 
       <main className="catalog-main">
+        <CatalogResultsToolbar
+          title={resultTitle}
+          count={visibleProducts.length}
+          filters={purchaseFilters}
+          onFiltersChange={setPurchaseFilters}
+          sort={sort}
+          onSortChange={setSort}
+          subcategories={subcategoryItems}
+        />
         {visibleProducts.length > 0 ? (
           <section
             className="catalog-section"
@@ -291,9 +317,11 @@ useEffect(() => {
                 setActiveCampaign("");
                 setActiveDiscover("");
                 setSearchQuery("");
+                setPurchaseFilters({ ...EMPTY_PURCHASE_FILTERS });
+                setSort("featured");
               }}
             >
-              Limpiar filtros
+              Limpiar todo
             </button>
           </div>
         )}
