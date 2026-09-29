@@ -306,19 +306,12 @@ useEffect(() => {
             <img src={BRAND_CONFIG.assets.logo} alt={BRAND_CONFIG.name} />
           </button>
         }
-        headingSlot={
-          <div className="catalog-heading">
-            <p className="catalog-kicker">Catálogo emocional</p>
-            <h1>Catálogo</h1>
-            <p>Ramos, arreglos y detalles para cada momento especial.</p>
-          </div>
-        }
         searchSlot={
           <SearchInput
             value={searchQuery}
             onChange={setSearchQuery}
             products={products}
-            placeholder={BRAND_CONFIG.search.placeholder}
+            placeholder="¿Qué ocasión o emoción buscas?"
           />
         }
         helpSlot={

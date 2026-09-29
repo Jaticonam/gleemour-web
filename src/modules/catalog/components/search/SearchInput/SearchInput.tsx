@@ -298,6 +298,7 @@ export function SearchInput({
           }}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
+          aria-label="Buscar productos"
           className="search-input-field"
           role="combobox"
           aria-expanded={showSuggestions || showQuickSearches}
@@ -427,7 +428,6 @@ export function SearchInput({
     </div>
   );
 }
-
 
 
 

@@ -23,7 +23,6 @@ export interface CatalogTopNavProps {
 
   searchSlot?: React.ReactNode;
   logoSlot?: React.ReactNode;
-  headingSlot?: React.ReactNode;
   helpSlot?: React.ReactNode;
 }
 import type { DiscoverKey } from "@/modules/catalog/pages/CatalogFilters";
