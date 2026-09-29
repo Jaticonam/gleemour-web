@@ -20,9 +20,6 @@ export function ProductCardPrice({
           {PRODUCT_CARD_CONFIG.price.preorder}
         </span>
 
-        <small>
-          {PRODUCT_CARD_CONFIG.price.preorderHelp}
-        </small>
       </div>
     );
   }
@@ -41,15 +38,6 @@ export function ProductCardPrice({
           <strong>{price.toFixed(2)}</strong>
         </div>
 
-        {hasOffer ? (
-          <small className="product-card-offer-text">
-            {PRODUCT_CARD_CONFIG.price.offerText}
-          </small>
-        ) : (
-          <small>
-            {PRODUCT_CARD_CONFIG.price.defaultText}
-          </small>
-        )}
       </div>
     </div>
   );

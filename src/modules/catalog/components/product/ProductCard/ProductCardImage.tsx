@@ -1,4 +1,5 @@
 import { getBadgePresentation } from "@/tenant/config/product";
+import { Link } from "react-router-dom";
 
 import type { Product } from "@/shared/types/product";
 
@@ -6,36 +7,26 @@ interface ProductCardImageProps {
   product: Product;
   available: boolean;
   isPreventa: boolean;
-  campaignBadge?: string;
-  stateBadge?: string;
-  onImageClick?: () => void;
+  badge?: string;
+  to: string;
 }
 
 export function ProductCardImage({
   product,
   available,
   isPreventa,
-  campaignBadge,
-  stateBadge,
-  onImageClick,
+  badge,
+  to,
 }: ProductCardImageProps) {
-  const statePresentation = stateBadge
-    ? getBadgePresentation(stateBadge)
+  const badgePresentation = badge
+    ? getBadgePresentation(badge)
     : null;
 
   return (
-    <div
+    <Link
       className="product-card-image-wrap"
-      onClick={onImageClick}
-      role="button"
-      tabIndex={0}
+      to={to}
       aria-label={`Ver detalle de ${product.title}`}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onImageClick?.();
-        }
-      }}
     >
       <img
         src={product.img || "/placeholder.svg"}
@@ -47,31 +38,13 @@ export function ProductCardImage({
         ].join(" ")}
       />
 
-      <div className="product-card-image-overlay">
-        <span>Ver detalle</span>
-      </div>
-
-      {(campaignBadge || stateBadge) && (
+      {badge && badgePresentation && (
         <div className="product-card-badges product-card-badges-primary">
-          {campaignBadge && (
-            <span className="product-card-badge product-card-badge-campaign">
-              {campaignBadge}
-            </span>
-          )}
-
-          {stateBadge && statePresentation && (
-            <span
-              className={[
-                "product-card-badge",
-                "product-card-badge-state",
-                statePresentation.className,
-              ].join(" ")}
-            >
-              {statePresentation.icon} {statePresentation.label}
-            </span>
-          )}
+          <span className={["product-card-badge", badgePresentation.className].join(" ")}>
+            {badgePresentation.icon} {badgePresentation.label}
+          </span>
         </div>
       )}
-    </div>
+    </Link>
   );
 }

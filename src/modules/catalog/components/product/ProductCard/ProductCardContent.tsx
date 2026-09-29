@@ -1,4 +1,3 @@
-import { getEmotionalHint } from "@/domain/product/emotional";
 import { getCategoryName } from "@/tenant/config/catalog";
 
 import type { Product } from "@/shared/types/product";
@@ -16,9 +15,6 @@ export function ProductCardContent({ product }: ProductCardContentProps) {
 
       <h3 className="product-card-title">{product.title}</h3>
 
-      <p className="product-card-hint">{getEmotionalHint(product)}</p>
-
-      <p className="product-card-code">Ref. {product.id}</p>
     </>
   );
 }

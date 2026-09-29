@@ -1,6 +1,6 @@
 import "./ProductCard.css";
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { getProductUrl } from "@/app/routes/routes";
 import { sortBadges } from "@/tenant/config/product";
@@ -13,13 +13,11 @@ import {
   hasOfferPrice,
   isProductAvailable,
   getProductState,
-  getLiveViewers,
 } from "@/domain/product";
 
 import { buildProductWhatsAppUrl } from "@/integrations/whatsapp/whatsapp";
 
 import { ProductCardImage } from "./ProductCardImage";
-import { ProductCardType } from "./ProductCardType";
 import { ProductCardContent } from "./ProductCardContent";
 import { ProductCardPrice } from "./ProductCardPrice";
 import { ProductCardSocial } from "./ProductCardSocial";
@@ -38,7 +36,6 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const navigate = useNavigate();
-
   const available = isProductAvailable(product);
   const productState = getProductState(product);
   const isPreventa = productState.type === "preorder";
@@ -47,27 +44,14 @@ export function ProductCard({ product }: ProductCardProps) {
   const originalPrice = getOriginalProductPrice(product);
   const hasOffer = hasOfferPrice(product);
 
-  const [viewers, setViewers] = useState(getLiveViewers());
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setViewers(getLiveViewers());
-    }, 6500);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const sortedBadges = useMemo(() => {
     return sortBadges(product.badges ?? []);
   }, [product.badges]);
 
   const campaignBadge = pickBadgeByKeys(sortedBadges, CAMPAIGN_BADGE_KEYS);
   const stateBadge = pickBadgeByKeys(sortedBadges, STATE_BADGE_KEYS);
-  const primaryAttribute = product.attributes?.[0];
-
-  const handleViewDetail = () => {
-    navigate(getProductUrl(product));
-  };
+  const detailUrl = getProductUrl(product);
+  const handleViewDetail = () => navigate(detailUrl);
 
   const handleWhatsApp = () => {
     const url = buildProductWhatsAppUrl({
@@ -86,31 +70,27 @@ export function ProductCard({ product }: ProductCardProps) {
         product={product}
         available={available}
         isPreventa={isPreventa}
-        campaignBadge={campaignBadge}
-        stateBadge={stateBadge}
-        onImageClick={handleViewDetail}
+        badge={stateBadge ?? campaignBadge}
+        to={detailUrl}
       />
 
-      <ProductCardType attribute={primaryAttribute} />
-
       <div className="product-card-body">
-        <ProductCardContent product={product} />
+        <Link className="product-card-detail" to={detailUrl}>
+          <ProductCardContent product={product} />
 
-        <ProductCardPrice
-          isPreventa={isPreventa}
-          hasOffer={hasOffer}
-          price={price}
-          originalPrice={originalPrice}
-        />
+          <ProductCardPrice
+            isPreventa={isPreventa}
+            hasOffer={hasOffer}
+            price={price}
+            originalPrice={originalPrice}
+          />
 
-        <ProductCardSocial
-          available={available}
-          isPreventa={isPreventa}
-          stockClass={stockClass}
-          StockIcon={StockIcon}
-          productStateLabel={productState.label}
-          viewers={viewers}
-        />
+          <ProductCardSocial
+            stockClass={stockClass}
+            StockIcon={StockIcon}
+            productStateLabel={productState.label}
+          />
+        </Link>
 
         <ProductCardActions
           productTitle={product.title}
