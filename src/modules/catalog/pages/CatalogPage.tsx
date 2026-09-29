@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 
 import { getExperienceUrl } from "@/app/routes/routes";
@@ -9,6 +9,7 @@ import {
   loadAllCampaigns,
 } from "@/integrations/sheets/fetchSheets";
 import type { Campaign, Product } from "@/shared/types/product";
+import { isCampaignActive } from "@/integrations/sheets/normalizeCampaign";
 import { BRAND_CONFIG } from "@/tenant/config/brand";
 
 
@@ -31,7 +32,6 @@ import {
   getAvailableSubcategories,
   getAvailableDiscoverOptions,
   normalizeCampaignKey,
-  normalizeFilterKey,
   sortCatalogProducts,
   EMPTY_PURCHASE_FILTERS,
   type CatalogSort,
@@ -39,29 +39,14 @@ import {
   type DiscoverKey,
 } from "./CatalogFilters";
 
-function isPublishedCampaignStatus(value: unknown): boolean {
-  const status = normalizeFilterKey(value);
-
-  return [
-    "publicado",
-    "publicada",
-    "publicadas",
-    "activo",
-    "activa",
-    "active",
-    "published",
-    "visible",
-  ].includes(status);
-}
-
 export default function CatalogPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeCampaign, setActiveCampaign] = useState("");
   const [activeCategory, setActiveCategory] = useState("todas");
   const [activeDiscover, setActiveDiscover] = useState<DiscoverKey | "">("");
   const [purchaseFilters, setPurchaseFilters] = useState<PurchaseFilters>({ ...EMPTY_PURCHASE_FILTERS });
@@ -147,9 +132,7 @@ useEffect(() => {
 
   const visibleCampaigns = useMemo(() => {
     return campaigns
-      .filter((campaign) =>
-        isPublishedCampaignStatus(campaign.publicationStatus),
-      )
+      .filter(isCampaignActive)
       .map((campaign) => {
         const possibleIds = [
           normalizeCampaignKey(campaign.id),
@@ -184,6 +167,21 @@ useEffect(() => {
       .sort((a, b) => b.priority - a.priority);
   }, [campaigns, campaignCounts]);
 
+  const campaignParam = searchParams.get("campaign") ?? "";
+  const activeCampaign = visibleCampaigns.find(
+    (item) => item.id === normalizeCampaignKey(campaignParam),
+  )?.id ?? "";
+
+  useEffect(() => {
+    if (!loading && campaignParam && !activeCampaign) {
+      setSearchParams((current) => {
+        const next = new URLSearchParams(current);
+        next.delete("campaign");
+        return next;
+      }, { replace: true });
+    }
+  }, [loading, campaignParam, activeCampaign, setSearchParams]);
+
   console.table(
     campaigns.map((campaign) => ({
       id: campaign.id,
@@ -197,7 +195,12 @@ useEffect(() => {
   );
 
   const handleCampaignSelect = (campaignId: string) => {
-    setActiveCampaign(campaignId);
+    setSearchParams((current) => {
+      const next = new URLSearchParams(current);
+      if (campaignId) next.set("campaign", campaignId);
+      else next.delete("campaign");
+      return next;
+    });
   };
 
   const handleCategorySelect = (categoryId: string) => {
@@ -233,7 +236,7 @@ useEffect(() => {
     else if (hasPurchaseFilters) setPurchaseFilters({ ...EMPTY_PURCHASE_FILTERS });
     else {
       setActiveCategory("todas");
-      setActiveCampaign("");
+      handleCampaignSelect("");
       setActiveDiscover("");
     }
   };
