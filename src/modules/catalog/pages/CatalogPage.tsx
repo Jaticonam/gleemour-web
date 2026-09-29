@@ -187,18 +187,6 @@ useEffect(() => {
     }
   }, [loading, campaignParam, activeCampaign, setSearchParams]);
 
-  console.table(
-    campaigns.map((campaign) => ({
-      id: campaign.id,
-      name: campaign.name,
-      publicationStatus: campaign.publicationStatus,
-      computedStatus: campaign.computedStatus,
-      colorClass: campaign.colorClass,
-      countById: campaignCounts[normalizeCampaignKey(campaign.id)] ?? 0,
-      countByName: campaignCounts[normalizeCampaignKey(campaign.name)] ?? 0,
-    })),
-  );
-
   const handleCampaignSelect = (campaignId: string) => {
     const selected = visibleCampaigns.find((item) => item.id === campaignId);
     if (selected) trackCommerceEvent({

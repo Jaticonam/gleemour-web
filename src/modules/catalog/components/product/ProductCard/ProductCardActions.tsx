@@ -2,20 +2,20 @@ import { MessageCircle, Sparkles } from "lucide-react";
 
 interface ProductCardActionsProps {
   productTitle: string;
-  onViewDetail: () => void;
+  onPersonalize: () => void;
   onWhatsApp: () => void;
 }
 
 export function ProductCardActions({
   productTitle,
-  onViewDetail,
+  onPersonalize,
   onWhatsApp,
 }: ProductCardActionsProps) {
   return (
     <div className="product-card-actions">
       <button
         type="button"
-        onClick={onViewDetail}
+        onClick={onPersonalize}
         className="product-card-button-personalize"
         aria-label={`Personalizar ${productTitle}`}
         title="Personalizar"

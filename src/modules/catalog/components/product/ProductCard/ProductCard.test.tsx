@@ -83,7 +83,7 @@ describe("ProductCard", () => {
     const personalize = screen.getByRole("button", { name: `Personalizar ${product.title}` });
     expect(personalize).toHaveAttribute("title", "Personalizar");
     fireEvent.click(personalize);
-    expect(screen.getByTestId("location")).toHaveTextContent("/catalogo/p/GLE-001.html");
+    expect(screen.getByTestId("location")).toHaveTextContent("/experiencia?origen=producto&producto=GLE-001");
     expect(open).toHaveBeenCalledTimes(1);
   });
 
@@ -124,7 +124,7 @@ describe("ProductCard", () => {
     expect(sink).toHaveBeenLastCalledWith({
       type: "catalog_product_customize", source: "catalog_card", productId: product.id,
     });
-    expect(screen.getByTestId("location")).toHaveTextContent("/catalogo/p/GLE-001.html");
+    expect(screen.getByTestId("location")).toHaveTextContent("/experiencia?origen=producto&producto=GLE-001");
   });
 
   it("abre WhatsApp aunque falle el adapter", () => {

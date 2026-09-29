@@ -2,7 +2,7 @@ import "./ProductCard.css";
 import { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { getProductUrl } from "@/app/routes/routes";
+import { getExperienceUrl, getProductUrl } from "@/app/routes/routes";
 import { sortBadges } from "@/tenant/config/product";
 
 import type { Product } from "@/shared/types/product";
@@ -56,9 +56,9 @@ export function ProductCard({ product }: ProductCardProps) {
     type: "catalog_product_open", source: "catalog_card", productId: product.id,
     categoryId: product.category, effectivePrice: price,
   });
-  const handleViewDetail = () => {
+  const handlePersonalize = () => {
     trackCommerceEvent({ type: "catalog_product_customize", source: "catalog_card", productId: product.id });
-    navigate(detailUrl);
+    navigate(getExperienceUrl("producto", product.id));
   };
 
   const handleWhatsApp = () => {
@@ -108,7 +108,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
         <ProductCardActions
           productTitle={product.title}
-          onViewDetail={handleViewDetail}
+          onPersonalize={handlePersonalize}
           onWhatsApp={handleWhatsApp}
         />
       </div>
