@@ -1,8 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { useState } from "react";
 import { CatalogResultsToolbar } from "./CatalogResultsToolbar";
 import { EMPTY_PURCHASE_FILTERS } from "@/modules/catalog/pages/CatalogFilters";
+import { setCommerceEventSink } from "@/core/services/commerceEvents";
+
+afterEach(() => setCommerceEventSink(null));
 
 describe("CatalogResultsToolbar", () => {
   function Controlled() {
@@ -56,5 +59,25 @@ describe("CatalogResultsToolbar", () => {
     expect(await screen.findByRole("button", { name: "Quitar filtro de precio" })).toBeInTheDocument();
     expect(trigger).toHaveAttribute("aria-expanded", "false");
     expect(trigger).toHaveFocus();
+  });
+
+  it("emite aplicación y limpieza una sola vez por acción", async () => {
+    const sink = vi.fn();
+    setCommerceEventSink(sink);
+    render(<Controlled />);
+    fireEvent.click(screen.getByRole("button", { name: "Filtros" }));
+    fireEvent.change(await screen.findByRole("combobox", { name: "Disponibilidad" }), { target: { value: "available" } });
+    expect(sink).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Ver 5 productos" }));
+    expect(sink).toHaveBeenCalledTimes(1);
+    expect(sink).toHaveBeenCalledWith({
+      type: "catalog_filter_applied", source: "filter_panel", resultCount: 5,
+      availability: "available",
+    });
+    fireEvent.click(await screen.findByRole("button", { name: "Limpiar filtros" }));
+    expect(sink).toHaveBeenCalledTimes(2);
+    expect(sink).toHaveBeenLastCalledWith({
+      type: "catalog_filters_cleared", source: "filter_chip", count: 1,
+    });
   });
 });

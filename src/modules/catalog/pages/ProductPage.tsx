@@ -29,6 +29,7 @@ import { getProductStatusPresentation } from "@/modules/catalog/mappers";
 import { NotificationStack } from "@/shared/components/feedback/NotificationStack";
 import { ProductSkeleton } from "@/shared/components/skeletons/ProductSkeleton";
 import { PRODUCT_DETAIL_CONFIG } from "@/tenant/config/product";
+import { trackCommerceEvent } from "@/core/services/commerceEvents";
 
 export default function ProductPage() {
   const { id: paramId } = useParams<{ id: string }>();
@@ -101,6 +102,7 @@ export default function ProductPage() {
   }
 
   const openExperience = () => {
+    trackCommerceEvent({ type: "catalog_product_customize", source: "product_detail", productId: product.id });
     navigate(
       getExperienceUrl(
         "producto",

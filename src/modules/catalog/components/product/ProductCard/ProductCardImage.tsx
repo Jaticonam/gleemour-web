@@ -9,6 +9,7 @@ interface ProductCardImageProps {
   isPreventa: boolean;
   badge?: string;
   to: string;
+  onOpen?: () => void;
 }
 
 export function ProductCardImage({
@@ -17,6 +18,7 @@ export function ProductCardImage({
   isPreventa,
   badge,
   to,
+  onOpen,
 }: ProductCardImageProps) {
   const badgePresentation = badge
     ? getBadgePresentation(badge)
@@ -26,6 +28,7 @@ export function ProductCardImage({
     <Link
       className="product-card-image-wrap"
       to={to}
+      onClick={onOpen}
       aria-label={`Ver detalle de ${product.title}`}
     >
       <img

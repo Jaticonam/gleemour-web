@@ -1,4 +1,5 @@
 import type { RefObject } from "react";
+import { trackCommerceEvent } from "@/core/services/commerceEvents";
 import {
   Dialog, DialogClose, DialogContent, DialogDescription,
   DialogFooter, DialogHeader, DialogTitle,
@@ -77,12 +78,24 @@ export default function CatalogFiltersDialog({
         <DialogFooter className="catalog-filters-footer">
           {activeCount > 0 && (
             <button type="button" className="catalog-filters-clear"
-              onClick={() => onFiltersChange(EMPTY_PURCHASE_FILTERS)}>
+              onClick={() => {
+                trackCommerceEvent({ type: "catalog_filters_cleared", source: "filter_panel", count: activeCount });
+                onFiltersChange(EMPTY_PURCHASE_FILTERS);
+              }}>
               Limpiar filtros
             </button>
           )}
           <DialogClose asChild>
-            <button type="button" className="catalog-filters-apply">
+            <button type="button" className="catalog-filters-apply" onClick={() => {
+              if (activeCount === 0) return;
+              trackCommerceEvent({
+                type: "catalog_filter_applied", source: "filter_panel", resultCount: count,
+                availability: filters.availability,
+                ...(filters.subcategory ? { subcategory: filters.subcategory } : {}),
+                ...(filters.minPrice !== "" ? { minPrice: Number(filters.minPrice) } : {}),
+                ...(filters.maxPrice !== "" ? { maxPrice: Number(filters.maxPrice) } : {}),
+              });
+            }}>
               Ver {count} {count === 1 ? "producto" : "productos"}
             </button>
           </DialogClose>

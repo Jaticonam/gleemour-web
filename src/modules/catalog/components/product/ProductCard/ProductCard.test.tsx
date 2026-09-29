@@ -3,6 +3,7 @@ import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { buildProductWhatsAppUrl } from "@/integrations/whatsapp/whatsapp";
+import { setCommerceEventSink } from "@/core/services/commerceEvents";
 import type { Product } from "@/shared/types/product";
 
 import { ProductCard } from "./ProductCard";
@@ -41,7 +42,7 @@ function renderCard(value: Product = product) {
   );
 }
 
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => { vi.restoreAllMocks(); setCommerceEventSink(null); });
 
 describe("ProductCard", () => {
   it("muestra una sola señal comercial, precio de oferta y contenido compacto", () => {
@@ -95,5 +96,45 @@ describe("ProductCard", () => {
     expect(screen.getByText("Agotado")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: `Consultar ${product.title} por WhatsApp` }));
     expect(open).toHaveBeenCalledWith(buildProductWhatsAppUrl({ product: soldOut, qty: 1 }), "_blank", "noopener,noreferrer");
+  });
+
+  it("emite apertura, personalización y WhatsApp una vez sin alterar el destino", () => {
+    const sink = vi.fn();
+    setCommerceEventSink(sink);
+    const open = vi.spyOn(window, "open").mockImplementation(() => null);
+    renderCard();
+    expect(sink).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("link", { name: `Ver detalle de ${product.title}` }));
+    expect(sink).toHaveBeenLastCalledWith({
+      type: "catalog_product_open", source: "catalog_card", productId: product.id,
+      categoryId: product.category, effectivePrice: 95,
+    });
+    fireEvent.click(screen.getByRole("button", { name: `Consultar ${product.title} por WhatsApp` }));
+    expect(sink).toHaveBeenCalledTimes(2);
+    expect(sink).toHaveBeenLastCalledWith({
+      type: "catalog_product_whatsapp_click", source: "catalog_card", productId: product.id,
+      effectivePrice: 95,
+    });
+    expect(open).toHaveBeenCalledTimes(1);
+    expect(open).toHaveBeenCalledWith(
+      buildProductWhatsAppUrl({ product, qty: 1 }), "_blank", "noopener,noreferrer",
+    );
+    fireEvent.click(screen.getByRole("button", { name: `Personalizar ${product.title}` }));
+    expect(sink).toHaveBeenCalledTimes(3);
+    expect(sink).toHaveBeenLastCalledWith({
+      type: "catalog_product_customize", source: "catalog_card", productId: product.id,
+    });
+    expect(screen.getByTestId("location")).toHaveTextContent("/catalogo/producto.html?id=GLE-001&cat=para-enamorar");
+  });
+
+  it("abre WhatsApp aunque falle el adapter", () => {
+    setCommerceEventSink(() => { throw new Error("sin proveedor"); });
+    const open = vi.spyOn(window, "open").mockImplementation(() => null);
+    renderCard();
+    fireEvent.click(screen.getByRole("button", { name: `Consultar ${product.title} por WhatsApp` }));
+    expect(open).toHaveBeenCalledTimes(1);
+    expect(open).toHaveBeenCalledWith(
+      buildProductWhatsAppUrl({ product, qty: 1 }), "_blank", "noopener,noreferrer",
+    );
   });
 });

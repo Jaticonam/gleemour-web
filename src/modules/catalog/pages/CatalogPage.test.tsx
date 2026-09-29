@@ -1,6 +1,7 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, useLocation, useNavigate } from "react-router-dom";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { setCommerceEventSink } from "@/core/services/commerceEvents";
 
 const loaders = vi.hoisted(() => ({ products: vi.fn(), campaigns: vi.fn() }));
 vi.mock("@/integrations/sheets/fetchSheets", () => ({
@@ -8,11 +9,12 @@ vi.mock("@/integrations/sheets/fetchSheets", () => ({
   loadAllCampaigns: loaders.campaigns,
 }));
 vi.mock("@/modules/catalog/components/catalog/CatalogTopNav", () => ({
-  CatalogTopNav: ({ searchSlot, onCategorySelect, campaignItems, onCampaignSelect }: {
-    searchSlot: React.ReactNode; onCategorySelect: (value: string) => void;
+  CatalogTopNav: ({ searchSlot, helpSlot, onCategorySelect, campaignItems, onCampaignSelect, onDiscoverSelect }: {
+    searchSlot: React.ReactNode; helpSlot: React.ReactNode; onCategorySelect: (value: string) => void;
     campaignItems: Array<{ id: string; name: string }>;
-    onCampaignSelect: (value: string) => void;
-  }) => <div>{searchSlot}<button onClick={() => onCategorySelect("special")}>Otra categoría</button>
+    onCampaignSelect: (value: string) => void; onDiscoverSelect: (value: "premium") => void;
+  }) => <div>{searchSlot}{helpSlot}<button onClick={() => onCategorySelect("special")}>Otra categoría</button>
+    <button onClick={() => onDiscoverSelect("premium")}>Premium</button>
     {campaignItems.map((item) => <button key={item.id} onClick={() => onCampaignSelect(item.id)}>{item.name}</button>)}
   </div>,
 }));
@@ -24,8 +26,10 @@ vi.mock("@/modules/catalog/components/search/SearchInput", () => ({
     <input aria-label="Buscar productos" value={value} onChange={(event) => onChange(event.target.value)} />,
 }));
 vi.mock("@/modules/catalog/components/catalog/CatalogResultsToolbar", () => ({
-  CatalogResultsToolbar: ({ onFiltersChange }: { onFiltersChange: (value: object) => void }) =>
-    <button onClick={() => onFiltersChange({ minPrice: "999", maxPrice: "", availability: "all", subcategory: "" })}>Filtrar</button>,
+  CatalogResultsToolbar: ({ onFiltersChange, onSortChange }: {
+    onFiltersChange: (value: object) => void; onSortChange: (value: "price-asc") => void;
+  }) => <><button onClick={() => onFiltersChange({ minPrice: "999", maxPrice: "", availability: "all", subcategory: "" })}>Filtrar</button>
+    <button onClick={() => onSortChange("price-asc")}>Precio ascendente</button></>,
 }));
 vi.mock("@/shared/components/overlays/FloatingButtons", () => ({ FloatingButtons: () => null }));
 vi.mock("@/modules/catalog/components/overlays/RecentActivity", () => ({ RecentActivity: () => null }));
@@ -34,6 +38,8 @@ vi.mock("@/shared/components/feedback/NotificationStack", () => ({ NotificationS
 import CatalogPage from "./CatalogPage";
 import { normalizeCampaign } from "@/integrations/sheets/normalizeCampaign";
 import type { Product } from "@/shared/types/product";
+
+afterEach(() => setCommerceEventSink(null));
 
 describe("CatalogPage: estados de resultados", () => {
   beforeEach(() => {
@@ -118,10 +124,15 @@ describe("CatalogPage: estados de resultados", () => {
 
   it("respeta el enlace compartido de una campaña activa", async () => {
     setCampaignFixtures();
+    const sink = vi.fn();
+    setCommerceEventSink(sink);
     showPage("/catalogo?campaign=vigente");
     expect(await screen.findByText("Producto Vigente")).toBeInTheDocument();
     expect(screen.queryByText("Producto Futura")).not.toBeInTheDocument();
     expect(screen.getByTestId("location")).toHaveTextContent("campaign=vigente");
+    expect(sink).toHaveBeenCalledWith({
+      type: "catalog_view", categoryId: "todas", campaignId: "vigente", resultCount: 1,
+    });
   });
 
   it.each(["futura", "finalizada", "oculta", "borrador"])(
@@ -141,5 +152,37 @@ describe("CatalogPage: estados de resultados", () => {
     expect(await screen.findByText("No encontramos productos en esta selección.")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Vigente" })).not.toBeInTheDocument();
     expect(screen.getByTestId("location")).not.toHaveTextContent("campaign=");
+  });
+
+  it("emite vista única, acciones y búsqueda efectiva sin registrar el texto", async () => {
+    setCampaignFixtures();
+    const sink = vi.fn();
+    setCommerceEventSink(sink);
+    showPage();
+    await screen.findByText("Producto Vigente");
+    expect(sink).toHaveBeenCalledWith({ type: "catalog_view", categoryId: "todas", resultCount: 5 });
+    fireEvent.click(screen.getByRole("button", { name: "Otra categoría" }));
+    expect(sink).toHaveBeenCalledWith({ type: "catalog_category_select", categoryId: "special" });
+    fireEvent.click(screen.getByRole("button", { name: "Vigente" }));
+    expect(sink).toHaveBeenCalledWith({
+      type: "catalog_campaign_select", campaignId: "vigente", campaignName: "Vigente",
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Premium" }));
+    expect(sink).toHaveBeenCalledWith({ type: "catalog_discover_select", discoverId: "premium" });
+    fireEvent.click(screen.getByRole("button", { name: "Precio ascendente" }));
+    expect(sink).toHaveBeenCalledWith({ type: "catalog_sort_changed", sortId: "price-asc", resultCount: 0 });
+    fireEvent.change(screen.getByRole("textbox", { name: "Buscar productos" }), { target: { value: "rosas" } });
+    await waitFor(() => expect(sink).toHaveBeenCalledWith({
+      type: "catalog_search", queryLength: 5, resultCount: 0,
+      categoryId: "special", campaignId: "vigente",
+    }));
+    expect(sink.mock.calls.filter(([event]) => event.type === "catalog_view")).toHaveLength(1);
+    expect(sink.mock.calls.filter(([event]) => event.type === "catalog_search")).toHaveLength(1);
+    expect(JSON.stringify(sink.mock.calls)).not.toContain("rosas");
+    fireEvent.click(screen.getByRole("link", { name: "Ayúdame a elegir" }));
+    expect(sink).toHaveBeenCalledWith({
+      type: "catalog_help_choose", source: "catalog_header", categoryId: "special",
+      campaignId: "vigente", hasSearch: true,
+    });
   });
 });

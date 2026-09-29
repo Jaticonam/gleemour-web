@@ -16,6 +16,7 @@ import {
 } from "@/domain/product";
 
 import { buildProductWhatsAppUrl } from "@/integrations/whatsapp/whatsapp";
+import { trackCommerceEvent } from "@/core/services/commerceEvents";
 
 import { ProductCardImage } from "./ProductCardImage";
 import { ProductCardContent } from "./ProductCardContent";
@@ -51,12 +52,24 @@ export function ProductCard({ product }: ProductCardProps) {
   const campaignBadge = pickBadgeByKeys(sortedBadges, CAMPAIGN_BADGE_KEYS);
   const stateBadge = pickBadgeByKeys(sortedBadges, STATE_BADGE_KEYS);
   const detailUrl = getProductUrl(product);
-  const handleViewDetail = () => navigate(detailUrl);
+  const trackOpen = () => trackCommerceEvent({
+    type: "catalog_product_open", source: "catalog_card", productId: product.id,
+    categoryId: product.category, effectivePrice: price,
+  });
+  const handleViewDetail = () => {
+    trackCommerceEvent({ type: "catalog_product_customize", source: "catalog_card", productId: product.id });
+    navigate(detailUrl);
+  };
 
   const handleWhatsApp = () => {
     const url = buildProductWhatsAppUrl({
       product,
       qty: 1,
+    });
+
+    trackCommerceEvent({
+      type: "catalog_product_whatsapp_click", source: "catalog_card",
+      productId: product.id, effectivePrice: price,
     });
 
     window.open(url, "_blank", "noopener,noreferrer");
@@ -72,10 +85,11 @@ export function ProductCard({ product }: ProductCardProps) {
         isPreventa={isPreventa}
         badge={stateBadge ?? campaignBadge}
         to={detailUrl}
+        onOpen={trackOpen}
       />
 
       <div className="product-card-body">
-        <Link className="product-card-detail" to={detailUrl}>
+        <Link className="product-card-detail" to={detailUrl} onClick={trackOpen}>
           <ProductCardContent product={product} />
 
           <ProductCardPrice

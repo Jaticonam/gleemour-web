@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 
@@ -11,6 +11,7 @@ import {
 import type { Campaign, Product } from "@/shared/types/product";
 import { isCampaignActive } from "@/integrations/sheets/normalizeCampaign";
 import { BRAND_CONFIG } from "@/tenant/config/brand";
+import { trackCommerceEvent } from "@/core/services/commerceEvents";
 
 
 import { ProductCard } from "@/modules/catalog/components/product/ProductCard";
@@ -51,6 +52,8 @@ export default function CatalogPage() {
   const [activeDiscover, setActiveDiscover] = useState<DiscoverKey | "">("");
   const [purchaseFilters, setPurchaseFilters] = useState<PurchaseFilters>({ ...EMPTY_PURCHASE_FILTERS });
   const [sort, setSort] = useState<CatalogSort>("featured");
+  const viewed = useRef(false);
+  const lastTrackedSearch = useRef("");
 
 
 
@@ -195,6 +198,10 @@ useEffect(() => {
   );
 
   const handleCampaignSelect = (campaignId: string) => {
+    const selected = visibleCampaigns.find((item) => item.id === campaignId);
+    if (selected) trackCommerceEvent({
+      type: "catalog_campaign_select", campaignId: selected.id, campaignName: selected.name,
+    });
     setSearchParams((current) => {
       const next = new URLSearchParams(current);
       if (campaignId) next.set("campaign", campaignId);
@@ -204,7 +211,13 @@ useEffect(() => {
   };
 
   const handleCategorySelect = (categoryId: string) => {
+    trackCommerceEvent({ type: "catalog_category_select", categoryId });
     setActiveCategory(categoryId);
+  };
+
+  const handleDiscoverSelect = (discoverId: DiscoverKey | "") => {
+    if (discoverId) trackCommerceEvent({ type: "catalog_discover_select", discoverId });
+    setActiveDiscover(discoverId);
   };
 
   const visibleProducts = useMemo(
@@ -213,6 +226,30 @@ useEffect(() => {
     }), sort),
     [products, searchQuery, activeCampaign, activeCategory, activeDiscover, purchaseFilters, sort],
   );
+
+  useEffect(() => {
+    if (loading || loadError || viewed.current) return;
+    viewed.current = true;
+    trackCommerceEvent({
+      type: "catalog_view", categoryId: activeCategory,
+      ...(activeCampaign ? { campaignId: activeCampaign } : {}),
+      resultCount: visibleProducts.length,
+    });
+  }, [loading, loadError, activeCategory, activeCampaign, visibleProducts.length]);
+
+  useEffect(() => {
+    const query = searchQuery.trim();
+    if (!query) { lastTrackedSearch.current = ""; return; }
+    if (loading || loadError || query.length < 2 || query === lastTrackedSearch.current) return;
+    const timeout = window.setTimeout(() => {
+      lastTrackedSearch.current = query;
+      trackCommerceEvent({
+        type: "catalog_search", queryLength: query.length, resultCount: visibleProducts.length,
+        categoryId: activeCategory, ...(activeCampaign ? { campaignId: activeCampaign } : {}),
+      });
+    }, 450);
+    return () => window.clearTimeout(timeout);
+  }, [searchQuery, visibleProducts.length, loading, loadError, activeCategory, activeCampaign]);
 
   const resultTitle = searchQuery.trim()
     ? `Búsqueda: “${searchQuery.trim()}”`
@@ -233,7 +270,14 @@ useEffect(() => {
 
   const resetEmptyState = () => {
     if (searchQuery.trim()) setSearchQuery("");
-    else if (hasPurchaseFilters) setPurchaseFilters({ ...EMPTY_PURCHASE_FILTERS });
+    else if (hasPurchaseFilters) {
+      trackCommerceEvent({
+        type: "catalog_filters_cleared", source: "empty_state",
+        count: Number(purchaseFilters.minPrice !== "" || purchaseFilters.maxPrice !== "") +
+          Number(purchaseFilters.availability !== "all") + Number(Boolean(purchaseFilters.subcategory)),
+      });
+      setPurchaseFilters({ ...EMPTY_PURCHASE_FILTERS });
+    }
     else {
       setActiveCategory("todas");
       handleCampaignSelect("");
@@ -261,7 +305,7 @@ useEffect(() => {
         categoryCounts={categoryCounts}
         onCampaignSelect={handleCampaignSelect}
         onCategorySelect={handleCategorySelect}
-        onDiscoverSelect={setActiveDiscover}
+        onDiscoverSelect={handleDiscoverSelect}
         logoSlot={
           <button
             type="button"
@@ -291,6 +335,11 @@ useEffect(() => {
           <Link
             to={getExperienceUrl("catalogo")}
             className="catalog-help-link"
+            onClick={() => trackCommerceEvent({
+              type: "catalog_help_choose", source: "catalog_header",
+              categoryId: activeCategory, ...(activeCampaign ? { campaignId: activeCampaign } : {}),
+              hasSearch: Boolean(searchQuery.trim()),
+            })}
           >
             <Sparkles className="h-5 w-5" aria-hidden="true" />
             Ayúdame a elegir
@@ -305,7 +354,12 @@ useEffect(() => {
           filters={purchaseFilters}
           onFiltersChange={setPurchaseFilters}
           sort={sort}
-          onSortChange={setSort}
+          onSortChange={(next) => {
+            if (next !== sort) trackCommerceEvent({
+              type: "catalog_sort_changed", sortId: next, resultCount: visibleProducts.length,
+            });
+            setSort(next);
+          }}
           subcategories={subcategoryItems}
         />
         {loadError ? (

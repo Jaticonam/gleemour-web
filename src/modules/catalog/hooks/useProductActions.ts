@@ -1,6 +1,8 @@
 import { useCallback } from "react";
 
 import { buildProductWhatsAppUrl } from "@/integrations/whatsapp/whatsapp";
+import { getProductPrice } from "@/domain/product";
+import { trackCommerceEvent } from "@/core/services/commerceEvents";
 import { showNotification } from "@/shared/components/feedback/NotificationStack";
 import { PRODUCT_DETAIL_CONFIG } from "@/tenant/config/product";
 import type { Product } from "@/shared/types/product";
@@ -39,6 +41,11 @@ export function useProductActions({
     const url = buildProductWhatsAppUrl({
       product,
       qty,
+    });
+
+    trackCommerceEvent({
+      type: "catalog_product_whatsapp_click", source: "product_detail",
+      productId: product.id, effectivePrice: getProductPrice(product),
     });
 
     window.open(url, "_blank", "noopener,noreferrer");

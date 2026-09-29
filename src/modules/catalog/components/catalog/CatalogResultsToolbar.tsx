@@ -1,4 +1,5 @@
 import { SlidersHorizontal, X } from "lucide-react";
+import { trackCommerceEvent } from "@/core/services/commerceEvents";
 import { lazy, Suspense, useRef, useState } from "react";
 import {
   EMPTY_PURCHASE_FILTERS,
@@ -27,6 +28,10 @@ export function CatalogResultsToolbar({
   const priceActive = filters.minPrice !== "" || filters.maxPrice !== "";
   const activeCount = Number(priceActive) + Number(filters.availability !== "all") + Number(Boolean(filters.subcategory));
   const update = (patch: Partial<PurchaseFilters>) => onFiltersChange({ ...filters, ...patch });
+  const removeFilter = (patch: Partial<PurchaseFilters>) => {
+    trackCommerceEvent({ type: "catalog_filters_cleared", source: "filter_chip", count: 1 });
+    update(patch);
+  };
 
   return (
     <div className="catalog-results-toolbar">
@@ -78,24 +83,27 @@ export function CatalogResultsToolbar({
         <div className="catalog-results-active-filters" aria-label="Filtros de compra activos">
           {priceActive && (
             <button type="button" aria-label="Quitar filtro de precio"
-              onClick={() => update({ minPrice: "", maxPrice: "" })}>
+              onClick={() => removeFilter({ minPrice: "", maxPrice: "" })}>
               <span>S/ {filters.minPrice || "0"} – {filters.maxPrice || "más"}</span> <X size={14} aria-hidden="true" />
             </button>
           )}
           {filters.availability !== "all" && (
             <button type="button" aria-label="Quitar filtro de disponibilidad"
-              onClick={() => update({ availability: "all" })}>
+              onClick={() => removeFilter({ availability: "all" })}>
               <span>{filters.availability === "available" ? "Disponible" : "Últimas unidades"}</span> <X size={14} aria-hidden="true" />
             </button>
           )}
           {filters.subcategory && (
             <button type="button" aria-label={`Quitar filtro de subcategoría: ${filters.subcategory}`}
               title={filters.subcategory}
-              onClick={() => update({ subcategory: "" })}>
+              onClick={() => removeFilter({ subcategory: "" })}>
               <span>{filters.subcategory}</span> <X size={14} aria-hidden="true" />
             </button>
           )}
-          <button type="button" className="catalog-results-clear" onClick={() => onFiltersChange(EMPTY_PURCHASE_FILTERS)}>
+          <button type="button" className="catalog-results-clear" onClick={() => {
+            trackCommerceEvent({ type: "catalog_filters_cleared", source: "filter_chip", count: activeCount });
+            onFiltersChange(EMPTY_PURCHASE_FILTERS);
+          }}>
             Limpiar filtros
           </button>
         </div>
