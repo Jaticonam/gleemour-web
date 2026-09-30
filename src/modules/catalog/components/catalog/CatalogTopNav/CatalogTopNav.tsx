@@ -117,42 +117,19 @@ export function CatalogTopNav({
           </nav>
 
           <div className="catalog-top-nav-discovery">
-            {discoverItems.length > 0 && (
-              <div className="catalog-discover-row" role="group" aria-label="Descubre">
-                <span className="catalog-discover-label">Descubre</span>
-                <div className="catalog-discover-chips">
-                  <button
-                    type="button"
-                    className={`catalog-discover-chip ${!activeDiscover ? "active" : ""}`}
-                    aria-pressed={!activeDiscover}
-                    onClick={() => onDiscoverSelect?.("")}
-                  >
-                    Todos
-                  </button>
-                  {discoverItems.map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      className={`catalog-discover-chip ${activeDiscover === item.id ? "active" : ""}`}
-                      aria-pressed={activeDiscover === item.id}
-                      onClick={() => onDiscoverSelect?.(activeDiscover === item.id ? "" : item.id)}
-                    >
-                      {item.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {hasCampaigns && (
-              <div className="catalog-top-nav-campaign-row">
-                <span className="catalog-campaign-row-label">
+              <section
+                className="catalog-commercial-card catalog-campaign-panel"
+                aria-label="Campañas"
+              >
+                <span className="catalog-commercial-eyebrow catalog-campaign-eyebrow">
                   Campañas
                 </span>
 
                 <div className="catalog-top-nav-campaigns">
                   {campaignItems.map((item) => {
                     const isActive = activeCampaign === item.id;
+                    const count = campaignCounts[item.id];
 
                     return (
                       <button
@@ -168,24 +145,68 @@ export function CatalogTopNav({
                           handleCampaignSelect(isActive ? "" : item.id)
                         }
                       >
-                        <span className="catalog-campaign-content">
-                          <strong>{item.name}</strong>
-
-                          {campaignCounts[item.id] !== undefined && (
-                            <small>{campaignCounts[item.id]} productos</small>
-                          )}
-                        </span>
-
                         {item.icon && (
                           <span className="catalog-campaign-icon">
                             {item.icon}
                           </span>
                         )}
+
+                        <span className="catalog-campaign-content">
+                          <strong>{item.name}</strong>
+
+                          {count !== undefined && (
+                            <small>
+                              {count} {count === 1 ? "producto" : "productos"}
+                            </small>
+                          )}
+                        </span>
                       </button>
                     );
                   })}
                 </div>
-              </div>
+              </section>
+            )}
+
+            {discoverItems.length > 0 && (
+              <section
+                className="catalog-commercial-card catalog-discover-panel"
+                aria-label="Descubre"
+              >
+                <span className="catalog-commercial-eyebrow">
+                  Descubre
+                </span>
+
+                <div
+                  className="catalog-discover-chips"
+                  role="group"
+                  aria-label="Descubre"
+                >
+                  <button
+                    type="button"
+                    className={`catalog-discover-chip ${!activeDiscover ? "active" : ""}`}
+                    aria-pressed={!activeDiscover}
+                    onClick={() => onDiscoverSelect?.("")}
+                  >
+                    Todos
+                  </button>
+
+                  {discoverItems.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      className={`catalog-discover-chip ${activeDiscover === item.id ? "active" : ""}`}
+                      aria-pressed={activeDiscover === item.id}
+                      onClick={() =>
+                        onDiscoverSelect?.(
+                          activeDiscover === item.id ? "" : item.id,
+                        )
+                      }
+                    >
+                      {item.name}
+                    </button>
+                  ))}
+                </div>
+              </section>
             )}
           </div>
 
@@ -287,3 +308,4 @@ export function CatalogTopNav({
     </>
   );
 }
+

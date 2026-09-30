@@ -48,6 +48,7 @@ export default function CatalogPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
+  const [brandLogoError, setBrandLogoError] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("todas");
@@ -303,7 +304,17 @@ useEffect(() => {
             onClick={() => (window.location.href = "/")}
             aria-label={`Ir al inicio de ${BRAND_CONFIG.name}`}
           >
-            <img src={BRAND_CONFIG.assets.logo} alt={BRAND_CONFIG.name} />
+            {brandLogoError ? (
+              <span className="catalog-top-nav-brand-wordmark">
+                {BRAND_CONFIG.name}
+              </span>
+            ) : (
+              <img
+                src={BRAND_CONFIG.assets.logo}
+                alt={BRAND_CONFIG.name}
+                onError={() => setBrandLogoError(true)}
+              />
+            )}
           </button>
         }
         searchSlot={
@@ -399,3 +410,4 @@ useEffect(() => {
     </div>
   );
 }
+
