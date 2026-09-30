@@ -2123,3 +2123,584 @@
   }
 
 }
+
+/* ============================================================
+   A8.2 UNIFIED ELEGANT CONTROL SYSTEM
+   Categorías + Campañas + Descubre
+   Un mismo lenguaje visual, distinta jerarquía.
+   ============================================================ */
+
+.catalog-top-nav {
+  --catalog-pill-height: 2.5rem;
+  --catalog-pill-radius: 999px;
+  --catalog-pill-border: rgba(106, 90, 138, 0.14);
+  --catalog-pill-border-hover: rgba(106, 90, 138, 0.27);
+  --catalog-pill-shadow: 0 3px 10px rgba(47, 36, 55, 0.035);
+  --catalog-pill-shadow-hover: 0 7px 17px rgba(47, 36, 55, 0.075);
+}
+
+/* ============================================================
+   1. CATEGORIAS
+   ============================================================ */
+
+.catalog-category-chip {
+  min-height: var(--catalog-pill-height);
+
+  padding: 0 0.9rem;
+
+  border: 1px solid var(--catalog-pill-border);
+  border-radius: var(--catalog-pill-radius);
+
+  background: rgba(255, 255, 255, 0.94);
+
+  color: var(--w-heading);
+
+  box-shadow: var(--catalog-pill-shadow);
+
+  font-size: 0.8rem;
+  font-weight: 650;
+
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 140ms ease;
+}
+
+.catalog-category-chip.active {
+  border-color: var(--w-primary);
+
+  background: var(--w-primary);
+
+  color: #ffffff;
+
+  box-shadow:
+    0 6px 15px rgba(106, 90, 138, 0.15);
+}
+
+@media (hover: hover) {
+  .catalog-category-chip:not(.active):hover {
+    border-color: var(--catalog-pill-border-hover);
+
+    background: #ffffff;
+
+    box-shadow: var(--catalog-pill-shadow-hover);
+
+    transform: translateY(-1px);
+  }
+}
+
+.catalog-category-chip:active {
+  transform: scale(0.985);
+}
+
+/* ============================================================
+   2. QUITAR LA APARIENCIA DE CARD GRANDE
+   ============================================================ */
+
+.catalog-top-nav-discovery {
+  margin-top: 0.55rem;
+
+  align-items: center;
+
+  gap: 0.7rem;
+}
+
+.catalog-commercial-card {
+  min-height: 0;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+
+  box-shadow: none;
+
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+
+  overflow: visible;
+
+  transform: none;
+}
+
+.catalog-commercial-card::after {
+  content: none;
+}
+
+.catalog-commercial-card:hover,
+.catalog-campaign-panel:hover {
+  border: 0;
+
+  background: transparent;
+
+  box-shadow: none;
+
+  transform: none;
+}
+
+.catalog-commercial-card:focus-within,
+.catalog-campaign-panel:focus-within {
+  border: 0;
+
+  box-shadow: none;
+}
+
+/* ============================================================
+   3. CAMPANAS
+   Ahora comparte geometría con Categorías.
+   ============================================================ */
+
+.catalog-campaign-panel {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.45rem;
+}
+
+/* El label CAMPAÑAS también entra al mismo sistema */
+
+.catalog-campaign-eyebrow,
+.catalog-campaign-row-label {
+  flex: 0 0 auto;
+
+  min-height: var(--catalog-pill-height);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 0.75rem;
+
+  border: 1px solid rgba(236, 164, 194, 0.22);
+  border-radius: var(--catalog-pill-radius);
+
+  background: rgba(253, 246, 249, 0.96);
+
+  color: var(--w-primary);
+
+  box-shadow: var(--catalog-pill-shadow);
+
+  font-size: 0.64rem;
+  font-weight: 800;
+
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+
+  white-space: nowrap;
+}
+
+/* Contenedor horizontal */
+
+.catalog-top-nav-campaigns {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.45rem;
+}
+
+/* Chip campaña: misma altura y forma que Categorías */
+
+.catalog-campaign-chip,
+.catalog-campaign-chip[class*="catalog-campaign-"] {
+  position: relative;
+
+  min-width: 0;
+  min-height: var(--catalog-pill-height);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 0.5rem;
+
+  padding: 0 0.8rem;
+
+  overflow: hidden;
+
+  border: 1px solid var(--catalog-pill-border);
+  border-radius: var(--catalog-pill-radius);
+
+  background: rgba(255, 255, 255, 0.96);
+
+  color: var(--w-heading);
+
+  box-shadow: var(--catalog-pill-shadow);
+
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease,
+    transform 140ms ease;
+}
+
+/* Limpiar cualquier bloque oscuro del icono */
+
+.catalog-campaign-icon,
+.catalog-campaign-chip[class*="catalog-campaign-"] .catalog-campaign-icon {
+  position: relative;
+
+  order: 1;
+
+  width: 1.55rem;
+  height: 1.55rem;
+  min-height: 1.55rem;
+
+  flex: 0 0 1.55rem;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: transparent !important;
+
+  color: var(--w-heading) !important;
+
+  box-shadow: none;
+
+  font-size: 0.9rem;
+
+  transform: none;
+}
+
+/* No pseudo-decoration pesada dentro del icono */
+
+.catalog-campaign-icon::after {
+  content: none;
+}
+
+/* Contenido */
+
+.catalog-campaign-content {
+  order: 2;
+
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  line-height: 1;
+}
+
+.catalog-campaign-content strong {
+  max-width: 13rem;
+
+  overflow: hidden;
+
+  color: var(--w-heading);
+
+  font-size: 0.77rem;
+  font-weight: 750;
+
+  line-height: 1.05;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.catalog-campaign-content small {
+  margin-top: 0.15rem;
+
+  color: var(--w-muted);
+
+  font-size: 0.6rem;
+  font-weight: 650;
+
+  line-height: 1;
+}
+
+/* ============================================================
+   4. EFECTO COMERCIAL DE CAMPAÑA
+   Color contextual sin romper coherencia.
+   ============================================================ */
+
+/* Línea de campaña oculta en estado normal */
+
+.catalog-campaign-chip::after {
+  content: "";
+
+  position: absolute;
+
+  left: 2.65rem;
+  right: 0.8rem;
+  bottom: 0;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background: var(--campaign-bg);
+
+  opacity: 0;
+
+  transform: scaleX(0.25);
+  transform-origin: left center;
+
+  transition:
+    opacity 170ms ease,
+    transform 190ms ease;
+}
+
+/* HOVER */
+
+@media (hover: hover) {
+  .catalog-campaign-chip:hover,
+  .catalog-campaign-chip[class*="catalog-campaign-"]:hover {
+    border-color: transparent;
+
+    background:
+      linear-gradient(#ffffff, #ffffff) padding-box,
+      var(--campaign-bg) border-box;
+
+    box-shadow: var(--catalog-pill-shadow-hover);
+
+    transform: translateY(-1px);
+  }
+
+  .catalog-campaign-chip:hover::after {
+    opacity: 0.8;
+
+    transform: scaleX(1);
+  }
+
+  .catalog-campaign-chip:hover .catalog-campaign-content strong {
+    color: var(--w-primary);
+  }
+
+  .catalog-campaign-chip:hover .catalog-campaign-icon {
+    transform: scale(1.08);
+  }
+}
+
+/* SELECTED */
+
+.catalog-campaign-chip.active,
+.catalog-campaign-chip[aria-pressed="true"],
+.catalog-campaign-chip[class*="catalog-campaign-"].active {
+  border-color: transparent;
+
+  background:
+    linear-gradient(
+      var(--w-secondary-soft),
+      var(--w-secondary-soft)
+    ) padding-box,
+    var(--campaign-bg) border-box;
+
+  color: var(--w-heading);
+
+  box-shadow:
+    0 6px 15px rgba(106, 90, 138, 0.10);
+}
+
+.catalog-campaign-chip.active::after,
+.catalog-campaign-chip[aria-pressed="true"]::after {
+  opacity: 1;
+
+  transform: scaleX(1);
+}
+
+.catalog-campaign-chip.active .catalog-campaign-content strong,
+.catalog-campaign-chip[aria-pressed="true"] .catalog-campaign-content strong {
+  color: var(--w-primary);
+}
+
+/* CLICK */
+
+.catalog-campaign-chip:active {
+  transform: scale(0.985);
+}
+
+/* ============================================================
+   5. DESCUBRE
+   Mismo lenguaje, menor jerarquía.
+   ============================================================ */
+
+.catalog-discover-panel {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.45rem;
+
+  background: transparent;
+
+  box-shadow: none;
+}
+
+.catalog-commercial-eyebrow:not(.catalog-campaign-eyebrow),
+.catalog-discover-label {
+  flex: 0 0 auto;
+
+  min-height: var(--catalog-pill-height);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 0.7rem;
+
+  border: 1px solid rgba(154, 139, 186, 0.15);
+  border-radius: var(--catalog-pill-radius);
+
+  background: rgba(249, 246, 252, 0.96);
+
+  color: var(--w-primary);
+
+  box-shadow: var(--catalog-pill-shadow);
+
+  font-size: 0.64rem;
+  font-weight: 800;
+
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+
+  white-space: nowrap;
+}
+
+.catalog-discover-chips {
+  gap: 0.35rem;
+}
+
+.catalog-discover-chip {
+  min-height: var(--catalog-pill-height);
+
+  padding: 0 0.8rem;
+
+  border: 1px solid var(--catalog-pill-border);
+  border-radius: var(--catalog-pill-radius);
+
+  background: rgba(255, 255, 255, 0.92);
+
+  color: var(--w-muted);
+
+  box-shadow: var(--catalog-pill-shadow);
+
+  font-size: 0.75rem;
+  font-weight: 650;
+
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 140ms ease;
+}
+
+.catalog-discover-chip.active {
+  border-color: rgba(106, 90, 138, 0.14);
+
+  background: var(--w-secondary-soft);
+
+  color: var(--w-primary);
+
+  box-shadow:
+    0 5px 13px rgba(106, 90, 138, 0.07);
+}
+
+@media (hover: hover) {
+  .catalog-discover-chip:not(.active):hover {
+    border-color: var(--catalog-pill-border-hover);
+
+    background: #ffffff;
+
+    color: var(--w-primary);
+
+    box-shadow: var(--catalog-pill-shadow-hover);
+
+    transform: translateY(-1px);
+  }
+}
+
+.catalog-discover-chip:active {
+  transform: scale(0.985);
+}
+
+/* ============================================================
+   6. FOCUS UNIFICADO
+   ============================================================ */
+
+.catalog-category-chip:focus-visible,
+.catalog-campaign-chip:focus-visible,
+.catalog-discover-chip:focus-visible {
+  outline: none;
+
+  box-shadow:
+    0 0 0 3px rgba(154, 139, 186, 0.14),
+    var(--catalog-pill-shadow);
+}
+
+/* ============================================================
+   7. MOBILE
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+  .catalog-top-nav-discovery {
+    gap: 0.45rem;
+  }
+
+  .catalog-campaign-panel,
+  .catalog-discover-panel {
+    overflow-x: auto;
+
+    scrollbar-width: none;
+  }
+
+  .catalog-campaign-panel::-webkit-scrollbar,
+  .catalog-discover-panel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .catalog-campaign-eyebrow,
+  .catalog-commercial-eyebrow:not(.catalog-campaign-eyebrow),
+  .catalog-campaign-chip,
+  .catalog-discover-chip {
+    flex-shrink: 0;
+  }
+
+  .catalog-campaign-chip,
+  .catalog-campaign-chip[class*="catalog-campaign-"] {
+    min-height: var(--catalog-pill-height);
+
+    padding-inline: 0.7rem;
+  }
+
+  .catalog-campaign-icon,
+  .catalog-campaign-chip[class*="catalog-campaign-"] .catalog-campaign-icon {
+    width: 1.45rem;
+    height: 1.45rem;
+    min-height: 1.45rem;
+
+    flex-basis: 1.45rem;
+  }
+}
+
+/* ============================================================
+   8. REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .catalog-category-chip,
+  .catalog-campaign-chip,
+  .catalog-campaign-chip::after,
+  .catalog-campaign-icon,
+  .catalog-discover-chip {
+    transition: none !important;
+  }
+}
