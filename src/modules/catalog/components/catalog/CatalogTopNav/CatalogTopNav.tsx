@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Compass, X } from "lucide-react";
+import { Menu, Sparkles, X } from "lucide-react";
 
 import "./CatalogTopNav.css";
 
@@ -22,32 +22,68 @@ export function CatalogTopNav({
   helpSlot,
 }: CatalogTopNavProps) {
   const [exploreOpen, setExploreOpen] = useState(false);
+
   const exploreTrigger = useRef<HTMLButtonElement>(null);
+  const campaignTrigger = useRef<HTMLButtonElement>(null);
+  const lastTrigger = useRef<HTMLButtonElement | null>(null);
   const exploreSheet = useRef<HTMLDivElement>(null);
+
   const hasCampaigns = campaignItems.length > 0;
+
+  const activeCampaignItem = campaignItems.find(
+    (item) => item.id === activeCampaign,
+  );
+
+  const openExplore = (trigger: HTMLButtonElement | null) => {
+    lastTrigger.current = trigger;
+    setExploreOpen(true);
+  };
+
+  const closeExplore = () => {
+    setExploreOpen(false);
+  };
 
   useEffect(() => {
     if (!exploreOpen) return;
+
     const previousOverflow = document.body.style.overflow;
-    const trigger = exploreTrigger.current;
+    const trigger = lastTrigger.current;
+
     document.body.style.overflow = "hidden";
-    exploreSheet.current?.querySelector<HTMLButtonElement>("button")?.focus();
+
+    exploreSheet.current
+      ?.querySelector<HTMLButtonElement>("button")
+      ?.focus();
+
     const handleKeys = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setExploreOpen(false);
+      if (event.key === "Escape") {
+        setExploreOpen(false);
+        return;
+      }
+
       if (event.key !== "Tab") return;
-      const buttons = exploreSheet.current?.querySelectorAll<HTMLButtonElement>("button");
+
+      const buttons =
+        exploreSheet.current?.querySelectorAll<HTMLButtonElement>("button");
+
       if (!buttons?.length) return;
+
       const first = buttons[0];
       const last = buttons[buttons.length - 1];
+
       if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
+      }
+
+      if (!event.shiftKey && document.activeElement === last) {
         event.preventDefault();
         first.focus();
       }
     };
+
     document.addEventListener("keydown", handleKeys);
+
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeys);
@@ -55,38 +91,89 @@ export function CatalogTopNav({
     };
   }, [exploreOpen]);
 
-  const handleCampaignSelect = (id: string) => {
-    onCampaignSelect?.(id);
-    setExploreOpen(false);
-  };
-
   const handleCategorySelect = (id: string) => {
     onCategorySelect?.(id);
     setExploreOpen(false);
   };
 
+  const handleCampaignSelect = (id: string) => {
+    onCampaignSelect?.(id);
+    setExploreOpen(false);
+  };
+
+  const handleDiscoverSelect = (id: string) => {
+    onDiscoverSelect?.(id);
+    setExploreOpen(false);
+  };
+
+  const handleCampaignEntry = () => {
+    if (campaignItems.length === 1) {
+      const campaign = campaignItems[0];
+
+      handleCampaignSelect(
+        activeCampaign === campaign.id ? "" : campaign.id,
+      );
+
+      return;
+    }
+
+    openExplore(campaignTrigger.current);
+  };
+
+  const campaignLabel =
+    campaignItems.length === 1
+      ? `Campañas · ${campaignItems[0].name}`
+      : activeCampaignItem
+        ? `Campañas · ${activeCampaignItem.name}`
+        : "Campañas";
+
+  const campaignVisualLabel =
+    campaignItems.length === 1
+      ? campaignItems[0].name
+      : activeCampaignItem?.name ?? "Campañas";
+
   return (
     <>
       <header className="catalog-top-nav">
         <div className="catalog-top-nav-inner">
-          <div className="catalog-top-nav-brand-row">
-            <h1 className="catalog-top-nav-brand-heading">{logoSlot}</h1>
+
+          <div className="catalog-commerce-main">
+
+            <h1 className="catalog-commerce-brand">
+              {logoSlot}
+            </h1>
+
+            <div className="catalog-commerce-search">
+              {searchSlot}
+            </div>
+
+            {helpSlot && (
+              <div className="catalog-commerce-assist">
+                {helpSlot}
+              </div>
+            )}
+
+          </div>
+
+          <div className="catalog-commerce-nav-row">
+
             <button
               ref={exploreTrigger}
               type="button"
-              className="catalog-explore-fab"
+              className="catalog-commerce-explore"
               aria-label="Explorar"
               aria-expanded={exploreOpen}
               aria-controls="catalog-explore-sheet"
-              onClick={() => setExploreOpen(true)}
+              onClick={() => openExplore(exploreTrigger.current)}
             >
-              <Compass className="w-4 h-4" aria-hidden="true" />
+              <Menu size={17} aria-hidden="true" />
               <span>Explorar</span>
             </button>
-          </div>
 
-          <nav className="catalog-top-nav-categories" aria-label="Categorías">
-            <div className="catalog-category-list">
+            <nav
+              className="catalog-commerce-categories"
+              aria-label="Categorías"
+            >
               {categoryItems.map((item) => {
                 const isActive = activeCategory === item.id;
 
@@ -95,147 +182,90 @@ export function CatalogTopNav({
                     key={item.id}
                     type="button"
                     className={[
-                      "catalog-category-chip",
+                      "catalog-commerce-category",
                       isActive ? "active" : "",
                     ].join(" ")}
                     aria-pressed={isActive}
-                    onClick={() => handleCategorySelect(item.id)}
+                    onClick={() =>
+                      handleCategorySelect(item.id)
+                    }
                   >
-                    {item.icon && (
-                      <span className="catalog-category-icon">{item.icon}</span>
-                    )}
-
-                    <span>{item.name}</span>
-
-                    {categoryCounts[item.id] !== undefined && (
-                      <small>({categoryCounts[item.id]})</small>
-                    )}
+                    {item.name}
                   </button>
                 );
               })}
-            </div>
-          </nav>
+            </nav>
 
-          <div className="catalog-top-nav-discovery">
             {hasCampaigns && (
-              <section
-                className="catalog-commercial-card catalog-campaign-panel"
-                aria-label="Campañas"
+              <button
+                ref={campaignTrigger}
+                type="button"
+                className={[
+                  "catalog-commerce-campaign",
+                  activeCampaign ? "active" : "",
+                ].join(" ")}
+                aria-label={campaignLabel}
+                aria-pressed={
+                  campaignItems.length === 1
+                    ? Boolean(activeCampaign)
+                    : undefined
+                }
+                aria-expanded={
+                  campaignItems.length > 1
+                    ? exploreOpen
+                    : undefined
+                }
+                aria-controls={
+                  campaignItems.length > 1
+                    ? "catalog-explore-sheet"
+                    : undefined
+                }
+                onClick={handleCampaignEntry}
               >
-                <span className="catalog-commercial-eyebrow catalog-campaign-eyebrow">
-                  Campañas
-                </span>
-
-                <div className="catalog-top-nav-campaigns">
-                  {campaignItems.map((item) => {
-                    const isActive = activeCampaign === item.id;
-                    const count = campaignCounts[item.id];
-
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        className={[
-                          "catalog-campaign-chip",
-                          item.colorClass ?? "",
-                          isActive ? "active" : "",
-                        ].join(" ")}
-                        aria-pressed={isActive}
-                        onClick={() =>
-                          handleCampaignSelect(isActive ? "" : item.id)
-                        }
-                      >
-                        {item.icon && (
-                          <span className="catalog-campaign-icon">
-                            {item.icon}
-                          </span>
-                        )}
-
-                        <span className="catalog-campaign-content">
-                          <strong>{item.name}</strong>
-
-                          {count !== undefined && (
-                            <small>
-                              {count} {count === 1 ? "producto" : "productos"}
-                            </small>
-                          )}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
+                <Sparkles size={16} aria-hidden="true" />
+                <span>{campaignVisualLabel}</span>
+              </button>
             )}
 
-            {discoverItems.length > 0 && (
-              <section
-                className="catalog-commercial-card catalog-discover-panel"
-                aria-label="Descubre"
-              >
-                <span className="catalog-commercial-eyebrow">
-                  Descubre
-                </span>
-
-                <div
-                  className="catalog-discover-chips"
-                  role="group"
-                  aria-label="Descubre"
-                >
-                  <button
-                    type="button"
-                    className={`catalog-discover-chip ${!activeDiscover ? "active" : ""}`}
-                    aria-pressed={!activeDiscover}
-                    onClick={() => onDiscoverSelect?.("")}
-                  >
-                    Todos
-                  </button>
-
-                  {discoverItems.map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      className={`catalog-discover-chip ${activeDiscover === item.id ? "active" : ""}`}
-                      aria-pressed={activeDiscover === item.id}
-                      onClick={() =>
-                        onDiscoverSelect?.(
-                          activeDiscover === item.id ? "" : item.id,
-                        )
-                      }
-                    >
-                      {item.name}
-                    </button>
-                  ))}
-                </div>
-              </section>
-            )}
-          </div>
-
-          <div className="catalog-top-nav-search-row">
-            <div className="catalog-top-nav-search">{searchSlot}</div>
-            {helpSlot}
           </div>
         </div>
       </header>
 
       {exploreOpen && (
         <div className="catalog-explore-overlay">
+
           <button
             type="button"
             className="catalog-explore-backdrop"
-            onClick={() => setExploreOpen(false)}
             aria-label="Cerrar explorar"
+            onClick={closeExplore}
           />
 
-          <div ref={exploreSheet} className="catalog-explore-sheet" id="catalog-explore-sheet" role="dialog"
-            aria-modal="true" aria-labelledby="catalog-explore-title">
+          <div
+            ref={exploreSheet}
+            id="catalog-explore-sheet"
+            className="catalog-explore-sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="catalog-explore-title"
+          >
+
             <div className="catalog-explore-header">
               <div>
                 <span>Explorar catálogo</span>
-                <h3 id="catalog-explore-title">Encuentra el detalle ideal</h3>
+
+                <h3 id="catalog-explore-title">
+                  Encuentra el detalle ideal
+                </h3>
               </div>
 
-              <button type="button" aria-label="Cerrar explorar" onClick={() => setExploreOpen(false)}>
-                <X className="w-5 h-5" aria-hidden="true" />
+              <button
+                type="button"
+                className="catalog-explore-close"
+                aria-label="Cerrar explorar"
+                onClick={closeExplore}
+              >
+                <X size={20} aria-hidden="true" />
               </button>
             </div>
 
@@ -244,7 +274,8 @@ export function CatalogTopNav({
 
               <div className="catalog-explore-list">
                 {categoryItems.map((item) => {
-                  const isActive = activeCategory === item.id;
+                  const isActive =
+                    activeCategory === item.id;
 
                   return (
                     <button
@@ -254,13 +285,23 @@ export function CatalogTopNav({
                         "catalog-explore-chip",
                         isActive ? "active" : "",
                       ].join(" ")}
-                      onClick={() => handleCategorySelect(item.id)}
+                      aria-pressed={isActive}
+                      onClick={() =>
+                        handleCategorySelect(item.id)
+                      }
                     >
-                      <span>{item.icon}</span>
-                      {item.name}
+                      {item.icon && (
+                        <span aria-hidden="true">
+                          {item.icon}
+                        </span>
+                      )}
+
+                      <span>{item.name}</span>
 
                       {categoryCounts[item.id] !== undefined && (
-                        <small>({categoryCounts[item.id]})</small>
+                        <small>
+                          {categoryCounts[item.id]}
+                        </small>
                       )}
                     </button>
                   );
@@ -268,13 +309,32 @@ export function CatalogTopNav({
               </div>
             </div>
 
-            {hasCampaigns && (
+            {discoverItems.length > 0 && (
               <div className="catalog-explore-group">
-                <p>Campañas activas</p>
+                <p>Descubre</p>
 
-                <div className="catalog-explore-list">
-                  {campaignItems.map((item) => {
-                    const isActive = activeCampaign === item.id;
+                <div
+                  className="catalog-explore-list"
+                  role="group"
+                  aria-label="Descubre"
+                >
+                  <button
+                    type="button"
+                    className={[
+                      "catalog-explore-chip",
+                      !activeDiscover ? "active" : "",
+                    ].join(" ")}
+                    aria-pressed={!activeDiscover}
+                    onClick={() =>
+                      handleDiscoverSelect("")
+                    }
+                  >
+                    Todos
+                  </button>
+
+                  {discoverItems.map((item) => {
+                    const isActive =
+                      activeDiscover === item.id;
 
                     return (
                       <button
@@ -282,19 +342,60 @@ export function CatalogTopNav({
                         type="button"
                         className={[
                           "catalog-explore-chip",
-                          "catalog-explore-campaign-chip",
-                          item.colorClass ?? "",
                           isActive ? "active" : "",
                         ].join(" ")}
+                        aria-pressed={isActive}
                         onClick={() =>
-                          handleCampaignSelect(isActive ? "" : item.id)
+                          handleDiscoverSelect(
+                            isActive ? "" : item.id,
+                          )
                         }
                       >
-                        <span>{item.icon}</span>
                         {item.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {hasCampaigns && (
+              <div className="catalog-explore-group">
+                <p>Campañas activas</p>
+
+                <div className="catalog-explore-list">
+                  {campaignItems.map((item) => {
+                    const isActive =
+                      activeCampaign === item.id;
+
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        className={[
+                          "catalog-explore-chip",
+                          "catalog-explore-campaign",
+                          isActive ? "active" : "",
+                        ].join(" ")}
+                        aria-pressed={isActive}
+                        onClick={() =>
+                          handleCampaignSelect(
+                            isActive ? "" : item.id,
+                          )
+                        }
+                      >
+                        {item.icon && (
+                          <span aria-hidden="true">
+                            {item.icon}
+                          </span>
+                        )}
+
+                        <span>{item.name}</span>
 
                         {campaignCounts[item.id] !== undefined && (
-                          <small>({campaignCounts[item.id]})</small>
+                          <small>
+                            {campaignCounts[item.id]}
+                          </small>
                         )}
                       </button>
                     );
@@ -302,6 +403,7 @@ export function CatalogTopNav({
                 </div>
               </div>
             )}
+
           </div>
         </div>
       )}

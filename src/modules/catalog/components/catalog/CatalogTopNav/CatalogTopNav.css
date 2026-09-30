@@ -1,2706 +1,663 @@
-/* ==========================================
-   CatalogTopNav.css
-   Gleemour Catalog Header / Campaign Nav
-   ------------------------------------------------
-   Objetivo:
-   - Header sticky premium.
-   - Categorías limpias y legibles.
-   - Campañas con colores completos desde Google Sheets.
-   - Mobile con panel "Explorar".
-   - CSS sin duplicados ni overrides fantasma.
-========================================== */
-
-/* ==========================================
-   01. Header principal
-========================================== */
+/* H1.1.1 - Catalogo sin franja superior global */
+html:has(.catalog-page),
+body:has(.catalog-page) {
+  border-top: 0 !important;
+}
+/* ============================================================
+   GLEEMOUR COMMERCE HEADER 1.0
+   H1.1 PREVIEW
+   ============================================================ */
 
 .catalog-top-nav {
-  --catalog-action-height: 2.875rem;
-  --catalog-navigation-height: 2.5rem;
-  --catalog-secondary-height: 2.125rem;
-  --catalog-control-radius: 0.75rem;
   position: sticky;
   top: 0;
   z-index: 30;
-  padding: 1rem 1rem 0.5rem;
-  background: var(--w-surface);
-  border-bottom: 1px solid rgba(239, 227, 234, 0.78);
-}
-.catalog-top-nav-inner { width: min(100%, 1280px); margin-inline: auto; }
-
-/* ==========================================
-   02. Logo / marca
-========================================== */
-
-.catalog-top-nav-brand-row {
-  position: relative;
   width: 100%;
-  margin: 0 auto 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.catalog-top-nav-brand-heading {
-  margin: 0;
-  line-height: 1;
-}
-
-.catalog-top-nav-brand {
-  width: 11rem;
-  height: 2.35rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  cursor: pointer;
-}
-
-.catalog-top-nav-brand img {
-  width: auto;
-  max-width: 100%;
-  max-height: 2.35rem;
-  object-fit: contain;
-}
-
-/* ==========================================
-   03. Categorías desktop
-========================================== */
-
-.catalog-top-nav-categories {
-  width: 100%;
-  margin: 0 auto;
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.catalog-category-list {
-  width: max-content;
-  max-width: none;
-  margin-inline: auto;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.catalog-top-nav-categories::-webkit-scrollbar {
-  display: none;
-}
-
-.catalog-category-chip {
-  flex-shrink: 0;
-  min-height: var(--catalog-navigation-height);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0 0.9rem;
-  border-radius: 999px;
-  border: 1px solid rgba(106, 90, 138, 0.2);
-  background: #fff;
-  color: var(--w-heading);
-  font-size: 0.82rem;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    background 180ms ease,
-    border-color 180ms ease,
-    color 180ms ease;
-}
-
-.catalog-category-chip.active {
-  background: var(--w-primary);
-  border-color: var(--w-primary);
-  color: #ffffff;
-  box-shadow: 0 3px 9px rgba(106, 90, 138, 0.12);
-}
-.catalog-category-chip:active { filter: brightness(.94); }
-
-.catalog-category-chip small {
-  opacity: 0.78;
-  font-size: 0.72rem;
-  font-weight: 600;
-}
-
-.catalog-category-icon {
-  font-size: 0.95rem;
-}
-
-/* ==========================================
-   04. Fila de campañas desktop
-========================================== */
-
-.catalog-top-nav-discovery {
-  width: 100%;
-  margin: 0.65rem auto 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  column-gap: 1rem;
-  row-gap: 0.45rem;
-}
-.catalog-top-nav-discovery:empty { display: none; }
-
-.catalog-top-nav-campaign-row {
-  min-width: 0;
-  max-width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-
-.catalog-campaign-row-label {
-  flex-shrink: 0;
-  color: var(--w-muted);
-  font-size: 0.78rem;
-  font-weight: 650;
-}
-
-.catalog-campaign-row-label::before,
-.catalog-campaign-row-label::after {
-  content: none;
-}
-
-.catalog-top-nav-campaigns {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.catalog-top-nav-campaigns::-webkit-scrollbar {
-  display: none;
-}
-
-/* ==========================================
-   05. Chip de campaña base
-   ------------------------------------------------
-   El color real viene por variables:
-   --campaign-bg
-   --campaign-text
-   --campaign-icon-bg
-========================================== */
-
-.catalog-campaign-chip {
-  --campaign-bg: linear-gradient(135deg, #6a5a8a, #9a8bba);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-
-  position: relative;
-  overflow: hidden;
-  flex-shrink: 0;
-  min-width: 8.75rem;
-  min-height: var(--catalog-secondary-height);
-  display: inline-flex;
-  align-items: stretch;
-  justify-content: space-between;
-  gap: 0.45rem;
-  padding: 0.18rem 0.3rem 0.18rem 0.7rem;
-  border: 0;
-  border-radius: var(--w-radius-full);
-  background: var(--campaign-bg);
-  color: var(--campaign-text);
-  box-shadow: none;
-  cursor: pointer;
-  transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    filter 180ms ease;
-}
-
-.catalog-campaign-chip:active { filter: brightness(.94); }
-
-.catalog-campaign-content {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  line-height: 1.05;
-  color: inherit;
-}
-
-.catalog-campaign-content strong {
-  color: inherit;
-  font-size: 0.75rem;
-  font-weight: 750;
-  letter-spacing: -0.025em;
-  line-height: 1.05;
-}
-
-.catalog-campaign-content small {
-  margin-top: 0.2rem;
-  color: inherit;
-  font-size: 0.62rem;
-  font-weight: 650;
-  line-height: 1;
-  opacity: 0.94;
-}
-
-.catalog-campaign-icon {
-  width: 1.75rem;
-  min-height: 100%;
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--w-radius-full);
-  font-size: 1rem;
-  background: var(--campaign-icon-bg);
-  color: inherit;
-  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   06. Buscador
-========================================== */
-
-.catalog-top-nav-search-row {
-  width: 100%;
-  margin: 0.65rem auto 0;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.catalog-top-nav-search {
-  flex: 1 1 26rem;
-  min-width: 0;
-}
-
-.catalog-help-link {
-  flex: 0 0 auto;
-  width: 9rem;
-  min-height: var(--catalog-action-height);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0 1rem;
-  border: 1px solid rgba(106, 90, 138, 0.18);
-  border-radius: var(--catalog-control-radius);
-  background: var(--w-primary);
-  color: #fff;
-  box-shadow: 0 3px 10px rgba(106, 90, 138, 0.11);
-  font-size: 0.84rem;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.catalog-help-link:hover {
-  color: #fff;
-  filter: brightness(1.06);
-}
-.catalog-help-link:active { filter: brightness(.94); }
-
-.catalog-help-link:focus-visible,
-.catalog-top-nav-brand:focus-visible,
-.catalog-explore-fab:focus-visible,
-.catalog-category-chip:focus-visible,
-.catalog-campaign-chip:focus-visible,
-.catalog-discover-chip:focus-visible {
-  outline: 3px solid var(--w-secondary);
-  outline-offset: 2px;
-}
-
-.catalog-discover-row {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-
-.catalog-discover-label {
-  flex: none;
-  color: var(--w-muted);
-  font-size: 0.78rem;
-  font-weight: 650;
-}
-
-.catalog-discover-chips {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.catalog-discover-chips::-webkit-scrollbar { display: none; }
-
-.catalog-discover-chip {
-  flex: none;
-  min-height: var(--catalog-secondary-height);
-  padding: 0 0.7rem;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--w-heading);
-  font-size: 0.75rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
-}
-
-.catalog-discover-chip.active {
-  border-color: rgba(106, 90, 138, 0.12);
-  background: var(--w-secondary-soft);
-  color: var(--w-primary);
-  box-shadow: none;
-}
-.catalog-discover-chip:active { filter: brightness(.94); }
-
-.catalog-page .catalog-top-nav .search-input-box {
-  min-height: var(--catalog-action-height);
-  gap: 0.65rem;
-  padding-inline: 1rem;
-  border: 1px solid rgba(106, 90, 138, 0.2);
-  border-radius: var(--catalog-control-radius);
-  background: #fff;
-  box-shadow: 0 3px 12px rgba(47, 36, 55, 0.05);
-}
-.catalog-page .catalog-top-nav .search-input-box:hover {
-  border-color: rgba(106, 90, 138, 0.42);
-}
-.catalog-page .catalog-top-nav .search-input-box:focus-within {
-  border-color: var(--w-primary);
-  box-shadow: 0 0 0 3px rgba(106, 90, 138, 0.13);
-}
-.catalog-page .catalog-top-nav .search-input-field { font-size: 0.875rem; font-weight: 600; }
-.catalog-page .catalog-top-nav .search-input-icon,
-.catalog-help-link svg { width: 1.125rem; height: 1.125rem; }
-.catalog-page .catalog-top-nav .search-input-field::placeholder { color: var(--w-muted); }
-
-@media (hover: hover) {
-  .catalog-category-chip:not(.active):hover,
-  .catalog-discover-chip:not(.active):hover {
-    border-color: var(--w-primary);
-    background: rgba(106, 90, 138, .07);
-  }
-  .catalog-campaign-chip:hover { filter: brightness(1.04); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .catalog-category-chip,
-  .catalog-discover-chip,
-  .catalog-campaign-chip,
-  .catalog-help-link { transition: none; }
-}
-
-/* ==========================================
-   07. Botón flotante mobile
-========================================== */
-
-.catalog-explore-fab {
-  display: none;
-}
-
-.catalog-explore-overlay {
-  display: none;
-}
-
-/* ==========================================
-   Campaign Palette A-Z
-   Gleemour Campaign Color System
-   ------------------------------------------
-   Uso:
-   Google Sheets color -> campaignColors.ts -> catalog-campaign-*
-========================================== */
-
-/* Base visual para cualquier campaña */
-.catalog-campaign-chip,
-.catalog-explore-campaign-chip {
-  --campaign-bg: linear-gradient(135deg, #6a5a8a, #9a8bba);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* Superficie discreta; la identidad de campaña permanece en el icono. */
-.catalog-campaign-chip[class*="catalog-campaign-"] {
-  border: 1px solid var(--w-border);
-  background: var(--w-surface);
-  color: var(--w-heading);
-}
-
-/* Aplica color completo al chip mobile */
-.catalog-explore-campaign-chip[class*="catalog-campaign-"] {
-  background: var(--campaign-bg);
-  color: var(--campaign-text);
-  border-color: transparent;
-}
-
-/* Icono interno desktop */
-.catalog-campaign-chip[class*="catalog-campaign-"] .catalog-campaign-icon {
-  background: var(--campaign-bg);
-  color: var(--campaign-text);
-}
-
-/* Active state desktop */
-.catalog-campaign-chip.active {
-  border-color: var(--w-primary);
-  background: var(--w-secondary-soft);
-}
-
-/* Active state mobile */
-.catalog-explore-campaign-chip.active {
-  background: var(--campaign-bg);
-  color: var(--campaign-text);
-  filter: saturate(1.08);
-  box-shadow: 0 14px 30px rgba(30, 22, 42, 0.18);
-}
-
-/* ==========================================
-   A
-========================================== */
-
-/* amarillo */
-.catalog-campaign-yellow {
-  --campaign-bg: linear-gradient(135deg, #ffd84d, #f9c95b);
-  --campaign-text: #4b3510;
-  --campaign-icon-bg: rgba(75, 53, 16, 0.1);
-}
-
-/* aqua */
-.catalog-campaign-aqua {
-  --campaign-bg: linear-gradient(135deg, #00b4d8, #90e0ef);
-  --campaign-text: #073b4c;
-  --campaign-icon-bg: rgba(7, 59, 76, 0.1);
-}
-
-/* azul */
-.catalog-campaign-blue {
-  --campaign-bg: linear-gradient(135deg, #2f64cf, #3f7ee8);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* azul bebe */
-.catalog-campaign-baby-blue {
-  --campaign-bg: linear-gradient(135deg, #93c5fd, #bfdbfe);
-  --campaign-text: #17365f;
-  --campaign-icon-bg: rgba(23, 54, 95, 0.1);
-}
-
-/* azul cielo */
-.catalog-campaign-sky {
-  --campaign-bg: linear-gradient(135deg, #37aee2, #68c7f5);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* azul cobalto */
-.catalog-campaign-cobalt {
-  --campaign-bg: linear-gradient(135deg, #0047ab, #2f6fed);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* azul electrico */
-.catalog-campaign-electric-blue {
-  --campaign-bg: linear-gradient(135deg, #0077ff, #00c2ff);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* azul hielo */
-.catalog-campaign-ice-blue {
-  --campaign-bg: linear-gradient(135deg, #dbeafe, #eff6ff);
-  --campaign-text: #1e3a8a;
-  --campaign-icon-bg: rgba(30, 58, 138, 0.1);
-}
-
-/* azul marino */
-.catalog-campaign-navy {
-  --campaign-bg: linear-gradient(135deg, #0f172a, #1e3a8a);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* azul petroleo */
-.catalog-campaign-petrol {
-  --campaign-bg: linear-gradient(135deg, #005f73, #0a9396);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* azul rey */
-.catalog-campaign-royal-blue {
-  --campaign-bg: linear-gradient(135deg, #1d4ed8, #2563eb);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   B
-========================================== */
-
-/* blanco */
-.catalog-campaign-white {
-  --campaign-bg: linear-gradient(135deg, #ffffff, #f8fafc);
-  --campaign-text: #2f2437;
-  --campaign-icon-bg: rgba(47, 36, 55, 0.08);
-}
-
-/* borgona */
-.catalog-campaign-burgundy {
-  --campaign-bg: linear-gradient(135deg, #58111a, #8a2332);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   C
-========================================== */
-
-/* celeste */
-.catalog-campaign-sky {
-  --campaign-bg: linear-gradient(135deg, #37aee2, #68c7f5);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* champagne */
-.catalog-campaign-champagne {
-  --campaign-bg: linear-gradient(135deg, #e8c98a, #fff1c7);
-  --campaign-text: #4b3510;
-  --campaign-icon-bg: rgba(75, 53, 16, 0.1);
-}
-
-/* cobre */
-.catalog-campaign-copper {
-  --campaign-bg: linear-gradient(135deg, #b66a42, #cf7d52);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* coral */
-.catalog-campaign-coral {
-  --campaign-bg: linear-gradient(135deg, #ff6f61, #ff9a8b);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* crema */
-.catalog-campaign-cream {
-  --campaign-bg: linear-gradient(135deg, #f7e7ce, #fff8e7);
-  --campaign-text: #4b3510;
-  --campaign-icon-bg: rgba(75, 53, 16, 0.1);
-}
-
-/* ==========================================
-   D
-========================================== */
-
-/* dorado */
-.catalog-campaign-gold {
-  --campaign-bg: linear-gradient(135deg, #f2b84d, #f9c95b);
-  --campaign-text: #4b3510;
-  --campaign-icon-bg: rgba(75, 53, 16, 0.1);
-}
-
-/* durazno */
-.catalog-campaign-peach {
-  --campaign-bg: linear-gradient(135deg, #f6ad97, #ffd1bd);
-  --campaign-text: #5a2c1e;
-  --campaign-icon-bg: rgba(90, 44, 30, 0.1);
-}
-
-/* ==========================================
-   E
-========================================== */
-
-/* elegante */
-.catalog-campaign-elegant {
-  --campaign-bg: linear-gradient(135deg, #2f2437, #6a5a8a);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* esmeralda */
-.catalog-campaign-emerald {
-  --campaign-bg: linear-gradient(135deg, #0f8f72, #16aa88);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   F
-========================================== */
-
-/* fucsia */
-.catalog-campaign-fuchsia {
-  --campaign-bg: linear-gradient(135deg, #d946ef, #ec5ff4);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   G
-========================================== */
-
-/* gleemour */
-.catalog-campaign-gleemour {
-  --campaign-bg: linear-gradient(135deg, #6a5a8a, #eca4c2);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* gris */
-.catalog-campaign-gray {
-  --campaign-bg: linear-gradient(135deg, #6b7280, #9ca3af);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   H
-========================================== */
-
-/* halloween */
-.catalog-campaign-halloween {
-  --campaign-bg: linear-gradient(135deg, #111827, #f97316);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   J
-========================================== */
-
-/* jade */
-.catalog-campaign-jade {
-  --campaign-bg: linear-gradient(135deg, #00a86b, #34d399);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   L
-========================================== */
-
-/* lavanda */
-.catalog-campaign-lavender {
-  --campaign-bg: linear-gradient(135deg, #8b7cf6, #c4b5fd);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* lila */
-.catalog-campaign-lilac {
-  --campaign-bg: linear-gradient(135deg, #b794f4, #d8b4fe);
-  --campaign-text: #3b2a52;
-  --campaign-icon-bg: rgba(59, 42, 82, 0.1);
-}
-
-/* lima */
-.catalog-campaign-lime {
-  --campaign-bg: linear-gradient(135deg, #a3e635, #d9f99d);
-  --campaign-text: #365314;
-  --campaign-icon-bg: rgba(54, 83, 20, 0.1);
-}
-
-/* ==========================================
-   M
-========================================== */
-
-/* magenta */
-.catalog-campaign-magenta {
-  --campaign-bg: linear-gradient(135deg, #c026d3, #e879f9);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* menta */
-.catalog-campaign-mint {
-  --campaign-bg: linear-gradient(135deg, #99f6e4, #ccfbf1);
-  --campaign-text: #064e3b;
-  --campaign-icon-bg: rgba(6, 78, 59, 0.1);
-}
-
-/* morado */
-.catalog-campaign-purple {
-  --campaign-bg: linear-gradient(135deg, #6a5a8a, #8b6ff4);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   N
-========================================== */
-
-/* naranja */
-.catalog-campaign-orange {
-  --campaign-bg: linear-gradient(135deg, #ef7d1a, #f59a3d);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* navidad */
-.catalog-campaign-christmas {
-  --campaign-bg: linear-gradient(135deg, #0f5132, #dc3545);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* negro */
-.catalog-campaign-dark {
-  --campaign-bg: linear-gradient(135deg, #252525, #3d3d3d);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   O
-========================================== */
-
-/* oliva */
-.catalog-campaign-olive {
-  --campaign-bg: linear-gradient(135deg, #6b8e23, #9caf3c);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   P
-========================================== */
-
-/* palo rosa */
-.catalog-campaign-dusty-rose {
-  --campaign-bg: linear-gradient(135deg, #c98da3, #e8b7c8);
-  --campaign-text: #4a2533;
-  --campaign-icon-bg: rgba(74, 37, 51, 0.1);
-}
-
-/* premium */
-.catalog-campaign-premium {
-  --campaign-bg: linear-gradient(135deg, #111827, #d4af37);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* primavera */
-.catalog-campaign-spring {
-  --campaign-bg: linear-gradient(135deg, #86efac, #f9a8d4);
-  --campaign-text: #24422d;
-  --campaign-icon-bg: rgba(36, 66, 45, 0.1);
-}
-
-/* ==========================================
-   R
-========================================== */
-
-/* rojo */
-.catalog-campaign-red {
-  --campaign-bg: linear-gradient(135deg, #dc3545, #ef5c66);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* rosa pastel */
-.catalog-campaign-soft-pink {
-  --campaign-bg: linear-gradient(135deg, #f9a8d4, #fbcfe8);
-  --campaign-text: #5b2445;
-  --campaign-icon-bg: rgba(91, 36, 69, 0.1);
-}
-
-/* rosado */
-.catalog-campaign-pink {
-  --campaign-bg: linear-gradient(135deg, #e94fb5, #f06abf);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   S
-========================================== */
-
-/* salmon */
-.catalog-campaign-salmon {
-  --campaign-bg: linear-gradient(135deg, #fa8072, #ffb199);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   T
-========================================== */
-
-/* terracota */
-.catalog-campaign-terracotta {
-  --campaign-bg: linear-gradient(135deg, #b85c38, #d9825b);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* turquesa */
-.catalog-campaign-teal {
-  --campaign-bg: linear-gradient(135deg, #269f98, #37b8b0);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   V
-========================================== */
-
-/* verde */
-.catalog-campaign-green {
-  --campaign-bg: linear-gradient(135deg, #13a77f, #2dbc9a);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* verano */
-.catalog-campaign-summer {
-  --campaign-bg: linear-gradient(135deg, #facc15, #fb923c);
-  --campaign-text: #4b3510;
-  --campaign-icon-bg: rgba(75, 53, 16, 0.1);
-}
-
-/* vino */
-.catalog-campaign-wine {
-  --campaign-bg: linear-gradient(135deg, #7f1734, #9f2448);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* violeta */
-.catalog-campaign-violet {
-  --campaign-bg: linear-gradient(135deg, #7c3aed, #a78bfa);
-  --campaign-text: #ffffff;
-  --campaign-icon-bg: rgba(255, 255, 255, 0.16);
-}
-
-/* ==========================================
-   09. Mobile
-========================================== */
-
-@media (min-width: 1024px) {
-  .catalog-top-nav-categories { overflow: visible; }
-  .catalog-category-icon { display: none; }
-  .catalog-category-list {
-    width: 100%;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 720px) {
-  .catalog-top-nav {
-    --catalog-action-height: 2.75rem;
-    --catalog-navigation-height: 2.375rem;
-    position: relative;
-    padding: 0.85rem 0.75rem 0.45rem;
-  }
-
-  .catalog-top-nav-brand-row { margin-bottom: 0.75rem; }
-
-  .catalog-top-nav-brand {
-    width: 8rem;
-    height: 2.2rem;
-  }
-
-  .catalog-top-nav-brand img {
-    max-height: 2.2rem;
-  }
-
-  .catalog-top-nav-search-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.45rem;
-    margin-top: 0.55rem;
-  }
-
-  .catalog-top-nav-search {
-    flex: none;
-  }
-
-  .catalog-page .catalog-top-nav .search-input-box { min-height: var(--catalog-action-height); }
-
-  .catalog-help-link {
-    width: 100%;
-    min-height: var(--catalog-action-height);
-    font-size: 0.78rem;
-  }
-
-  .catalog-top-nav-discovery {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 0.4rem;
-    margin-top: 0.45rem;
-  }
-  .catalog-discover-row,
-  .catalog-top-nav-campaign-row {
-    width: 100%;
-    align-items: stretch;
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-  .catalog-discover-label,
-  .catalog-campaign-row-label { font-size: 0.74rem; }
-  .catalog-discover-chip { min-height: var(--catalog-secondary-height); padding-inline: 0.7rem; }
-
-  .catalog-top-nav-campaign-row {
-    margin-top: 0;
-  }
-
-  .catalog-campaign-chip {
-    min-width: 9rem;
-    min-height: var(--catalog-secondary-height);
-  }
-
-  .catalog-top-nav-categories {
-    min-width: 0;
-    padding-block: 0.1rem;
-  }
-
-  .catalog-category-list { gap: 0.35rem; }
-
-  .catalog-category-chip {
-    min-height: var(--catalog-navigation-height);
-    padding-inline: 0.7rem;
-    white-space: nowrap;
-  }
-
-  .catalog-explore-fab {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    min-height: 2.75rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.55rem;
-    padding: 0 0.85rem;
-    border: 0;
-    border-radius: 999px;
-    color: #ffffff;
-    background: var(--w-primary);
-    box-shadow: 0 4px 12px rgba(106, 90, 138, 0.16);
-    font-size: 0.75rem;
-    font-weight: 950;
-    cursor: pointer;
-  }
-
-  .catalog-explore-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 300;
-    display: block;
-  }
-
-  .catalog-explore-backdrop {
-    position: absolute;
-    inset: 0;
-    border: 0;
-    background: rgba(30, 22, 42, 0.38);
-    backdrop-filter: blur(4px);
-  }
-
-  .catalog-explore-sheet {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    max-height: 82dvh;
-    overflow-y: auto;
-    padding: 1rem 1rem max(1.25rem, env(safe-area-inset-bottom));
-    border-radius: 1.6rem 1.6rem 0 0;
-    background: rgba(255, 255, 255, 0.98);
-    box-shadow: 0 -24px 70px rgba(30, 22, 42, 0.22);
-  }
-
-  .catalog-explore-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .catalog-explore-header span {
-    color: var(--w-secondary-strong);
-    font-size: 0.72rem;
-    font-weight: 950;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-  }
-
-  .catalog-explore-header h3 {
-    margin: 0.2rem 0 0;
-    color: var(--w-heading);
-    font-family: var(--font-brand);
-    font-size: 1.45rem;
-    font-weight: 950;
-    letter-spacing: -0.04em;
-  }
-
-  .catalog-explore-header button {
-    width: 2.75rem;
-    height: 2.75rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 0;
-    border-radius: 999px;
-    background: rgba(106, 90, 138, 0.08);
-    color: var(--w-heading);
-    cursor: pointer;
-  }
-
-  .catalog-explore-group {
-    margin-top: 1rem;
-  }
-
-  .catalog-explore-group p {
-    margin: 0 0 0.65rem;
-    color: var(--w-muted);
-    font-size: 0.78rem;
-    font-weight: 950;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-  }
-
-  .catalog-explore-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-  }
-
-  .catalog-explore-chip {
-    min-height: 2.55rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0 0.85rem;
-    border-radius: 999px;
-    border: 1px solid rgba(106, 90, 138, 0.14);
-    background: rgba(255, 255, 255, 0.92);
-    color: var(--w-heading);
-    font-size: 0.8rem;
-    font-weight: 900;
-    cursor: pointer;
-    box-shadow: 0 8px 18px rgba(30, 22, 42, 0.06);
-  }
-
-  .catalog-explore-chip.active {
-    background: var(--w-primary);
-    border-color: var(--w-primary);
-    color: #ffffff;
-  }
-
-  .catalog-explore-campaign-chip {
-    --campaign-bg: linear-gradient(135deg, #6a5a8a, #9a8bba);
-    --campaign-text: #ffffff;
-
-    background: var(--campaign-bg);
-    border-color: transparent;
-    color: var(--campaign-text);
-  }
-
-  .catalog-explore-campaign-chip.active {
-    background: var(--campaign-bg);
-    color: var(--campaign-text);
-    filter: saturate(1.08);
-    box-shadow: 0 14px 30px rgba(30, 22, 42, 0.18);
-  }
-
-  .catalog-explore-chip small {
-    opacity: 0.72;
-    font-size: 0.72rem;
-  }
-}
-
-@media (max-width: 420px) {
-  .catalog-explore-fab {
-    width: 2.75rem;
-    padding: 0;
-  }
-  .catalog-explore-fab span { display: none; }
-}
-
-/* ============================================================
-   A8 PREMIUM COMPACT COMMERCIAL HEADER
-   Campañas > Descubre
-   Lenguaje visual inspirado en Home, sin altura de hero.
-   ============================================================ */
-
-.catalog-top-nav {
-  --catalog-action-height: 3rem;
-  --catalog-navigation-height: 2.4rem;
-  --catalog-secondary-height: 2.1rem;
-  --catalog-control-radius: 0.875rem;
-
-  padding: 0.75rem 1rem 0.6rem;
-
-  background:
-    radial-gradient(
-      circle at 50% -8rem,
-      rgba(236, 164, 194, 0.11),
-      transparent 18rem
-    ),
-    linear-gradient(
-      180deg,
-      rgba(253, 251, 247, 0.98),
-      rgba(255, 255, 255, 0.98)
-    );
-
-  border-bottom: 1px solid rgba(106, 90, 138, 0.1);
-  box-shadow: 0 8px 28px rgba(47, 36, 55, 0.035);
+  background: rgba(253, 251, 247, 0.985);
+  border-bottom: 1px solid rgba(106, 90, 138, 0.11);
+  box-shadow: 0 5px 20px rgba(47, 36, 55, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .catalog-top-nav-inner {
-  width: min(100%, 1280px);
+  width: min(calc(100% - 2rem), 1560px);
+  max-width: 1560px;
   margin-inline: auto;
+  padding-inline: 0;
 }
 
-/* ------------------------------------------------------------
-   MARCA
-   ------------------------------------------------------------ */
+/* ============================================================
+   BRAND / SEARCH / ASSIST
+   ============================================================ */
 
-.catalog-top-nav-brand-row {
-  margin: 0 auto 0.65rem;
+.catalog-commerce-main {
+  min-height: 4.9rem;
+  display: grid;
+  grid-template-columns:
+    minmax(10.5rem, 12rem)
+    minmax(22rem, 1fr)
+    auto;
+  align-items: center;
+  gap: 1.3rem;
+  padding-block: 0.65rem;
+}
+
+.catalog-commerce-brand {
+  margin: 0;
+  display: flex;
+  align-items: center;
 }
 
 .catalog-top-nav-brand {
-  position: relative;
-  width: 10.75rem;
-  height: 2.3rem;
+  appearance: none;
+  width: 100%;
+  max-width: 11.6rem;
+  min-height: 2.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
 }
 
 .catalog-top-nav-brand img {
+  display: block;
   width: auto;
   max-width: 100%;
-  max-height: 2.3rem;
+  max-height: 2.9rem;
+  object-fit: contain;
 }
 
 .catalog-top-nav-brand-wordmark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  color: var(--w-primary-dark, #4b3f63);
-  font-family: serif;
+  color: #6a5a8a;
   font-size: 1.85rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.035em;
-}
-
-/* ------------------------------------------------------------
-   CATEGORIAS
-   ------------------------------------------------------------ */
-
-.catalog-category-list {
-  gap: 0.45rem;
-}
-
-.catalog-category-chip {
-  min-height: var(--catalog-navigation-height);
-
-  padding-inline: 0.9rem;
-
-  border: 1px solid rgba(106, 90, 138, 0.14);
-  background: rgba(255, 255, 255, 0.82);
-
-  box-shadow: 0 3px 10px rgba(47, 36, 55, 0.025);
-
-  font-size: 0.8rem;
-}
-
-.catalog-category-chip.active {
-  border-color: var(--w-primary);
-  background: var(--w-primary);
-
-  box-shadow:
-    0 5px 14px rgba(106, 90, 138, 0.13);
-}
-
-/* ------------------------------------------------------------
-   BANDA COMERCIAL
-   CAMPANAS PRIMERO / DESCUBRE SEGUNDO
-   ------------------------------------------------------------ */
-
-.catalog-top-nav-discovery {
-  width: 100%;
-  margin: 0.55rem auto 0;
-
-  display: grid;
-  grid-template-columns:
-    minmax(0, 1.62fr)
-    minmax(18rem, 1fr);
-
-  align-items: stretch;
-  gap: 0.6rem;
-}
-
-.catalog-top-nav-discovery:empty {
-  display: none;
-}
-
-/* ------------------------------------------------------------
-   SUPERFICIE PREMIUM COMPACTA
-   ------------------------------------------------------------ */
-
-.catalog-commercial-card {
-  position: relative;
-
-  min-width: 0;
-  min-height: 3.8rem;
-
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-
-  padding: 0.45rem 0.65rem;
-
-  overflow: hidden;
-
-  border: 1px solid rgba(106, 90, 138, 0.12);
-  border-radius: 1.2rem;
-
-  background: rgba(255, 255, 255, 0.86);
-
-  box-shadow:
-    0 7px 22px rgba(47, 36, 55, 0.045);
-
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-
-  transition:
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    transform 180ms ease;
-}
-
-/* Microacento tomado del lenguaje visual del Home. */
-
-.catalog-commercial-card::after {
-  content: "";
-
-  position: absolute;
-  left: 0.9rem;
-  bottom: 0;
-
-  width: 2.75rem;
-  height: 2px;
-
-  border-radius: 999px;
-
-  background:
-    linear-gradient(
-      90deg,
-      var(--w-highlight),
-      var(--w-secondary),
-      var(--w-primary)
-    );
-
-  opacity: 0.72;
-}
-
-/* ------------------------------------------------------------
-   EYEBROWS
-   ------------------------------------------------------------ */
-
-.catalog-commercial-eyebrow {
-  flex: 0 0 auto;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0.27rem 0.52rem;
-
-  border-radius: 999px;
-
-  background: var(--w-secondary-soft);
-
-  color: var(--w-primary);
-
-  font-size: 0.64rem;
   font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  white-space: nowrap;
+  letter-spacing: -0.04em;
 }
 
-.catalog-campaign-eyebrow {
-  background: rgba(246, 173, 151, 0.16);
-  color: var(--w-primary);
-}
-
-/* ------------------------------------------------------------
-   CAMPANAS — DOMINANTE EN ANCHO, NO EN ALTURA
-   ------------------------------------------------------------ */
-
-.catalog-campaign-panel {
-  box-shadow:
-    0 8px 24px rgba(106, 90, 138, 0.055);
-}
-
-.catalog-campaign-panel:hover {
-  border-color: rgba(154, 139, 186, 0.28);
-
-  box-shadow:
-    0 10px 28px rgba(106, 90, 138, 0.075);
-}
-
-.catalog-top-nav-campaigns {
-  flex: 1 1 auto;
+.catalog-commerce-search {
   min-width: 0;
-
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
-  scrollbar-width: none;
 }
 
-.catalog-top-nav-campaigns::-webkit-scrollbar {
-  display: none;
-}
-
-.catalog-campaign-chip,
-.catalog-campaign-chip[class*="catalog-campaign-"] {
-  flex: 0 1 auto;
-
-  min-width: 9rem;
-  min-height: 2.75rem;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-
-  gap: 0.5rem;
-
-  padding: 0.28rem 0.55rem;
-
-  border: 1px solid transparent;
-  border-radius: 0.9rem;
-
-  background: transparent;
-  color: var(--w-heading);
-
-  box-shadow: none;
-
-  transition:
-    background-color 170ms ease,
-    border-color 170ms ease,
-    transform 170ms ease,
-    box-shadow 170ms ease;
-}
-
-.catalog-campaign-chip[class*="catalog-campaign-"] {
-  background: transparent;
-  color: var(--w-heading);
-}
-
-.catalog-campaign-chip.active {
-  border-color: rgba(106, 90, 138, 0.13);
-
-  background: var(--w-secondary-soft);
-
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.4);
-}
-
-.catalog-campaign-content {
-  order: 2;
-
-  min-width: 0;
-
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-
-  color: inherit;
-  line-height: 1.05;
-}
-
-.catalog-campaign-content strong {
-  max-width: 13rem;
-
-  overflow: hidden;
-
-  color: var(--w-heading);
-
-  font-size: 0.79rem;
-  font-weight: 750;
-  line-height: 1.1;
-  letter-spacing: -0.018em;
-
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.catalog-campaign-content small {
-  margin-top: 0.18rem;
-
-  color: var(--w-muted);
-
-  font-size: 0.63rem;
-  font-weight: 650;
-  line-height: 1;
-}
-
-.catalog-campaign-icon,
-.catalog-campaign-chip[class*="catalog-campaign-"] .catalog-campaign-icon {
-  order: 1;
-
-  width: 2rem;
-  height: 2rem;
-  min-height: 2rem;
-
-  flex: 0 0 2rem;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 0.72rem;
-
-  background: var(--campaign-bg);
-
-  color: var(--campaign-text);
-
-  box-shadow:
-    0 4px 10px rgba(47, 36, 55, 0.08);
-
-  font-size: 0.95rem;
-}
-
-/* ------------------------------------------------------------
-   DESCUBRE — SUPERFICIE SECUNDARIA
-   ------------------------------------------------------------ */
-
-.catalog-discover-panel {
-  background: rgba(255, 255, 255, 0.7);
-
-  box-shadow:
-    0 5px 18px rgba(47, 36, 55, 0.035);
-}
-
-.catalog-discover-panel::after {
-  width: 2rem;
-  opacity: 0.38;
-}
-
-.catalog-discover-chips {
-  flex: 1 1 auto;
-  min-width: 0;
-
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
-  scrollbar-width: none;
-}
-
-.catalog-discover-chips::-webkit-scrollbar {
-  display: none;
-}
-
-.catalog-discover-chip {
-  position: relative;
-
-  flex: 0 0 auto;
-
-  min-height: 2.1rem;
-
-  padding: 0 0.58rem;
-
-  border: 1px solid transparent;
-  border-radius: 0.7rem;
-
-  background: transparent;
-
-  color: var(--w-muted);
-
-  font-size: 0.75rem;
-  font-weight: 700;
-
-  box-shadow: none;
-}
-
-.catalog-discover-chip.active {
-  border-color: rgba(106, 90, 138, 0.1);
-
-  background: rgba(154, 139, 186, 0.12);
-
-  color: var(--w-primary);
-
-  box-shadow: none;
-}
-
-.catalog-discover-chip:not(.active):hover {
-  border-color: transparent;
-  background: rgba(154, 139, 186, 0.07);
-  color: var(--w-primary);
-}
-
-/* ------------------------------------------------------------
-   BUSQUEDA + INSPIRAME
-   ------------------------------------------------------------ */
-
-.catalog-top-nav-search-row {
-  width: 100%;
-
-  margin: 0.55rem auto 0;
-
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-}
-
-.catalog-page .catalog-top-nav .search-input-box {
-  min-height: var(--catalog-action-height);
-
+.catalog-commerce-search .search-input-box {
+  min-height: 3rem;
   border: 1px solid rgba(106, 90, 138, 0.14);
-  border-radius: 0.95rem;
-
-  background: rgba(255, 255, 255, 0.94);
-
-  box-shadow:
-    0 7px 22px rgba(47, 36, 55, 0.045);
+  border-radius: 0.9rem;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(47, 36, 55, 0.04);
 }
 
-.catalog-page .catalog-top-nav .search-input-box:hover {
-  border-color: rgba(106, 90, 138, 0.3);
+.catalog-commerce-search .search-input-box:hover {
+  border-color: rgba(106, 90, 138, 0.28);
 }
 
-.catalog-page .catalog-top-nav .search-input-box:focus-within {
-  border-color: rgba(106, 90, 138, 0.5);
-
+.catalog-commerce-search .search-input-box:focus-within {
+  border-color: rgba(106, 90, 138, 0.42);
   box-shadow:
-    0 0 0 3px rgba(154, 139, 186, 0.13),
-    0 8px 24px rgba(47, 36, 55, 0.05);
+    0 0 0 3px rgba(154, 139, 186, 0.10),
+    0 5px 16px rgba(47, 36, 55, 0.05);
+}
+
+.catalog-commerce-search .search-input-shortcut {
+  display: none;
+}
+
+.catalog-commerce-search .search-input-field {
+  color: #3f3548;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.catalog-commerce-search .search-input-field::placeholder {
+  color: rgba(106, 90, 138, 0.52);
+  font-weight: 500;
+  opacity: 1;
+}
+
+.catalog-commerce-assist {
+  display: flex;
+  align-items: center;
 }
 
 .catalog-help-link {
-  width: auto;
-  min-width: 8.75rem;
-  min-height: var(--catalog-action-height);
-
-  padding-inline: 1.05rem;
-
-  border: 1px solid rgba(106, 90, 138, 0.15);
-  border-radius: 0.95rem;
-
-  background: var(--w-primary);
-
-  color: #ffffff;
-
-  box-shadow:
-    0 7px 20px rgba(106, 90, 138, 0.16);
-
-  font-size: 0.82rem;
+  min-height: 2.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding-inline: 1rem;
+  border: 1px solid rgba(106, 90, 138, 0.17);
+  border-radius: 0.8rem;
+  background: #ffffff;
+  color: #6a5a8a;
+  font-size: 0.78rem;
   font-weight: 750;
-
+  text-decoration: none;
+  white-space: nowrap;
   transition:
-    transform 170ms ease,
-    box-shadow 170ms ease,
-    background-color 170ms ease;
-}
-
-.catalog-help-link:hover {
-  color: #ffffff;
-
-  transform: translateY(-1px);
-
-  filter: none;
-
-  box-shadow:
-    0 9px 24px rgba(106, 90, 138, 0.2);
-}
-
-.catalog-help-link:active {
-  transform: translateY(0);
-}
-
-/* ------------------------------------------------------------
-   HOVER PREMIUM DESKTOP
-   ------------------------------------------------------------ */
-
-@media (hover: hover) {
-  .catalog-commercial-card:hover {
-    transform: translateY(-1px);
-  }
-
-  .catalog-campaign-chip:not(.active):hover {
-    border-color: rgba(106, 90, 138, 0.08);
-
-    background: rgba(154, 139, 186, 0.07);
-
-    filter: none;
-  }
-}
-
-/* ------------------------------------------------------------
-   TABLET
-   ------------------------------------------------------------ */
-
-@media (max-width: 1024px) {
-  .catalog-top-nav-discovery {
-    grid-template-columns:
-      minmax(0, 1.45fr)
-      minmax(15rem, 1fr);
-  }
-
-  .catalog-commercial-card {
-    gap: 0.5rem;
-    padding-inline: 0.55rem;
-  }
-
-  .catalog-commercial-eyebrow {
-    padding-inline: 0.45rem;
-  }
-
-  .catalog-campaign-content strong {
-    max-width: 10rem;
-  }
-}
-
-/* ------------------------------------------------------------
-   MOBILE
-   Campañas sigue primero, pero se apila.
-   ------------------------------------------------------------ */
-
-@media (max-width: 760px) {
-  .catalog-top-nav {
-    padding: 0.65rem 0.75rem 0.5rem;
-  }
-
-  .catalog-top-nav-brand-row {
-    margin-bottom: 0.5rem;
-  }
-
-  .catalog-top-nav-brand {
-    width: 9.5rem;
-    height: 2.05rem;
-  }
-
-  .catalog-top-nav-brand img {
-    max-height: 2.05rem;
-  }
-
-  .catalog-top-nav-brand-wordmark {
-    font-size: 1.65rem;
-  }
-
-  .catalog-top-nav-discovery {
-    margin-top: 0.45rem;
-
-    grid-template-columns: minmax(0, 1fr);
-
-    gap: 0.4rem;
-  }
-
-  .catalog-commercial-card {
-    min-height: 3.4rem;
-
-    gap: 0.45rem;
-
-    padding: 0.4rem 0.5rem;
-
-    border-radius: 1rem;
-  }
-
-  .catalog-commercial-card::after {
-    left: 0.7rem;
-  }
-
-  .catalog-commercial-eyebrow {
-    font-size: 0.6rem;
-    letter-spacing: 0.07em;
-  }
-
-  .catalog-campaign-chip,
-  .catalog-campaign-chip[class*="catalog-campaign-"] {
-    min-height: 2.5rem;
-    min-width: 8rem;
-
-    padding: 0.2rem 0.4rem;
-
-    border-radius: 0.8rem;
-  }
-
-  .catalog-campaign-icon,
-  .catalog-campaign-chip[class*="catalog-campaign-"] .catalog-campaign-icon {
-    width: 1.85rem;
-    height: 1.85rem;
-    min-height: 1.85rem;
-
-    flex-basis: 1.85rem;
-  }
-
-  .catalog-campaign-content strong {
-    max-width: 10rem;
-    font-size: 0.75rem;
-  }
-
-  .catalog-top-nav-search-row {
-    margin-top: 0.45rem;
-  }
-}
-
-/* ------------------------------------------------------------
-   MOBILE ESTRECHO
-   ------------------------------------------------------------ */
-
-@media (max-width: 640px) {
-  .catalog-top-nav-search-row {
-    flex-direction: column;
-    align-items: stretch;
-
-    gap: 0.4rem;
-  }
-
-  .catalog-help-link {
-    width: 100%;
-    min-height: 2.75rem;
-  }
-
-  .catalog-page .catalog-top-nav .search-input-box {
-    min-height: 2.75rem;
-  }
-}
-
-/* ------------------------------------------------------------
-   MOVIMIENTO REDUCIDO
-   ------------------------------------------------------------ */
-
-@media (prefers-reduced-motion: reduce) {
-  .catalog-commercial-card,
-  .catalog-campaign-chip,
-  .catalog-discover-chip,
-  .catalog-help-link {
-    transition: none;
-  }
-}
-
-/* ============================================================
-   A8.1 CAMPAIGN INTERACTION PREMIUM
-   Icono limpio + hover + selected + pressed
-   Sin aumentar altura del header.
-   ============================================================ */
-
-/* ------------------------------------------------------------
-   PANEL GENERAL
-   ------------------------------------------------------------ */
-
-.catalog-campaign-panel {
-  position: relative;
-
-  transition:
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    background-color 180ms ease;
-}
-
-.catalog-campaign-panel:hover {
-  border-color: rgba(106, 90, 138, 0.18);
-
-  background: rgba(255, 255, 255, 0.94);
-
-  box-shadow:
-    0 11px 27px rgba(65, 49, 88, 0.075);
-}
-
-/* ------------------------------------------------------------
-   CHIP DE CAMPAÑA
-   ------------------------------------------------------------ */
-
-.catalog-campaign-chip,
-.catalog-campaign-chip[class*="catalog-campaign-"] {
-  position: relative;
-
-  overflow: hidden;
-
-  border: 1px solid transparent;
-
-  background: transparent;
-
-  box-shadow: none;
-
-  transition:
-    background-color 170ms ease,
-    border-color 170ms ease,
-    box-shadow 170ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
     transform 150ms ease;
 }
 
-/* Línea comercial inferior.
-   Conserva la identidad de la campaña sin pintar toda la card. */
-
-.catalog-campaign-chip::after {
-  content: "";
-
-  position: absolute;
-  left: 2.95rem;
-  right: 0.65rem;
-  bottom: 0.2rem;
-
-  height: 2px;
-
-  border-radius: 999px;
-
-  background: var(--campaign-bg);
-
-  opacity: 0;
-
-  transform: scaleX(0.28);
-  transform-origin: left center;
-
-  transition:
-    opacity 170ms ease,
-    transform 210ms ease;
+.catalog-help-link:hover {
+  border-color: rgba(106, 90, 138, 0.3);
+  box-shadow: 0 6px 16px rgba(47, 36, 55, 0.06);
+  transform: translateY(-1px);
 }
 
-/* ------------------------------------------------------------
-   ICONO LIMPIO
-   El color oscuro de campaña deja de llenar el cuadrado.
-   ------------------------------------------------------------ */
+/* ============================================================
+   MAIN NAV
+   ============================================================ */
 
-.catalog-campaign-icon,
-.catalog-campaign-chip[class*="catalog-campaign-"] .catalog-campaign-icon {
+.catalog-commerce-nav-row {
+  min-height: 3.2rem;
+  display: flex;
+  align-items: stretch;
+  border-top: 1px solid rgba(106, 90, 138, 0.08);
+}
+
+.catalog-commerce-explore {
+  flex: 0 0 auto;
+  min-height: 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0 1.1rem 0 0.1rem;
+  border: 0;
+  border-right: 1px solid rgba(106, 90, 138, 0.11);
+  background: transparent;
+  color: #342d3b;
+  font-size: 0.77rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.catalog-commerce-explore:hover {
+  color: #6a5a8a;
+}
+
+.catalog-commerce-categories {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.catalog-commerce-categories::-webkit-scrollbar {
+  display: none;
+}
+
+.catalog-commerce-category {
   position: relative;
-
-  width: 2rem;
-  height: 2rem;
-  min-height: 2rem;
-  flex: 0 0 2rem;
-
-  border: 1px solid rgba(106, 90, 138, 0.10);
-
-  border-radius: 0.72rem;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 1),
-      rgba(250, 247, 252, 0.98)
-    ) !important;
-
-  color: var(--w-heading) !important;
-
-  box-shadow:
-    0 4px 12px rgba(65, 49, 88, 0.065);
-
-  transition:
-    transform 170ms ease,
-    border-color 170ms ease,
-    box-shadow 170ms ease,
-    background-color 170ms ease;
+  flex: 0 0 auto;
+  min-height: 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 0.78rem;
+  border: 0;
+  background: transparent;
+  color: rgba(47, 36, 55, 0.78);
+  font-size: 0.79rem;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
-/* Pequeño acento de campaña.
-   Usa el color real sin convertir el icono en un bloque oscuro. */
-
-.catalog-campaign-icon::after {
+.catalog-commerce-category::after {
   content: "";
-
   position: absolute;
-  left: 50%;
-  bottom: -1px;
-
-  width: 55%;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0;
   height: 2px;
-
-  transform: translateX(-50%);
-
   border-radius: 999px;
-
-  background: var(--campaign-bg);
-
-  opacity: 0.82;
-}
-
-/* ------------------------------------------------------------
-   DEFAULT
-   ------------------------------------------------------------ */
-
-.catalog-campaign-content strong {
-  color: var(--w-heading);
-
+  background: linear-gradient(
+    90deg,
+    #eca4c2,
+    #9a8bba
+  );
+  opacity: 0;
+  transform: scaleX(0.3);
   transition:
-    color 170ms ease,
-    transform 170ms ease;
+    opacity 160ms ease,
+    transform 180ms ease;
 }
 
-.catalog-campaign-content small {
-  color: var(--w-muted);
-
-  transition:
-    color 170ms ease;
+.catalog-commerce-category:hover {
+  color: #6a5a8a;
 }
 
-/* ------------------------------------------------------------
-   HOVER
-   Mouse encima = despierta la campaña.
-   ------------------------------------------------------------ */
-
-@media (hover: hover) {
-
-  .catalog-campaign-chip:hover,
-  .catalog-campaign-chip[class*="catalog-campaign-"]:hover {
-    border-color: rgba(106, 90, 138, 0.10);
-
-    background:
-      linear-gradient(
-        90deg,
-        rgba(154, 139, 186, 0.065),
-        rgba(236, 164, 194, 0.035)
-      );
-
-    box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.45);
-
-    transform: translateY(-1px);
-  }
-
-  .catalog-campaign-chip:hover::after {
-    opacity: 0.55;
-    transform: scaleX(1);
-  }
-
-  .catalog-campaign-chip:hover .catalog-campaign-icon {
-    border-color: rgba(106, 90, 138, 0.18);
-
-    background:
-      linear-gradient(
-        180deg,
-        #ffffff,
-        rgba(246, 241, 249, 0.98)
-      ) !important;
-
-    box-shadow:
-      0 7px 16px rgba(65, 49, 88, 0.10);
-
-    transform:
-      translateY(-1px)
-      scale(1.045);
-  }
-
-  .catalog-campaign-chip:hover .catalog-campaign-content strong {
-    color: var(--w-primary);
-  }
-
+.catalog-commerce-category:hover::after {
+  opacity: 0.4;
+  transform: scaleX(0.7);
 }
 
-/* ------------------------------------------------------------
-   ACTIVE / SELECCIONADA
-   Después del click debe ser claramente diferente del hover.
-   ------------------------------------------------------------ */
-
-.catalog-campaign-chip.active,
-.catalog-campaign-chip[aria-pressed="true"],
-.catalog-campaign-chip[class*="catalog-campaign-"].active {
-  border-color: rgba(106, 90, 138, 0.18);
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(236, 164, 194, 0.13),
-      rgba(154, 139, 186, 0.11)
-    );
-
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.56),
-    0 5px 14px rgba(65, 49, 88, 0.055);
+.catalog-commerce-category.active {
+  color: #6a5a8a;
+  font-weight: 800;
 }
 
-.catalog-campaign-chip.active::after,
-.catalog-campaign-chip[aria-pressed="true"]::after {
-  opacity: 0.92;
+.catalog-commerce-category.active::after {
+  opacity: 1;
   transform: scaleX(1);
 }
 
-.catalog-campaign-chip.active .catalog-campaign-icon,
-.catalog-campaign-chip[aria-pressed="true"] .catalog-campaign-icon {
-  border-color: rgba(106, 90, 138, 0.20);
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 1),
-      rgba(241, 236, 246, 1)
-    ) !important;
-
-  box-shadow:
-    0 7px 17px rgba(65, 49, 88, 0.11);
-}
-
-.catalog-campaign-chip.active .catalog-campaign-content strong,
-.catalog-campaign-chip[aria-pressed="true"] .catalog-campaign-content strong {
-  color: var(--w-primary);
-}
-
-.catalog-campaign-chip.active .catalog-campaign-content small,
-.catalog-campaign-chip[aria-pressed="true"] .catalog-campaign-content small {
-  color: rgba(106, 90, 138, 0.82);
-}
-
-/* ------------------------------------------------------------
-   CLICK FISICO
-   Feedback inmediato al presionar.
-   ------------------------------------------------------------ */
-
-.catalog-campaign-chip:active {
-  transform: scale(0.985);
-}
-
-.catalog-campaign-chip:active .catalog-campaign-icon {
-  transform: scale(0.96);
-}
-
-/* ------------------------------------------------------------
-   TECLADO
-   ------------------------------------------------------------ */
-
-.catalog-campaign-chip:focus-visible {
-  outline: none;
-
-  border-color: rgba(106, 90, 138, 0.32);
-
-  box-shadow:
-    0 0 0 3px rgba(154, 139, 186, 0.14);
-}
-
-/* ------------------------------------------------------------
-   MOBILE
-   Mantener limpio y compacto.
-   ------------------------------------------------------------ */
-
-@media (max-width: 760px) {
-
-  .catalog-campaign-chip::after {
-    left: 2.7rem;
-  }
-
-  .catalog-campaign-icon,
-  .catalog-campaign-chip[class*="catalog-campaign-"] .catalog-campaign-icon {
-    width: 1.85rem;
-    height: 1.85rem;
-    min-height: 1.85rem;
-    flex-basis: 1.85rem;
-  }
-
-}
-
-/* ------------------------------------------------------------
-   REDUCED MOTION
-   ------------------------------------------------------------ */
-
-@media (prefers-reduced-motion: reduce) {
-
-  .catalog-campaign-panel,
-  .catalog-campaign-chip,
-  .catalog-campaign-chip::after,
-  .catalog-campaign-icon,
-  .catalog-campaign-content strong,
-  .catalog-campaign-content small {
-    transition: none !important;
-  }
-
-}
-
 /* ============================================================
-   A8.2 UNIFIED ELEGANT CONTROL SYSTEM
-   Categorías + Campañas + Descubre
-   Un mismo lenguaje visual, distinta jerarquía.
+   CAMPAIGN
    ============================================================ */
 
-.catalog-top-nav {
-  --catalog-pill-height: 2.5rem;
-  --catalog-pill-radius: 999px;
-  --catalog-pill-border: rgba(106, 90, 138, 0.14);
-  --catalog-pill-border-hover: rgba(106, 90, 138, 0.27);
-  --catalog-pill-shadow: 0 3px 10px rgba(47, 36, 55, 0.035);
-  --catalog-pill-shadow-hover: 0 7px 17px rgba(47, 36, 55, 0.075);
-}
-
-/* ============================================================
-   1. CATEGORIAS
-   ============================================================ */
-
-.catalog-category-chip {
-  min-height: var(--catalog-pill-height);
-
-  padding: 0 0.9rem;
-
-  border: 1px solid var(--catalog-pill-border);
-  border-radius: var(--catalog-pill-radius);
-
-  background: rgba(255, 255, 255, 0.94);
-
-  color: var(--w-heading);
-
-  box-shadow: var(--catalog-pill-shadow);
-
-  font-size: 0.8rem;
-  font-weight: 650;
-
-  transition:
-    border-color 160ms ease,
-    background-color 160ms ease,
-    color 160ms ease,
-    box-shadow 160ms ease,
-    transform 140ms ease;
-}
-
-.catalog-category-chip.active {
-  border-color: var(--w-primary);
-
-  background: var(--w-primary);
-
-  color: #ffffff;
-
-  box-shadow:
-    0 6px 15px rgba(106, 90, 138, 0.15);
-}
-
-@media (hover: hover) {
-  .catalog-category-chip:not(.active):hover {
-    border-color: var(--catalog-pill-border-hover);
-
-    background: #ffffff;
-
-    box-shadow: var(--catalog-pill-shadow-hover);
-
-    transform: translateY(-1px);
-  }
-}
-
-.catalog-category-chip:active {
-  transform: scale(0.985);
-}
-
-/* ============================================================
-   2. QUITAR LA APARIENCIA DE CARD GRANDE
-   ============================================================ */
-
-.catalog-top-nav-discovery {
-  margin-top: 0.55rem;
-
-  align-items: center;
-
-  gap: 0.7rem;
-}
-
-.catalog-commercial-card {
-  min-height: 0;
-
-  padding: 0;
-
-  border: 0;
-  border-radius: 0;
-
-  background: transparent;
-
-  box-shadow: none;
-
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-
-  overflow: visible;
-
-  transform: none;
-}
-
-.catalog-commercial-card::after {
-  content: none;
-}
-
-.catalog-commercial-card:hover,
-.catalog-campaign-panel:hover {
-  border: 0;
-
-  background: transparent;
-
-  box-shadow: none;
-
-  transform: none;
-}
-
-.catalog-commercial-card:focus-within,
-.catalog-campaign-panel:focus-within {
-  border: 0;
-
-  box-shadow: none;
-}
-
-/* ============================================================
-   3. CAMPANAS
-   Ahora comparte geometría con Categorías.
-   ============================================================ */
-
-.catalog-campaign-panel {
-  min-width: 0;
-
-  display: flex;
-  align-items: center;
-
-  gap: 0.45rem;
-}
-
-/* El label CAMPAÑAS también entra al mismo sistema */
-
-.catalog-campaign-eyebrow,
-.catalog-campaign-row-label {
+.catalog-commerce-campaign {
   flex: 0 0 auto;
-
-  min-height: var(--catalog-pill-height);
-
+  min-height: 3rem;
+  max-width: 17rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  padding: 0 0.75rem;
-
-  border: 1px solid rgba(236, 164, 194, 0.22);
-  border-radius: var(--catalog-pill-radius);
-
-  background: rgba(253, 246, 249, 0.96);
-
-  color: var(--w-primary);
-
-  box-shadow: var(--catalog-pill-shadow);
-
-  font-size: 0.64rem;
-  font-weight: 800;
-
-  letter-spacing: 0.075em;
-  text-transform: uppercase;
-
-  white-space: nowrap;
-}
-
-/* Contenedor horizontal */
-
-.catalog-top-nav-campaigns {
-  min-width: 0;
-
-  display: flex;
-  align-items: center;
-
   gap: 0.45rem;
-}
-
-/* Chip campaña: misma altura y forma que Categorías */
-
-.catalog-campaign-chip,
-.catalog-campaign-chip[class*="catalog-campaign-"] {
-  position: relative;
-
-  min-width: 0;
-  min-height: var(--catalog-pill-height);
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-
-  gap: 0.5rem;
-
-  padding: 0 0.8rem;
-
-  overflow: hidden;
-
-  border: 1px solid var(--catalog-pill-border);
-  border-radius: var(--catalog-pill-radius);
-
-  background: rgba(255, 255, 255, 0.96);
-
-  color: var(--w-heading);
-
-  box-shadow: var(--catalog-pill-shadow);
-
-  transition:
-    border-color 160ms ease,
-    background 160ms ease,
-    box-shadow 160ms ease,
-    transform 140ms ease;
-}
-
-/* Limpiar cualquier bloque oscuro del icono */
-
-.catalog-campaign-icon,
-.catalog-campaign-chip[class*="catalog-campaign-"] .catalog-campaign-icon {
-  position: relative;
-
-  order: 1;
-
-  width: 1.55rem;
-  height: 1.55rem;
-  min-height: 1.55rem;
-
-  flex: 0 0 1.55rem;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0;
-
+  padding-inline: 1rem;
   border: 0;
-  border-radius: 50%;
-
-  background: transparent !important;
-
-  color: var(--w-heading) !important;
-
-  box-shadow: none;
-
-  font-size: 0.9rem;
-
-  transform: none;
+  border-left: 1px solid rgba(236, 164, 194, 0.25);
+  background: linear-gradient(
+    180deg,
+    rgba(253, 246, 249, 0.86),
+    rgba(255, 255, 255, 0.9)
+  );
+  color: #ae5a80;
+  font-size: 0.74rem;
+  font-weight: 800;
+  cursor: pointer;
 }
 
-/* No pseudo-decoration pesada dentro del icono */
-
-.catalog-campaign-icon::after {
-  content: none;
-}
-
-/* Contenido */
-
-.catalog-campaign-content {
-  order: 2;
-
-  min-width: 0;
-
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-
-  line-height: 1;
-}
-
-.catalog-campaign-content strong {
-  max-width: 13rem;
-
+.catalog-commerce-campaign span {
   overflow: hidden;
-
-  color: var(--w-heading);
-
-  font-size: 0.77rem;
-  font-weight: 750;
-
-  line-height: 1.05;
-
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.catalog-campaign-content small {
-  margin-top: 0.15rem;
-
-  color: var(--w-muted);
-
-  font-size: 0.6rem;
-  font-weight: 650;
-
-  line-height: 1;
+.catalog-commerce-campaign:hover,
+.catalog-commerce-campaign.active {
+  background: linear-gradient(
+    180deg,
+    rgba(236, 164, 194, 0.18),
+    rgba(154, 139, 186, 0.08)
+  );
+  color: #6a5a8a;
 }
 
 /* ============================================================
-   4. EFECTO COMERCIAL DE CAMPAÑA
-   Color contextual sin romper coherencia.
+   EXPLORE DRAWER
    ============================================================ */
 
-/* Línea de campaña oculta en estado normal */
-
-.catalog-campaign-chip::after {
-  content: "";
-
-  position: absolute;
-
-  left: 2.65rem;
-  right: 0.8rem;
-  bottom: 0;
-
-  height: 2px;
-
-  border-radius: 999px;
-
-  background: var(--campaign-bg);
-
-  opacity: 0;
-
-  transform: scaleX(0.25);
-  transform-origin: left center;
-
-  transition:
-    opacity 170ms ease,
-    transform 190ms ease;
-}
-
-/* HOVER */
-
-@media (hover: hover) {
-  .catalog-campaign-chip:hover,
-  .catalog-campaign-chip[class*="catalog-campaign-"]:hover {
-    border-color: transparent;
-
-    background:
-      linear-gradient(#ffffff, #ffffff) padding-box,
-      var(--campaign-bg) border-box;
-
-    box-shadow: var(--catalog-pill-shadow-hover);
-
-    transform: translateY(-1px);
-  }
-
-  .catalog-campaign-chip:hover::after {
-    opacity: 0.8;
-
-    transform: scaleX(1);
-  }
-
-  .catalog-campaign-chip:hover .catalog-campaign-content strong {
-    color: var(--w-primary);
-  }
-
-  .catalog-campaign-chip:hover .catalog-campaign-icon {
-    transform: scale(1.08);
-  }
-}
-
-/* SELECTED */
-
-.catalog-campaign-chip.active,
-.catalog-campaign-chip[aria-pressed="true"],
-.catalog-campaign-chip[class*="catalog-campaign-"].active {
-  border-color: transparent;
-
-  background:
-    linear-gradient(
-      var(--w-secondary-soft),
-      var(--w-secondary-soft)
-    ) padding-box,
-    var(--campaign-bg) border-box;
-
-  color: var(--w-heading);
-
-  box-shadow:
-    0 6px 15px rgba(106, 90, 138, 0.10);
-}
-
-.catalog-campaign-chip.active::after,
-.catalog-campaign-chip[aria-pressed="true"]::after {
-  opacity: 1;
-
-  transform: scaleX(1);
-}
-
-.catalog-campaign-chip.active .catalog-campaign-content strong,
-.catalog-campaign-chip[aria-pressed="true"] .catalog-campaign-content strong {
-  color: var(--w-primary);
-}
-
-/* CLICK */
-
-.catalog-campaign-chip:active {
-  transform: scale(0.985);
-}
-
-/* ============================================================
-   5. DESCUBRE
-   Mismo lenguaje, menor jerarquía.
-   ============================================================ */
-
-.catalog-discover-panel {
-  min-width: 0;
-
+.catalog-explore-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
   display: flex;
-  align-items: center;
-
-  gap: 0.45rem;
-
-  background: transparent;
-
-  box-shadow: none;
+  justify-content: flex-end;
 }
 
-.catalog-commercial-eyebrow:not(.catalog-campaign-eyebrow),
-.catalog-discover-label {
-  flex: 0 0 auto;
+.catalog-explore-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: rgba(35, 28, 45, 0.38);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
 
-  min-height: var(--catalog-pill-height);
+.catalog-explore-sheet {
+  position: relative;
+  z-index: 1;
+  width: min(28rem, 92vw);
+  height: 100%;
+  overflow-y: auto;
+  padding: 1.4rem;
+  background: #ffffff;
+  box-shadow: -20px 0 50px rgba(35, 28, 45, 0.14);
+}
 
+.catalog-explore-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.8rem;
+}
+
+.catalog-explore-header span {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #9a8bba;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.catalog-explore-header h3 {
+  margin: 0;
+  color: #342d3b;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.catalog-explore-close {
+  width: 2.5rem;
+  height: 2.5rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid rgba(106, 90, 138, 0.12);
+  border-radius: 0.75rem;
+  background: #ffffff;
+  color: #342d3b;
+  cursor: pointer;
+}
 
-  padding: 0 0.7rem;
+.catalog-explore-group + .catalog-explore-group {
+  margin-top: 1.7rem;
+}
 
-  border: 1px solid rgba(154, 139, 186, 0.15);
-  border-radius: var(--catalog-pill-radius);
-
-  background: rgba(249, 246, 252, 0.96);
-
-  color: var(--w-primary);
-
-  box-shadow: var(--catalog-pill-shadow);
-
-  font-size: 0.64rem;
+.catalog-explore-group > p {
+  margin: 0 0 0.7rem;
+  color: rgba(47, 36, 55, 0.6);
+  font-size: 0.67rem;
   font-weight: 800;
-
-  letter-spacing: 0.075em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-
-  white-space: nowrap;
 }
 
-.catalog-discover-chips {
-  gap: 0.35rem;
+.catalog-explore-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
 }
 
-.catalog-discover-chip {
-  min-height: var(--catalog-pill-height);
-
-  padding: 0 0.8rem;
-
-  border: 1px solid var(--catalog-pill-border);
-  border-radius: var(--catalog-pill-radius);
-
-  background: rgba(255, 255, 255, 0.92);
-
-  color: var(--w-muted);
-
-  box-shadow: var(--catalog-pill-shadow);
-
-  font-size: 0.75rem;
+.catalog-explore-chip {
+  min-height: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(106, 90, 138, 0.11);
+  border-radius: 0.8rem;
+  background: rgba(253, 251, 247, 0.8);
+  color: #342d3b;
+  text-align: left;
+  font-size: 0.76rem;
   font-weight: 650;
-
-  transition:
-    border-color 160ms ease,
-    background-color 160ms ease,
-    color 160ms ease,
-    box-shadow 160ms ease,
-    transform 140ms ease;
+  cursor: pointer;
 }
 
-.catalog-discover-chip.active {
-  border-color: rgba(106, 90, 138, 0.14);
-
-  background: var(--w-secondary-soft);
-
-  color: var(--w-primary);
-
-  box-shadow:
-    0 5px 13px rgba(106, 90, 138, 0.07);
+.catalog-explore-chip small {
+  margin-left: auto;
+  color: rgba(47, 36, 55, 0.5);
+  font-size: 0.64rem;
 }
 
-@media (hover: hover) {
-  .catalog-discover-chip:not(.active):hover {
-    border-color: var(--catalog-pill-border-hover);
-
-    background: #ffffff;
-
-    color: var(--w-primary);
-
-    box-shadow: var(--catalog-pill-shadow-hover);
-
-    transform: translateY(-1px);
-  }
+.catalog-explore-chip:hover {
+  border-color: rgba(106, 90, 138, 0.25);
+  background: #ffffff;
+  color: #6a5a8a;
 }
 
-.catalog-discover-chip:active {
-  transform: scale(0.985);
+.catalog-explore-chip.active {
+  border-color: rgba(106, 90, 138, 0.22);
+  background: rgba(154, 139, 186, 0.11);
+  color: #6a5a8a;
+  font-weight: 800;
+}
+
+.catalog-explore-campaign {
+  background: linear-gradient(
+    135deg,
+    rgba(253, 246, 249, 0.95),
+    rgba(249, 246, 252, 0.95)
+  );
 }
 
 /* ============================================================
-   6. FOCUS UNIFICADO
+   RESPONSIVE
    ============================================================ */
 
-.catalog-category-chip:focus-visible,
-.catalog-campaign-chip:focus-visible,
-.catalog-discover-chip:focus-visible {
-  outline: none;
+@media (max-width: 1080px) {
+  .catalog-commerce-main {
+    grid-template-columns:
+      minmax(8.5rem, 10rem)
+      minmax(16rem, 1fr)
+      auto;
+    gap: 0.9rem;
+  }
 
-  box-shadow:
-    0 0 0 3px rgba(154, 139, 186, 0.14),
-    var(--catalog-pill-shadow);
+  .catalog-commerce-category {
+    padding-inline: 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  .catalog-commerce-campaign {
+    max-width: 13rem;
+  }
 }
 
-/* ============================================================
-   7. MOBILE
-   ============================================================ */
-
-@media (max-width: 760px) {
-
-  .catalog-top-nav-discovery {
-    gap: 0.45rem;
+@media (max-width: 860px) {
+  .catalog-top-nav-inner {
+    width: calc(100% - 1.5rem);
+    max-width: 1560px;
+    margin-inline: auto;
+    padding-inline: 0;
   }
 
-  .catalog-campaign-panel,
-  .catalog-discover-panel {
-    overflow-x: auto;
-
-    scrollbar-width: none;
+  .catalog-commerce-main {
+    grid-template-columns: 1fr auto;
+    min-height: auto;
+    padding-block: 0.65rem;
   }
 
-  .catalog-campaign-panel::-webkit-scrollbar,
-  .catalog-discover-panel::-webkit-scrollbar {
+  .catalog-commerce-brand {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .catalog-commerce-assist {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .catalog-commerce-search {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .catalog-commerce-categories {
     display: none;
   }
 
-  .catalog-campaign-eyebrow,
-  .catalog-commercial-eyebrow:not(.catalog-campaign-eyebrow),
-  .catalog-campaign-chip,
-  .catalog-discover-chip {
-    flex-shrink: 0;
+  .catalog-commerce-nav-row {
+    justify-content: space-between;
   }
 
-  .catalog-campaign-chip,
-  .catalog-campaign-chip[class*="catalog-campaign-"] {
-    min-height: var(--catalog-pill-height);
+  .catalog-commerce-explore {
+    flex: 1 1 auto;
+    justify-content: flex-start;
+  }
 
+  .catalog-commerce-campaign {
+    flex: 0 1 auto;
+    max-width: 62%;
+  }
+}
+
+@media (max-width: 560px) {
+  .catalog-top-nav-inner {
+    width: calc(100% - 1rem);
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+  .catalog-commerce-assist .catalog-help-link {
+    min-height: 2.4rem;
     padding-inline: 0.7rem;
+    font-size: 0.72rem;
   }
 
-  .catalog-campaign-icon,
-  .catalog-campaign-chip[class*="catalog-campaign-"] .catalog-campaign-icon {
-    width: 1.45rem;
-    height: 1.45rem;
-    min-height: 1.45rem;
+  .catalog-commerce-search .search-input-box {
+    min-height: 2.75rem;
+  }
 
-    flex-basis: 1.45rem;
+  .catalog-commerce-campaign {
+    max-width: 65%;
+    font-size: 0.69rem;
+  }
+
+  .catalog-explore-sheet {
+    width: 100%;
+    padding: 1.1rem;
+  }
+
+  .catalog-explore-list {
+    grid-template-columns: 1fr;
+  }
+}
+/* === H1.1.4 FINAL POLISH START === */
+
+/* ------------------------------------------------------------
+   1. CONTENT ALIGNMENT
+   Header y productos comparten exactamente el mismo eje visual.
+   ------------------------------------------------------------ */
+
+.catalog-page .catalog-top-nav-inner {
+  box-sizing: border-box;
+
+  width: min(
+    calc(100% - 4rem),
+    1550px
+  );
+
+  max-width: 1550px;
+
+  margin-inline: auto;
+  padding-inline: 0;
+}
+
+/* ------------------------------------------------------------
+   2. REMOVE GLOBAL TOP STRIP
+   Solo mientras /catalogo esta montado.
+   ------------------------------------------------------------ */
+
+html:has(.catalog-page),
+body:has(.catalog-page),
+#root:has(.catalog-page) {
+  border-top: 0 !important;
+}
+
+body:has(.catalog-page)::before,
+#root:has(.catalog-page)::before {
+  content: none !important;
+
+  display: none !important;
+
+  width: 0 !important;
+  height: 0 !important;
+
+  border: 0 !important;
+
+  background: transparent !important;
+
+  box-shadow: none !important;
+}
+
+/* ------------------------------------------------------------
+   3. CATEGORY NAV FINAL
+   Más contraste, sin volver a chips.
+   ------------------------------------------------------------ */
+
+.catalog-page .catalog-commerce-category {
+  color: rgba(47, 36, 55, 0.84);
+
+  font-weight: 675;
+}
+
+.catalog-page .catalog-commerce-category:hover {
+  color: #6a5a8a;
+}
+
+.catalog-page .catalog-commerce-category::after {
+  left: 0.9rem;
+  right: 0.9rem;
+
+  height: 1.5px;
+
+  opacity: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      #eca4c2,
+      #9a8bba
+    );
+}
+
+.catalog-page .catalog-commerce-category:hover::after {
+  opacity: 0.32;
+}
+
+.catalog-page .catalog-commerce-category.active {
+  color: #6a5a8a;
+
+  font-weight: 800;
+}
+
+.catalog-page .catalog-commerce-category.active::after {
+  opacity: 0.88;
+}
+
+/* ------------------------------------------------------------
+   4. CATALOG CONNECTION
+   Menos aire entre navegación y resultados.
+   ------------------------------------------------------------ */
+
+.catalog-page .catalog-main {
+  padding-top: 0.55rem !important;
+}
+
+.catalog-page .catalog-results-toolbar {
+  margin-top: 0 !important;
+}
+
+/* ------------------------------------------------------------
+   5. TABLET
+   ------------------------------------------------------------ */
+
+@media (max-width: 860px) {
+  .catalog-page .catalog-top-nav-inner {
+    width: calc(100% - 1.5rem);
+    max-width: none;
   }
 }
 
-/* ============================================================
-   8. REDUCED MOTION
-   ============================================================ */
+/* ------------------------------------------------------------
+   6. MOBILE
+   ------------------------------------------------------------ */
 
-@media (prefers-reduced-motion: reduce) {
+@media (max-width: 560px) {
+  .catalog-page .catalog-top-nav-inner {
+    width: calc(100% - 1rem);
+  }
 
-  .catalog-category-chip,
-  .catalog-campaign-chip,
-  .catalog-campaign-chip::after,
-  .catalog-campaign-icon,
-  .catalog-discover-chip {
-    transition: none !important;
+  .catalog-page .catalog-main {
+    padding-top: 0.4rem !important;
   }
 }
+
+/* === H1.1.4 FINAL POLISH END === */

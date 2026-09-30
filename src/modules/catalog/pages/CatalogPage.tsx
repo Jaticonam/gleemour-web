@@ -322,7 +322,7 @@ useEffect(() => {
             value={searchQuery}
             onChange={setSearchQuery}
             products={products}
-            placeholder="¿Qué ocasión o emoción buscas?"
+            placeholder="Buscar producto, ocasión o código"
           />
         }
         helpSlot={
