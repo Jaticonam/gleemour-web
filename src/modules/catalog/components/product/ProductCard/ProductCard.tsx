@@ -45,7 +45,11 @@ export function ProductCard({ product }: ProductCardProps) {
   const hasOffer = hasOfferPrice(product);
 
   const sortedBadges = useMemo(() => {
-    return sortBadges(product.badges ?? []).filter((badge) => !isUrgencyBadge(badge));
+    return sortBadges(product.badges ?? []).filter((badge) => {
+      const normalizedBadge = badge.trim().toLowerCase();
+
+      return !isUrgencyBadge(badge) && normalizedBadge !== "oferta";
+    });
   }, [product.badges]);
 
   const campaignBadge = pickBadgeByKeys(sortedBadges, CAMPAIGN_BADGE_KEYS);

@@ -27,16 +27,16 @@ export function ProductCardPrice({
   return (
     <div className="product-card-price-block">
       <div className="product-card-price-wrap">
+        <div className="product-card-price">
+          <span>S/</span>
+          <strong>{price.toFixed(2)}</strong>
+        </div>
+
         {hasOffer && (
           <div className="product-card-price-old">
             S/ {originalPrice.toFixed(2)}
           </div>
         )}
-
-        <div className="product-card-price">
-          <span>S/</span>
-          <strong>{price.toFixed(2)}</strong>
-        </div>
 
       </div>
     </div>

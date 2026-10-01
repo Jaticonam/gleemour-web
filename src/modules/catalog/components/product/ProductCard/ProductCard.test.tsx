@@ -45,21 +45,65 @@ function renderCard(value: Product = product) {
 afterEach(() => { vi.restoreAllMocks(); setCommerceEventSink(null); });
 
 describe("ProductCard", () => {
-  it("prioriza el precio y badge comercial sin mostrar alertas de stock", () => {
+  it("prioriza código, tipo, nombre, emoción y precio sin duplicar la oferta", () => {
     renderCard();
 
     expect(screen.getByRole("img", { name: product.title })).toHaveAttribute("src", product.img);
+    expect(screen.getByText("GLE-001")).toBeInTheDocument();
+    expect(screen.getByText("Naturales")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: product.title })).toBeInTheDocument();
+    expect(screen.getByText("Para enamorar")).toBeInTheDocument();
     expect(screen.getByText("S/ 120.00")).toBeInTheDocument();
     expect(screen.getByText("95.00")).toBeInTheDocument();
+
+    const priceWrap = document.querySelector(".product-card-price-wrap");
+    expect(priceWrap?.firstElementChild).toHaveClass("product-card-price");
+    expect(priceWrap?.lastElementChild).toHaveClass("product-card-price-old");
     expect(screen.queryByText("Últimos 2")).not.toBeInTheDocument();
     expect(screen.queryByText("Pocas unidades")).not.toBeInTheDocument();
-    expect(screen.getByText(/Oferta/)).toBeInTheDocument();
-    expect(screen.queryByText("Nuevo")).not.toBeInTheDocument();
-    expect(screen.queryByText(/Ref\. GLE-001/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Oferta/)).not.toBeInTheDocument();
+    expect(screen.getByText(/Nuevo/)).toBeInTheDocument();
     expect(screen.queryByText(product.description)).not.toBeInTheDocument();
     expect(screen.queryByText(/viendo ahora/)).not.toBeInTheDocument();
   });
 
+  it("muestra Artificiales solo cuando el atributo real lo declara", () => {
+    renderCard({
+      ...product,
+      id: "GLE-002",
+      attributes: ["artificial", "premium", "express"],
+    });
+
+    expect(screen.getByText("GLE-002")).toBeInTheDocument();
+    expect(screen.getByText("Artificiales")).toBeInTheDocument();
+    expect(screen.queryByText("Naturales")).not.toBeInTheDocument();
+    expect(screen.queryByText("Corporativo")).not.toBeInTheDocument();
+    expect(screen.queryByText("Express")).not.toBeInTheDocument();
+  });
+
+  it("muestra Naturales y Artificiales cuando ambos atributos reales existen", () => {
+    renderCard({
+      ...product,
+      id: "GLE-004",
+      attributes: ["natural", "artificial"],
+    });
+
+    expect(screen.getByText("GLE-004")).toBeInTheDocument();
+    expect(
+      screen.getByText("Naturales · Artificiales"),
+    ).toBeInTheDocument();
+  });
+  it("mantiene el código sin inventar tipo cuando no hay Natural ni Artificial", () => {
+    renderCard({
+      ...product,
+      id: "GLE-003",
+      attributes: ["premium", "express"],
+    });
+
+    expect(screen.getByText("GLE-003")).toBeInTheDocument();
+    expect(screen.queryByText("Naturales")).not.toBeInTheDocument();
+    expect(screen.queryByText("Artificiales")).not.toBeInTheDocument();
+  });
   it("abre el detalle desde la imagen, nombre y área principal", () => {
     renderCard();
     const destination = "/catalogo/p/GLE-001.html";
