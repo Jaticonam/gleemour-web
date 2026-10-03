@@ -10,7 +10,13 @@ import {
   configurePublicAssets,
 } from "@/app/publicAssets/configurePublicAssets";
 
-configurePublicAssets();
+import {
+  jungMediaPublicAssetProvider,
+} from "@/infrastructure/publicAssets/JungMediaPublicAssetProvider";
+
+configurePublicAssets([
+  jungMediaPublicAssetProvider,
+]);
 
 AOS.init({
   duration: 600,
