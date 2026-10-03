@@ -111,3 +111,29 @@ og-product
 La conexión futura de JUNG Media no debe requerir modificaciones en Home, Catalog, Category, Product ni SEO.
 
 Un cambio incompatible con `public-assets.v1` debe introducir una versión contractual nueva.
+## Static Brand Shell
+
+Los activos solicitados directamente por el navegador no dependen del runtime React ni del `PublicAssetProvider`.
+
+JUNG Media deberá entregar físicamente, cuando estén disponibles:
+
+- `/favicon.ico`
+- `/apple-touch-icon.png`
+- `/icon-192.png`
+- `/icon-512.png`
+
+Hasta que existan archivos reales:
+
+- Gleemour no debe referenciar archivos inexistentes.
+- Gleemour no debe publicar placeholders vacíos.
+- `site.webmanifest` mantiene `icons: []`.
+- No se deben fabricar iconos desde la aplicación.
+
+Cuando JUNG Media entregue los activos:
+
+1. publicar los archivos físicos;
+2. activar las referencias correspondientes en `index.html`;
+3. registrar `icon-192.png` e `icon-512.png` en `site.webmanifest`;
+4. validar que los archivos existan también en el build final.
+
+El Open Graph estático puede continuar usando el fallback canónico existente hasta que exista un activo social real publicado por JUNG Media.

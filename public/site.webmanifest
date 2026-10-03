@@ -1,9 +1,12 @@
 {
+  "id": "/",
   "name": "Gleemour",
   "short_name": "Gleemour",
+  "description": "Flores, regalos emocionales y experiencias Gleemour.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#fff7fb",
+  "background_color": "#FDFBF7",
   "theme_color": "#6A5A8A",
   "icons": []
 }
