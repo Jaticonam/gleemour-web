@@ -50,7 +50,7 @@ describe("ProductDetail V2", () => {
     expect(await screen.findByRole("heading", { name: product.title, level: 1 })).toBeInTheDocument();
     expect(document.title).toBe("Rosas especiales | Gleemour");
     expect(document.head.querySelector('link[rel="canonical"]')).toHaveAttribute("href", "https://gleemour.com/catalogo/p/GLE-001.html");
-    expect(document.head.querySelector('meta[property="og:image"]')).toHaveAttribute("content", "https://gleemour.com/og/home.jpg");
+    expect(document.head.querySelector('meta[property="og:image"]')).toHaveAttribute("content", "https://gleemour.com/logo_color.png");
     expect(screen.getByText("S/ 95.00")).toBeInTheDocument();
     expect(screen.getByText("S/ 120.00").tagName).toBe("DEL");
     expect(screen.getByText("Últimos 2")).toBeInTheDocument();

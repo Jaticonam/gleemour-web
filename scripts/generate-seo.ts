@@ -11,8 +11,6 @@ import {
 
 async function main() {
   const dist = resolve("dist");
-  // Sin el recurso oficial no publicamos Open Graph que apunte a una imagen rota.
-  await readFile(resolve(dist, "og/home.jpg"));
   const index = await readFile(resolve(dist, "index.html"), "utf8");
   const products = await loadAllProducts();
   if (products.length === 0) throw new Error("SEO: la fuente pública no entregó productos");

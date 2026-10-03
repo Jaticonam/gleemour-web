@@ -1,7 +1,17 @@
 import type { Product } from "@/shared/types/product";
 
+import {
+  GLEEMOUR_BRAND_ASSET_URLS,
+} from "@/tenant/assets/publicAssets";
+
 export const SITE_URL = "https://gleemour.com";
-export const OG_FALLBACK = `${SITE_URL}/og/home.jpg`;
+
+/**
+ * Transitional fallback until JUNG Media publishes
+ * the canonical social-og-v1 asset.
+ */
+export const OG_FALLBACK =
+  GLEEMOUR_BRAND_ASSET_URLS.logoPrimary;
 
 export interface PageMetadata {
   title: string;

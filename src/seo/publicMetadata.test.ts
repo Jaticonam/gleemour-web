@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { Product } from "@/shared/types/product";
+
+import {
+  GLEEMOUR_BRAND_ASSET_URLS,
+} from "@/tenant/assets/publicAssets";
+
 import {
   catalogMetadata, OG_FALLBACK, productMetadata, productPublicPath, renderMetadataHtml,
 } from "./publicMetadata";
@@ -16,11 +21,17 @@ const index = `<html><head><title>Home</title>
 <meta name="robots" content="index, follow" />
 <link rel="canonical" href="https://gleemour.com/" />
 <meta property="og:title" content="Home" />
-<meta property="og:image" content="https://gleemour.com/og/home.jpg" />
+<meta property="og:image" content="https://gleemour.com/logo_color.png" />
 <meta name="twitter:title" content="Home" />
 </head><body><div id="root"></div></body></html>`;
 
 describe("SEO HTML estático", () => {
+  it("usa un fallback publico real mientras social-og-v1 no existe localmente", () => {
+    expect(OG_FALLBACK).toBe(
+      GLEEMOUR_BRAND_ASSET_URLS.logoPrimary,
+    );
+  });
+
   it("da al catálogo un canonical estable y reemplaza metadata heredada", () => {
     const html = renderMetadataHtml(index, catalogMetadata);
     expect(html).toContain('rel="canonical" href="https://gleemour.com/catalogo"');

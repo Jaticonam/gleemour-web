@@ -15,6 +15,13 @@ export const GLEEMOUR_BRAND_ASSET_URLS = {
     "https://gleemour.com/favicon.ico",
 } as const;
 
+export const GLEEMOUR_SOCIAL_OG_PRESET = {
+  id: "social-og-v1",
+  width: 1200,
+  height: 630,
+  mimeType: "image/jpeg",
+} as const;
+
 /**
  * Local provider catalog.
  *
