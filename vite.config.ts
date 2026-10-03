@@ -11,6 +11,15 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       overlay: false,
     },
+    proxy: {
+      "/__jung-core": {
+        target: "https://core.jungnegocios.com",
+        changeOrigin: true,
+        secure: true,
+        rewrite: (requestPath) =>
+          requestPath.replace(/^\/__jung-core/, ""),
+      },
+    },
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
