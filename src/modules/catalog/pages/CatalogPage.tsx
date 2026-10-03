@@ -6,7 +6,11 @@ import { getExperienceUrl } from "@/app/routes/routes";
 import {
   getGleemourBrandAssetUrl,
 } from "@/app/publicAssets/GleemourPublicAssets";
-import { applyPageMetadata, catalogMetadata } from "@/seo/publicMetadata";
+import {
+  applyPageMetadata,
+  campaignMetadata,
+  catalogMetadata,
+} from "@/seo/publicMetadata";
 
 import {
   loadAllProducts,
@@ -45,7 +49,6 @@ import {
 } from "./CatalogFilters";
 
 export default function CatalogPage() {
-  useEffect(() => { applyPageMetadata(catalogMetadata); }, []);
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -185,6 +188,29 @@ useEffect(() => {
   const activeCampaign = visibleCampaigns.find(
     (item) => item.id === normalizeCampaignKey(campaignParam),
   )?.id ?? "";
+
+  useEffect(() => {
+    const selectedCampaign =
+      visibleCampaigns.find(
+        (item) =>
+          item.id === activeCampaign,
+      );
+
+    applyPageMetadata(
+      selectedCampaign
+        ? campaignMetadata({
+            id:
+              selectedCampaign.id,
+
+            name:
+              selectedCampaign.name,
+          })
+        : catalogMetadata(),
+    );
+  }, [
+    activeCampaign,
+    visibleCampaigns,
+  ]);
 
   useEffect(() => {
     if (!loading && campaignParam && !activeCampaign) {

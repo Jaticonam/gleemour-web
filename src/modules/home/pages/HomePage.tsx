@@ -16,7 +16,7 @@ import HomeFloatingButtons from "../components/HomeFloatingButtons";
 import { useCart } from "@/modules/cart/hooks/useCart";
 
 export default function HomePage() {
-  useEffect(() => { applyPageMetadata(homeMetadata); }, []);
+  useEffect(() => { applyPageMetadata(homeMetadata()); }, []);
   const { totalItems } = useCart();
 
   const handleCartClick = () => {

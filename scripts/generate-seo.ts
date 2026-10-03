@@ -18,7 +18,7 @@ async function main() {
   const catalogDir = resolve(dist, "catalogo");
   const productDir = resolve(catalogDir, "p");
   await mkdir(productDir, { recursive: true });
-  await writeFile(resolve(catalogDir, "index.html"), renderMetadataHtml(index, catalogMetadata));
+  await writeFile(resolve(catalogDir, "index.html"), renderMetadataHtml(index, catalogMetadata()));
 
   for (const product of products) {
     const relative = productPublicPath(product.id).replace(/^\//, "");
@@ -27,12 +27,12 @@ async function main() {
 
   // URLs anteriores continúan funcionando en React, pero no se indexan como otra ficha.
   await writeFile(resolve(catalogDir, "producto.html"), renderMetadataHtml(index, {
-    ...catalogMetadata,
+    ...catalogMetadata(),
     title: "Detalle de producto | Gleemour",
     robots: "noindex, follow",
   }));
   await writeFile(resolve(catalogDir, "categoria.html"), renderMetadataHtml(index, {
-    ...catalogMetadata,
+    ...catalogMetadata(),
     robots: "noindex, follow",
   }));
   console.info(`SEO: catálogo y ${products.length} productos públicos generados`);

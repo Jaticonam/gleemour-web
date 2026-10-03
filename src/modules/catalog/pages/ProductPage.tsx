@@ -59,7 +59,11 @@ export default function ProductPage() {
   });
 
   useEffect(() => {
-    applyPageMetadata(!loading && product ? productMetadata(product) : unavailableProductMetadata);
+    applyPageMetadata(
+      !loading && product
+        ? productMetadata(product)
+        : unavailableProductMetadata(),
+    );
   }, [loading, product]);
 
   const productActions = useProductActions({

@@ -130,6 +130,22 @@ describe("CatalogPage: estados de resultados", () => {
     expect(await screen.findByText("Producto Vigente")).toBeInTheDocument();
     expect(screen.queryByText("Producto Futura")).not.toBeInTheDocument();
     expect(screen.getByTestId("location")).toHaveTextContent("campaign=vigente");
+
+    await waitFor(() =>
+      expect(document.title).toBe(
+        "Vigente | Gleemour",
+      ),
+    );
+
+    expect(
+      document.head.querySelector(
+        'meta[name="robots"]',
+      ),
+    ).toHaveAttribute(
+      "content",
+      "noindex, follow",
+    );
+
     expect(sink).toHaveBeenCalledWith({
       type: "catalog_view", categoryId: "todas", campaignId: "vigente", resultCount: 1,
     });
