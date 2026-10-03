@@ -14,8 +14,20 @@ import {
   jungMediaPublicAssetProvider,
 } from "@/infrastructure/publicAssets/JungMediaPublicAssetProvider";
 
+import {
+  configureWebAssets,
+} from "@/app/webAssets/configureWebAssets";
+
+import {
+  jungMediaWebAssetProvider,
+} from "@/infrastructure/webAssets/JungMediaWebAssetProvider";
+
 configurePublicAssets([
   jungMediaPublicAssetProvider,
+]);
+
+configureWebAssets([
+  jungMediaWebAssetProvider,
 ]);
 
 AOS.init({

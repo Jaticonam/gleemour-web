@@ -3,7 +3,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { MessageCircle, ArrowRight } from "lucide-react";
 
+import {
+  getGleemourWebAssetUrl,
+} from "@/app/webAssets/GleemourWebAssets";
+
 export default function HeroSlider() {
+
+  const homeHeroUrl =
+    getGleemourWebAssetUrl(
+      "home-hero",
+    );
 
   const [petals] = useState(() =>
     Array.from({ length: 24 }, (_, index) => {
@@ -51,11 +60,13 @@ export default function HeroSlider() {
 
       {/* FONDO */}
       <div className="absolute inset-0 overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1920"
-          alt="Gleemour portada"
-          className="absolute inset-0 w-full h-full object-cover hero-zoom opacity-60"
-        />
+        {homeHeroUrl ? (
+          <img
+            src={homeHeroUrl}
+            alt="Gleemour portada"
+            className="absolute inset-0 w-full h-full object-cover hero-zoom opacity-60"
+          />
+        ) : null}
       </div>
 
       {/* OVERLAY */}
