@@ -2,16 +2,25 @@ import type {
   PublicAssetDescriptor,
 } from "@/application/publicAssets/PublicAssetContract";
 
-import {
-  ASSETS_CONFIG,
-} from "./assets";
+/**
+ * Canonical public URLs currently owned by Gleemour.
+ *
+ * JUNG Media may override these through the provider chain,
+ * but UI components must never hardcode physical asset URLs.
+ */
+export const GLEEMOUR_BRAND_ASSET_URLS = {
+  logoPrimary:
+    "https://gleemour.com/logo_color.png",
+  favicon:
+    "https://gleemour.com/favicon.ico",
+} as const;
 
 /**
- * Transitional local catalog.
+ * Local provider catalog.
  *
- * A10.2 will replace legacy brand sources with
- * canonical assets. A10.3 will add canonical OG
- * assets. Physical Media paths never belong here.
+ * Only real, known public assets belong here.
+ * Missing variants are resolved semantically by the application
+ * or remain unresolved until JUNG Media publishes them.
  */
 export const LOCAL_PUBLIC_ASSETS:
   readonly PublicAssetDescriptor[] = [
@@ -21,9 +30,10 @@ export const LOCAL_PUBLIC_ASSETS:
       app: "gleemour",
       scope: "brand",
       role: "logo-primary",
-      publicUrl: ASSETS_CONFIG.logo,
+      publicUrl:
+        GLEEMOUR_BRAND_ASSET_URLS.logoPrimary,
       mimeType: "image/png",
-      version: "legacy-v1",
+      version: "brand-v1",
       status: "ACTIVE",
     },
     {
@@ -33,7 +43,7 @@ export const LOCAL_PUBLIC_ASSETS:
       scope: "brand",
       role: "favicon",
       publicUrl:
-        "https://gleemour.com/favicon.ico",
+        GLEEMOUR_BRAND_ASSET_URLS.favicon,
       mimeType: "image/x-icon",
       version: "legacy-v1",
       status: "ACTIVE",

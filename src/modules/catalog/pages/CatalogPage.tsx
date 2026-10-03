@@ -3,6 +3,9 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 
 import { getExperienceUrl } from "@/app/routes/routes";
+import {
+  getGleemourBrandAssetUrl,
+} from "@/app/publicAssets/GleemourPublicAssets";
 import { applyPageMetadata, catalogMetadata } from "@/seo/publicMetadata";
 
 import {
@@ -57,6 +60,11 @@ export default function CatalogPage() {
   const [sort, setSort] = useState<CatalogSort>("featured");
   const viewed = useRef(false);
   const lastTrackedSearch = useRef("");
+
+  const brandLogo =
+    getGleemourBrandAssetUrl(
+      "logo-primary",
+    );
 
 
 
@@ -310,7 +318,7 @@ useEffect(() => {
               </span>
             ) : (
               <img
-                src={BRAND_CONFIG.assets.logo}
+                src={brandLogo ?? ""}
                 alt={BRAND_CONFIG.name}
                 onError={() => setBrandLogoError(true)}
               />

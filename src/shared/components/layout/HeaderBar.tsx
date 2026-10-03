@@ -1,4 +1,8 @@
 import "./HeaderBar.css";
+
+import {
+  getGleemourBrandAssetUrl,
+} from "@/app/publicAssets/GleemourPublicAssets";
 import { SearchInput } from "@/modules/catalog/components/search/SearchInput";
 import { BRAND_CONFIG } from "@/tenant/config/brand";
 import type { Product } from "@/shared/types/product";
@@ -14,6 +18,11 @@ export function HeaderBar({
   onSearchChange,
   products = [],
 }: HeaderBarProps) {
+  const brandLogo =
+    getGleemourBrandAssetUrl(
+      "logo-primary",
+    );
+
   return (
     <div className="catalog-header-bar">
       <div className="catalog-header-bar-inner">
@@ -24,7 +33,7 @@ export function HeaderBar({
           aria-label={`Ir al inicio de ${BRAND_CONFIG.name}`}
         >
           <img
-            src={BRAND_CONFIG.assets.logo}
+            src={brandLogo ?? ""}
             alt={BRAND_CONFIG.name}
           />
         </button>

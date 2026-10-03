@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, ShoppingBag } from "lucide-react";
 
+import {
+  getGleemourBrandAssetUrl,
+} from "@/app/publicAssets/GleemourPublicAssets";
+
 type HomeNavProps = {
   cartCount?: number;
   onCartClick?: () => void;
@@ -25,6 +29,11 @@ const catalogItems = [
 export default function HomeNav({ cartCount = 0, onCartClick }: HomeNavProps) {
   const [open, setOpen] = useState(false);
 
+  const brandLogo =
+    getGleemourBrandAssetUrl(
+      "logo-primary",
+    );
+
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-[var(--w-border)] bg-[var(--w-bg)]/90 backdrop-blur-xl">
       <div className="home-container">
@@ -36,7 +45,7 @@ export default function HomeNav({ cartCount = 0, onCartClick }: HomeNavProps) {
           >
             <div className="relative">
               <img
-                src="https://gleemour.com/logo_color.png"
+                src={brandLogo ?? ""}
                 alt="Logo Gleemour"
                 className="h-11 object-contain transition-all duration-300 group-hover:scale-110 sm:h-14"
               />

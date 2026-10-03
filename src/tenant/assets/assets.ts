@@ -1,10 +1,14 @@
+import {
+  GLEEMOUR_BRAND_ASSET_URLS,
+} from "./publicAssets";
+
 /**
- * Recursos visuales globales de la marca.
- * Aquí deben vivir logos, imágenes base, rutas públicas y assets reutilizables.
+ * Compatibility facade for legacy consumers.
+ *
+ * New public UI must resolve brand assets through
+ * the Public Asset Contract composition root.
  */
 export const ASSETS_CONFIG = {
-  logo: "https://gleemour.com/logo_color.png",
+  logo:
+    GLEEMOUR_BRAND_ASSET_URLS.logoPrimary,
 } as const;
-
-
-

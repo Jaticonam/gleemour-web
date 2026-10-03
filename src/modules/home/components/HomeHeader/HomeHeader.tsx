@@ -2,6 +2,10 @@ import { Link } from "react-router-dom";
 import { Menu, Search, ShoppingBag, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
+import {
+  getGleemourBrandAssetUrl,
+} from "@/app/publicAssets/GleemourPublicAssets";
+
 const categories = [
   { name: "Flores", slug: "flores" },
   { name: "Peluches", slug: "peluches" },
@@ -16,6 +20,11 @@ const categories = [
 export default function HomeHeader() {
   const [open, setOpen] = useState(false);
 
+  const brandLogo =
+    getGleemourBrandAssetUrl(
+      "logo-primary",
+    );
+
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.05)]">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
@@ -23,8 +32,8 @@ export default function HomeHeader() {
         {/* LOGO */}
         <Link to="/" className="group">
           <img
-            src="https://dl.dropboxusercontent.com/scl/fi/pnsqsg5o0v9sce32wi0n5/Logo_Wooly.png?rlkey=jjfdddx66emkv2rdh9dp4kosd&st=xbp3j3ks&raw=1"
-            alt="Wooly Import"
+            src={brandLogo ?? ""}
+            alt="Gleemour"
             className="h-10 md:h-12 transition-transform group-hover:scale-105"
           />
         </Link>
