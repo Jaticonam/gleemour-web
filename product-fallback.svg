@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800" role="img" aria-labelledby="title">
+  <title id="title">Imagen no disponible - Gleemour</title>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FDFBF7"/>
+      <stop offset="1" stop-color="#F7EAF2"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#background)"/>
+  <circle cx="300" cy="365" r="118" fill="#FFF9F5" opacity=".8"/>
+  <g fill="#F5D9E7" stroke="#B581A6" stroke-width="5" stroke-linejoin="round">
+    <ellipse cx="300" cy="310" rx="38" ry="64"/>
+    <ellipse cx="300" cy="420" rx="38" ry="64"/>
+    <ellipse cx="245" cy="365" rx="64" ry="38"/>
+    <ellipse cx="355" cy="365" rx="64" ry="38"/>
+  </g>
+  <circle cx="300" cy="365" r="38" fill="#F9C95B" stroke="#B581A6" stroke-width="5"/>
+  <path d="M300 484v66m0-25c-31-26-58-25-78-8 21 25 47 30 78 8Zm0 2c30-27 58-27 78-9-21 25-47 31-78 9Z" fill="none" stroke="#9A8BBA" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="300" y="661" text-anchor="middle" fill="#6A5A8A" font-family="Arial, sans-serif" font-size="29" font-weight="600" letter-spacing="2">Gleemour</text>
+</svg>
