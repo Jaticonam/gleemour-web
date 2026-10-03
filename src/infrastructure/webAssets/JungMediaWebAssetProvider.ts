@@ -4,11 +4,13 @@ import type {
 } from "@/application/webAssets/WebAssetContract";
 
 /**
- * Certified JUNG Media WEB snapshot for Gleemour.
+ * Stable semantic bindings from Gleemour to JUNG Media WEB assets.
  *
- * Physical Media infrastructure remains hidden.
- * Consumers receive only semantic WEB descriptors
- * and public delivery URLs.
+ * Physical mutable metadata such as dimensions, checksum or
+ * publication version remains owned by JUNG Media.
+ *
+ * Gleemour depends only on semantic identity and the stable
+ * public delivery URL.
  */
 export const JUNG_MEDIA_GLEEMOUR_WEB_ASSETS:
   readonly WebAssetDescriptor[] = [
@@ -23,14 +25,6 @@ export const JUNG_MEDIA_GLEEMOUR_WEB_ASSETS:
         "https://media.jungnegocios.com/gleemour/public/web/home-hero.jpg",
       mimeType:
         "image/jpeg",
-      width:
-        832,
-      height:
-        912,
-      version:
-        "public-v1",
-      checksumSha256:
-        "11e154d4561a4218cf860a7218f9541e8cf1f23c25dff3d64c77b718f66aa40d",
       status:
         "ACTIVE",
     },

@@ -13,7 +13,7 @@ describe(
   "JungMediaWebAssetProvider",
   () => {
     it(
-      "resuelve home-hero desde JUNG Media",
+      "resuelve home-hero desde JUNG Media por URL pública estable",
       () => {
         const asset =
           jungMediaWebAssetProvider.resolve({
@@ -23,7 +23,7 @@ describe(
               "home-hero",
           });
 
-        expect(asset).toMatchObject({
+        expect(asset).toEqual({
           assetId:
             "jung-media:gleemour:web:home-hero",
           app:
@@ -34,18 +34,41 @@ describe(
             "https://media.jungnegocios.com/gleemour/public/web/home-hero.jpg",
           mimeType:
             "image/jpeg",
-          width:
-            832,
-          height:
-            912,
           status:
             "ACTIVE",
         });
+      },
+    );
 
-        expect(
-          asset?.checksumSha256,
-        ).toBe(
-          "11e154d4561a4218cf860a7218f9541e8cf1f23c25dff3d64c77b718f66aa40d",
+    it(
+      "no fija metadata física mutable del asset",
+      () => {
+        const asset =
+          jungMediaWebAssetProvider.resolve({
+            app:
+              "gleemour",
+            role:
+              "home-hero",
+          });
+
+        expect(asset).not.toHaveProperty(
+          "width",
+        );
+
+        expect(asset).not.toHaveProperty(
+          "height",
+        );
+
+        expect(asset).not.toHaveProperty(
+          "version",
+        );
+
+        expect(asset).not.toHaveProperty(
+          "checksumSha256",
+        );
+
+        expect(asset).not.toHaveProperty(
+          "updatedAt",
         );
       },
     );
