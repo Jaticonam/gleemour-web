@@ -1,4 +1,5 @@
 import {
+  beforeEach,
   describe,
   expect,
   it,
@@ -16,6 +17,7 @@ import {
 } from "@/tenant/assets/publicAssets";
 
 import {
+  configureGleemourExternalPublicAssetProviders,
   getGleemourBrandAssetUrl,
   getGleemourSocialAssetUrl,
   resolveGleemourBrandAsset,
@@ -23,6 +25,9 @@ import {
 } from "./GleemourPublicAssets";
 
 describe("GleemourPublicAssets", () => {
+  beforeEach(() => {
+    configureGleemourExternalPublicAssetProviders([]);
+  });
   it("resuelve logo-primary desde el provider local", () => {
     expect(
       getGleemourBrandAssetUrl(
@@ -236,5 +241,85 @@ describe("GleemourPublicAssets", () => {
         entityType: "category",
       }),
     ).toBeNull();
+  });
+
+  it("prioriza provider externo global sobre provider local", () => {
+    const externalAsset:
+      PublicAssetDescriptor = {
+        assetId:
+          "media:gleemour:logo-primary:external",
+        app: "gleemour",
+        scope: "brand",
+        role: "logo-primary",
+        publicUrl:
+          "https://media.jung.test/logo.png",
+        mimeType: "image/png",
+        version: "external-v1",
+        status: "ACTIVE",
+      };
+
+    const externalProvider:
+      PublicAssetProvider = {
+        resolve: vi.fn(
+          (request) =>
+            request.role === "logo-primary"
+              ? externalAsset
+              : null,
+        ),
+      };
+
+    configureGleemourExternalPublicAssetProviders(
+      [externalProvider],
+    );
+
+    expect(
+      getGleemourBrandAssetUrl(
+        "logo-primary",
+      ),
+    ).toBe(
+      externalAsset.publicUrl,
+    );
+  });
+
+  it("usa provider local cuando externo no resuelve", () => {
+    const externalProvider:
+      PublicAssetProvider = {
+        resolve: vi.fn(() => null),
+      };
+
+    configureGleemourExternalPublicAssetProviders(
+      [externalProvider],
+    );
+
+    expect(
+      getGleemourBrandAssetUrl(
+        "logo-primary",
+      ),
+    ).toBe(
+      GLEEMOUR_BRAND_ASSET_URLS.logoPrimary,
+    );
+  });
+
+  it("mantiene fail-soft si provider externo lanza error", () => {
+    const failingProvider:
+      PublicAssetProvider = {
+        resolve: vi.fn(() => {
+          throw new Error(
+            "External provider unavailable",
+          );
+        }),
+      };
+
+    configureGleemourExternalPublicAssetProviders(
+      [failingProvider],
+    );
+
+    expect(
+      getGleemourBrandAssetUrl(
+        "logo-primary",
+      ),
+    ).toBe(
+      GLEEMOUR_BRAND_ASSET_URLS.logoPrimary,
+    );
   });
 });

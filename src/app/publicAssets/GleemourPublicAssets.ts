@@ -1,7 +1,7 @@
 import type {
   PublicAssetDescriptor,
-  PublicAssetProvider,
   PublicAssetEntityType,
+  PublicAssetProvider,
   PublicAssetRequest,
   PublicAssetRole,
 } from "@/application/publicAssets/PublicAssetContract";
@@ -21,10 +21,33 @@ import {
 export const GLEEMOUR_APP_ID =
   "gleemour" as const;
 
-const DEFAULT_PUBLIC_ASSET_PROVIDERS:
-  readonly PublicAssetProvider[] = [
+let externalPublicAssetProviders:
+  readonly PublicAssetProvider[] = [];
+
+/**
+ * Registers external public asset providers.
+ *
+ * Registration order defines their priority.
+ * The local provider remains the final runtime fallback.
+ *
+ * JUNG Media will implement its own concrete provider later.
+ */
+export function configureGleemourExternalPublicAssetProviders(
+  providers:
+    readonly PublicAssetProvider[],
+): void {
+  externalPublicAssetProviders = [
+    ...providers,
+  ];
+}
+
+function getDefaultPublicAssetProviders():
+  readonly PublicAssetProvider[] {
+  return [
+    ...externalPublicAssetProviders,
     localPublicAssetProvider,
   ];
+}
 
 type GleemourPublicAssetRequest =
   Omit<PublicAssetRequest, "app">;
@@ -49,16 +72,18 @@ function brandFallbacks(
 }
 
 /**
- * Application composition root for public assets.
+ * Provider-neutral public asset composition root.
  *
- * A10.5 will be able to prepend a JUNG Media provider here
- * without changing consumers in Home, Catalog or SEO.
+ * Default runtime precedence:
+ * external providers -> local Gleemour provider.
+ *
+ * Explicit providers remain supported for isolated
+ * consumers and tests.
  */
 export function resolveGleemourPublicAsset(
   request: GleemourPublicAssetRequest,
-  providers:
-    readonly PublicAssetProvider[] =
-      DEFAULT_PUBLIC_ASSET_PROVIDERS,
+  providers?:
+    readonly PublicAssetProvider[],
   fallbacks:
     readonly PublicAssetRequest[] = [],
 ): PublicAssetDescriptor | null {
@@ -67,16 +92,17 @@ export function resolveGleemourPublicAsset(
       ...request,
       app: GLEEMOUR_APP_ID,
     },
-    providers,
+    providers:
+      providers ??
+      getDefaultPublicAssetProviders(),
     fallbacks,
   });
 }
 
 export function resolveGleemourBrandAsset(
   role: PublicAssetRole,
-  providers:
-    readonly PublicAssetProvider[] =
-      DEFAULT_PUBLIC_ASSET_PROVIDERS,
+  providers?:
+    readonly PublicAssetProvider[],
 ): PublicAssetDescriptor | null {
   return resolveGleemourPublicAsset(
     {
@@ -90,9 +116,8 @@ export function resolveGleemourBrandAsset(
 
 export function getGleemourBrandAssetUrl(
   role: PublicAssetRole,
-  providers:
-    readonly PublicAssetProvider[] =
-      DEFAULT_PUBLIC_ASSET_PROVIDERS,
+  providers?:
+    readonly PublicAssetProvider[],
 ): string | null {
   return (
     resolveGleemourBrandAsset(
@@ -101,6 +126,7 @@ export function getGleemourBrandAssetUrl(
     )?.publicUrl ?? null
   );
 }
+
 export type GleemourSocialAssetRole =
   | "og-default"
   | "og-category"
@@ -108,9 +134,14 @@ export type GleemourSocialAssetRole =
   | "og-product";
 
 export interface GleemourSocialAssetInput {
-  readonly role: GleemourSocialAssetRole;
-  readonly entityType?: PublicAssetEntityType;
-  readonly entityId?: string;
+  readonly role:
+    GleemourSocialAssetRole;
+
+  readonly entityType?:
+    PublicAssetEntityType;
+
+  readonly entityId?:
+    string;
 }
 
 const SOCIAL_ENTITY_BY_ROLE:
@@ -126,17 +157,26 @@ const SOCIAL_ENTITY_BY_ROLE:
   };
 
 function socialFallbacks(
-  role: GleemourSocialAssetRole,
+  role:
+    GleemourSocialAssetRole,
 ): readonly PublicAssetRequest[] {
-  if (role === "og-default") {
+  if (
+    role === "og-default"
+  ) {
     return [];
   }
 
   return [
     {
-      app: GLEEMOUR_APP_ID,
-      scope: "social",
-      role: "og-default",
+      app:
+        GLEEMOUR_APP_ID,
+
+      scope:
+        "social",
+
+      role:
+        "og-default",
+
       preset:
         GLEEMOUR_SOCIAL_OG_PRESET.id,
     },
@@ -144,9 +184,12 @@ function socialFallbacks(
 }
 
 function isValidSocialAssetInput(
-  input: GleemourSocialAssetInput,
+  input:
+    GleemourSocialAssetInput,
 ): boolean {
-  if (input.role === "og-default") {
+  if (
+    input.role === "og-default"
+  ) {
     return (
       input.entityType === undefined &&
       input.entityId === undefined
@@ -154,43 +197,62 @@ function isValidSocialAssetInput(
   }
 
   const expectedEntity =
-    SOCIAL_ENTITY_BY_ROLE[input.role];
+    SOCIAL_ENTITY_BY_ROLE[
+      input.role
+    ];
 
   return (
-    input.entityType === expectedEntity &&
-    Boolean(input.entityId?.trim())
+    input.entityType ===
+      expectedEntity &&
+    Boolean(
+      input.entityId?.trim(),
+    )
   );
 }
 
 export function resolveGleemourSocialAsset(
-  input: GleemourSocialAssetInput,
-  providers:
-    readonly PublicAssetProvider[] =
-      DEFAULT_PUBLIC_ASSET_PROVIDERS,
+  input:
+    GleemourSocialAssetInput,
+  providers?:
+    readonly PublicAssetProvider[],
 ): PublicAssetDescriptor | null {
-  if (!isValidSocialAssetInput(input)) {
+  if (
+    !isValidSocialAssetInput(
+      input,
+    )
+  ) {
     return null;
   }
 
   return resolveGleemourPublicAsset(
     {
-      scope: "social",
-      role: input.role,
-      entityType: input.entityType,
-      entityId: input.entityId,
+      scope:
+        "social",
+
+      role:
+        input.role,
+
+      entityType:
+        input.entityType,
+
+      entityId:
+        input.entityId,
+
       preset:
         GLEEMOUR_SOCIAL_OG_PRESET.id,
     },
     providers,
-    socialFallbacks(input.role),
+    socialFallbacks(
+      input.role,
+    ),
   );
 }
 
 export function getGleemourSocialAssetUrl(
-  input: GleemourSocialAssetInput,
-  providers:
-    readonly PublicAssetProvider[] =
-      DEFAULT_PUBLIC_ASSET_PROVIDERS,
+  input:
+    GleemourSocialAssetInput,
+  providers?:
+    readonly PublicAssetProvider[],
 ): string | null {
   return (
     resolveGleemourSocialAsset(

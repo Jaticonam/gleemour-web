@@ -6,6 +6,12 @@ import "./index.css";
 
 import App from "./App.tsx";
 
+import {
+  configurePublicAssets,
+} from "@/app/publicAssets/configurePublicAssets";
+
+configurePublicAssets();
+
 AOS.init({
   duration: 600,
   easing: "ease-out-cubic",
